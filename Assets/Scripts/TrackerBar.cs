@@ -20,26 +20,18 @@ public class TrackerBar : MonoBehaviour
 	[SerializeField]
 	private float tickTime = 0.5f;
 
-	private LinkedList<TrackerData> trackerList;
-	private LinkedListNode<TrackerData> writeNode;
+	private TrackerList trackerList;
 
 	[SerializeField]
 	private int writeNodeValue = 16;
 
 	private Coroutine activeCoroutine;
 
-	private struct TrackerData
-	{
-		public GameObject obj;
-		public TrackerCell trackerCell;
-	}
-
 	private Vector3 trackerPoint;
 
 	void Start()
 	{
-		// allocate us a linked list and have our variable point at it
-		trackerList = new LinkedList<TrackerData>();
+		trackerList = new TrackerList();
 
 		trackerPoint = Vector3.zero;
 		bool altColor = false;
@@ -74,12 +66,7 @@ public class TrackerBar : MonoBehaviour
 			}
 
 			// Add this data to the end of the linked list
-			trackerList.AddLast(data);
-
-			if (j == writeNodeValue - 1)
-			{
-				writeNode = trackerList.Last;
-			}
+			trackerList.Add(data);
 		}
 
 		activeCoroutine = StartCoroutine(tickCoroutine());
@@ -89,19 +76,19 @@ public class TrackerBar : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
-			writeNode.Value.trackerCell.TakeInput(BUTTON.A);
+			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.A);
 		}
 		if (Input.GetKeyDown(KeyCode.X))
 		{
-			writeNode.Value.trackerCell.TakeInput(BUTTON.B);
+			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.B);
 		}
 		if (Input.GetKeyDown(KeyCode.C))
 		{
-			writeNode.Value.trackerCell.TakeInput(BUTTON.X);
+			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.X);
 		}
 		if (Input.GetKeyDown(KeyCode.V))
 		{
-			writeNode.Value.trackerCell.TakeInput(BUTTON.Y);
+			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.Y);
 		}
 	}
 
@@ -116,21 +103,16 @@ public class TrackerBar : MonoBehaviour
 
 			transform.position -= trackerWidth;
 
-			writeNode = writeNode.Next;
-
 			// take the first node and then remove it
-			var firstNode = trackerList.First;
-			trackerList.RemoveFirst();
-			// and stick it on the end:
-			trackerList.AddLast(firstNode);
+			var firstNode = trackerList[0];
 
+			trackerList.Step();
+			
 			// reposition it to the end of the pile:
-			TrackerData data = firstNode.Value;
-
-			data.obj.transform.localPosition = trackerPoint;
+			firstNode.obj.transform.localPosition = trackerPoint;
 			trackerPoint += trackerWidth;
 
-			data.trackerCell.ResetAllBars();
+			firstNode.trackerCell.ResetAllBars();
 		}
 	}
 }
