@@ -30,6 +30,8 @@ public class TrackerCell : MonoBehaviour
 	[SerializeField]
 	private bool DeactivateOnStart;
 
+	public SpriteRenderer spriteRenderer;
+
 	void Start()
 	{
 		// Create a Dict<> struct from our serialised array:

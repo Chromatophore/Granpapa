@@ -56,8 +56,14 @@ public class TrackerBar : MonoBehaviour
 			// spaced out by the specified width
 			trackerPoint += trackerWidth;
 
+			// Create an instance of our trackerData struct
+			var data = new TrackerData();
+			// and populate it
+			data.obj = createdObject;
+			data.trackerCell = createdObject.GetComponent<TrackerCell>();
+
 			// Alternate the background colour of the bar for every other cell
-			SpriteRenderer rend = createdObject.GetComponent<SpriteRenderer>();
+			SpriteRenderer rend = data.trackerCell.spriteRenderer;
 			if (rend != null)
 			{
 				var selectedColor = mainColor;
@@ -66,12 +72,6 @@ public class TrackerBar : MonoBehaviour
 				rend.color = selectedColor;
 				altColor = !altColor;
 			}
-
-			// Create an instance of our trackerData struct
-			var data = new TrackerData();
-			// and populate it
-			data.obj = createdObject;
-			data.trackerCell = createdObject.GetComponent<TrackerCell>();
 
 			// Add this data to the end of the linked list
 			trackerList.AddLast(data);
