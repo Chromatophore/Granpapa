@@ -1,0 +1,9 @@
+Library
+Temp
+*.csproj
+*.unity.orig
+*.unity.orig.meta
+ProjectVersion.txt
+*.cache
+*.sln
+*.suo
