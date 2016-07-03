@@ -16,15 +16,25 @@ public class Resolver
 
 	public void Step(TrackerData currentStep)
 	{
-		foreach (KeyValuePair<BUTTON, int> value in currentStep.trackerCell.enemyBars)
+		foreach (BUTTON button in System.Enum.GetValues(typeof(BUTTON)))
 		{
-			int player;
-			if (currentStep.trackerCell.playerBars.TryGetValue(value.Key, out player))
+			int player = -1;
+			currentStep.trackerCell.playerBars.TryGetValue(button.ToString(), out player);
+
+			int enemy = -1;
+			currentStep.trackerCell.enemyBars.TryGetValue(button.ToString(), out enemy);
+
+			if (enemy == player && enemy > 0) // Hey, looks like the actions align!
 			{
-				if (player == value.Value)
-				{
-					Debug.Log("Yay you killed a thing but I haven't made a way to change colors that is sane!");
-				}
+				currentStep.trackerCell.SetColor(button, Color.magenta);
+			}
+			else if (enemy > 0) // Only the enemy went here.
+			{
+
+			}
+			else if (player > 0) // Only the player went here.
+			{
+				currentStep.trackerCell.SetColor(button, Color.gray);
 			}
 		}
 	}

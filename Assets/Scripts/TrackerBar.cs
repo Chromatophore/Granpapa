@@ -44,6 +44,8 @@ public class TrackerBar : MonoBehaviour
 	private float timeMotionStart = 0f;
 	private float timeInMotion = 0f;
 
+	private Color lastNodeColor;
+
 	private Vector3 trackerInitResetPoint;
 
 	void Start()
@@ -95,6 +97,10 @@ public class TrackerBar : MonoBehaviour
 
 		if (activeCoroutine == null)
 			activeCoroutine = StartCoroutine(tickCoroutine());
+
+		var mainNode = trackerList[writeNodeValue];
+		lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
+
 	}
 
 	void Update()
@@ -210,7 +216,16 @@ public class TrackerBar : MonoBehaviour
 			// take the first node and then remove it
 			var firstNode = trackerList[0];
 
+			// Change the color of the current node back.
+			var mainNode = trackerList[writeNodeValue];
+			mainNode.trackerCell.spriteRenderer.color = lastNodeColor;
+
 			trackerList.Step();
+
+			// Store the color of the new node and change it for a simple, ugly highlight.
+			mainNode = trackerList[writeNodeValue];
+			lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
+			mainNode.trackerCell.spriteRenderer.color = Color.gray;
 			
 			// reposition it to the end of the pile:
 			firstNode.obj.transform.localPosition = trackerPoint;

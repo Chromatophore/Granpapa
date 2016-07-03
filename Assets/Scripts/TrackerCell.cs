@@ -25,8 +25,8 @@ public class TrackerCell : MonoBehaviour
 	[SerializeField]
 	private ButtonObjectAssoctiate[] DisplayBars;
 
-	public Dictionary<BUTTON, int> enemyBars { get; private set; }
-	public Dictionary<BUTTON, int> playerBars { get; private set; }
+	public Dictionary<string, int> enemyBars { get; private set; }
+	public Dictionary<string, int> playerBars { get; private set; }
 
 	private Dictionary<BUTTON, ButtonObjectAssoctiate> DisplayBarsDict;
 
@@ -41,19 +41,22 @@ public class TrackerCell : MonoBehaviour
 		DisplayBarsDict = new Dictionary<BUTTON, ButtonObjectAssoctiate>();
 
 		// Activebars and Enemybars are dicts of bars that are active, in theory!
-		enemyBars = new Dictionary<BUTTON, int>();
-		playerBars = new Dictionary<BUTTON, int>();
+		enemyBars = new Dictionary<string, int>();
+		playerBars = new Dictionary<string, int>();
 
 		foreach (var association in DisplayBars)
 		{
 			DisplayBarsDict[association.button] = association;
 		}
 
+		/*
 		foreach (BUTTON button in System.Enum.GetValues(typeof(BUTTON)))
 		{
-			enemyBars.Add(button, 0);
-			playerBars.Add(button, 0);
+			enemyBars.Add(button.ToString(), 0);
+			playerBars.Add(button.ToString(), 0);
 		}
+		playerBars.Add("Used", 0);
+		 */
 
 
 		if (DeactivateOnStart)
@@ -67,7 +70,7 @@ public class TrackerCell : MonoBehaviour
 		foreach (var bar in DisplayBarsDict.Values)
 		{
 			bar.obj.SetActive(false);
-			bar.obj.GetComponent<SpriteRenderer>().color = bar.startColor;
+			SetColor(bar.button, bar.startColor);
 		}
 
 		enemyBars.Clear();
@@ -76,20 +79,40 @@ public class TrackerCell : MonoBehaviour
 
 	public void PlayerInput(BUTTON inputButton)
 	{
+		int used;
+		if (playerBars.TryGetValue("Used", out used))
+		{
+			if (used != 0)
+			{
+				return;
+			}
+		}
+
 		ButtonObjectAssoctiate result;
 		if (DisplayBarsDict.TryGetValue(inputButton, out result))
 		{
 			int pressed;
-			if (enemyBars.TryGetValue(inputButton, out pressed))
+			if (enemyBars.TryGetValue(inputButton.ToString(), out pressed))
 			{
-				playerBars[inputButton] = 1;
-				result.obj.GetComponent<SpriteRenderer>().color = Color.white;
+				playerBars["Used"] = 1;
+				playerBars[inputButton.ToString()] = 1;
+				SetColor(inputButton, Color.white);
 			}
 			else
 			{
-				playerBars[inputButton] = 1;
+				playerBars["Used"] = 1;
+				playerBars[inputButton.ToString()] = 1;
 				result.obj.SetActive(true);
 			}
+		}
+	}
+
+	public void SetColor(BUTTON whichBar, Color newColor) // Oh god why am I using buttons everywhere? This needs to change.
+	{
+		ButtonObjectAssoctiate result;
+		if (DisplayBarsDict.TryGetValue(whichBar, out result))
+		{
+			result.obj.GetComponent<SpriteRenderer>().color = newColor;
 		}
 	}
 
@@ -98,7 +121,7 @@ public class TrackerCell : MonoBehaviour
 		ButtonObjectAssoctiate result;
 		if (DisplayBarsDict.TryGetValue(inputButton, out result))
 		{
-			enemyBars[inputButton] = 1;
+			enemyBars[inputButton.ToString()] = 1;
 			result.obj.SetActive(true);
 		}
 	}
