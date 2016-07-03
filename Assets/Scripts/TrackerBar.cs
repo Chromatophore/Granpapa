@@ -31,12 +31,20 @@ public class TrackerBar : MonoBehaviour
 	[SerializeField]
 	private int resolveNodeValue = 8;
 
-	private Coroutine activeCoroutine;
-
 	private Vector3 trackerPoint;
 
 	private Enemy mainEnemy;
 	private Resolver mainResolver;
+
+	private Coroutine activeCoroutine = null;
+
+	private Vector3 currentPosition;
+	private Vector3 targetPosition;
+	private float targetGoalTime;
+	private float timeMotionStart = 0f;
+	private float timeInMotion = 0f;
+
+	private Vector3 trackerInitResetPoint;
 
 	void Start()
 	{
@@ -44,6 +52,10 @@ public class TrackerBar : MonoBehaviour
 
 		mainEnemy = new Enemy();
 		mainResolver = new Resolver();
+
+		trackerInitResetPoint = transform.position;
+		targetPosition = trackerInitResetPoint;
+
 
 		trackerPoint = Vector3.zero;
 		bool altColor = false;
@@ -81,7 +93,8 @@ public class TrackerBar : MonoBehaviour
 			trackerList.Add(data);
 		}
 
-		activeCoroutine = StartCoroutine(tickCoroutine());
+		if (activeCoroutine == null)
+			activeCoroutine = StartCoroutine(tickCoroutine());
 	}
 
 	void Update()
@@ -102,6 +115,86 @@ public class TrackerBar : MonoBehaviour
 		{
 			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.Y);
 		}
+
+
+
+		if (targetGoalTime != 0)
+		{
+			timeInMotion = Time.time  - timeMotionStart;
+
+			float ratio = Mathf.Clamp(timeInMotion / targetGoalTime,0f,1f);
+
+			ratio = TrackerCurve(ratio);
+
+			transform.position = Vector3.Lerp(currentPosition, targetPosition, ratio);
+
+			if (ratio == 1f)
+				targetGoalTime = 0;
+		}
+
+	}
+
+	// deactivate and restore coroutine on enable/disable:
+	void OnDisable()
+	{
+		if (activeCoroutine != null)
+		{
+			StopCoroutine(activeCoroutine);
+			activeCoroutine = null;
+		}
+	}
+	void OnEnable()
+	{
+		if (activeCoroutine == null)
+			activeCoroutine = StartCoroutine(tickCoroutine());
+	}
+
+	private void MoveTracker(Vector3 amount, float time)
+	{
+		transform.position = targetPosition;
+
+		if (targetPosition.x < -100f)
+		{
+			TrackerFullReset();
+		}
+
+		timeMotionStart = Time.time;;
+		
+		currentPosition = transform.position;
+		targetPosition = currentPosition + amount;
+
+		targetGoalTime = time;
+	}
+
+	public float TrackerCurve(float ratio)
+	{
+		float cosWave = (1f + Mathf.Cos((1 + ratio) * Mathf.PI)) / 2;
+		cosWave *= cosWave;
+		return cosWave;
+	}
+
+	public void TrackerFullReset()
+	{
+		// TODO: we would need to reset the position of all of the objects here
+
+		var tempObjectList = new List<Transform>();
+
+		while (transform.childCount != 0)
+		{
+			Transform childTrans = transform.GetChild(0);
+			childTrans.parent = null;
+			tempObjectList.Add(childTrans);
+		}
+
+		trackerPoint += transform.position - trackerInitResetPoint;
+
+
+		transform.position = trackerInitResetPoint;
+
+		foreach (var rechild in tempObjectList)
+		{
+			rechild.parent = transform;
+		}
 	}
 
 	IEnumerator tickCoroutine()
@@ -109,11 +202,10 @@ public class TrackerBar : MonoBehaviour
 		for(;;) {
 			yield return new WaitForSeconds(tickTime);
 
-
 			if (trackerList == null)
 				return false;
 
-			transform.position -= trackerWidth;
+			MoveTracker(-trackerWidth, tickTime);
 
 			// take the first node and then remove it
 			var firstNode = trackerList[0];
