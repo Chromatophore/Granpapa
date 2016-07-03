@@ -268,12 +268,16 @@ MonoBehaviour:
   DisplayBars:
   - button: 0
     obj: {fileID: 148944}
+    startColor: {r: 1, g: 0.89411765, b: 0.050980393, a: 1}
   - button: 1
     obj: {fileID: 105206}
+    startColor: {r: 0, g: 0.25490198, b: 1, a: 1}
   - button: 2
     obj: {fileID: 131054}
+    startColor: {r: 1, g: 0.003921569, b: 0.003921569, a: 1}
   - button: 3
     obj: {fileID: 126886}
+    startColor: {r: 0.23921569, g: 1, b: 0.21176471, a: 1}
   DeactivateOnStart: 1
   spriteRenderer: {fileID: 21285776}
 --- !u!212 &21201400

@@ -15,6 +15,7 @@ public struct ButtonObjectAssoctiate
 {
 	public BUTTON button;
 	public GameObject obj;
+	public Color startColor;
 }
 
 public class TrackerCell : MonoBehaviour
@@ -24,8 +25,10 @@ public class TrackerCell : MonoBehaviour
 	[SerializeField]
 	private ButtonObjectAssoctiate[] DisplayBars;
 
+	public Dictionary<BUTTON, int> enemyBars { get; private set; }
+	public Dictionary<BUTTON, int> playerBars { get; private set; }
 
-	private Dictionary<BUTTON, GameObject> DisplayBarsDict;
+	private Dictionary<BUTTON, ButtonObjectAssoctiate> DisplayBarsDict;
 
 	[SerializeField]
 	private bool DeactivateOnStart;
@@ -35,11 +38,21 @@ public class TrackerCell : MonoBehaviour
 	void Start()
 	{
 		// Create a Dict<> struct from our serialised array:
-		DisplayBarsDict = new Dictionary<BUTTON, GameObject>();
+		DisplayBarsDict = new Dictionary<BUTTON, ButtonObjectAssoctiate>();
+
+		// Activebars and Enemybars are dicts of bars that are active, in theory!
+		enemyBars = new Dictionary<BUTTON, int>();
+		playerBars = new Dictionary<BUTTON, int>();
 
 		foreach (var association in DisplayBars)
 		{
-			DisplayBarsDict[association.button] = association.obj;
+			DisplayBarsDict[association.button] = association;
+		}
+
+		foreach (BUTTON button in System.Enum.GetValues(typeof(BUTTON)))
+		{
+			enemyBars.Add(button, 0);
+			playerBars.Add(button, 0);
 		}
 
 
@@ -53,16 +66,40 @@ public class TrackerCell : MonoBehaviour
 	{
 		foreach (var bar in DisplayBarsDict.Values)
 		{
-			bar.SetActive(false);
+			bar.obj.SetActive(false);
+			bar.obj.GetComponent<SpriteRenderer>().color = bar.startColor;
+		}
+
+		enemyBars.Clear();
+		playerBars.Clear();
+	}
+
+	public void PlayerInput(BUTTON inputButton)
+	{
+		ButtonObjectAssoctiate result;
+		if (DisplayBarsDict.TryGetValue(inputButton, out result))
+		{
+			int pressed;
+			if (enemyBars.TryGetValue(inputButton, out pressed))
+			{
+				playerBars[inputButton] = 1;
+				result.obj.GetComponent<SpriteRenderer>().color = Color.white;
+			}
+			else
+			{
+				playerBars[inputButton] = 1;
+				result.obj.SetActive(true);
+			}
 		}
 	}
 
-	public void TakeInput(BUTTON inputButton)
+	public void EnemyInput(BUTTON inputButton)
 	{
-		GameObject result;
+		ButtonObjectAssoctiate result;
 		if (DisplayBarsDict.TryGetValue(inputButton, out result))
 		{
-			result.SetActive(true);
+			enemyBars[inputButton] = 1;
+			result.obj.SetActive(true);
 		}
 	}
 }

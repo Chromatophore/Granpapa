@@ -119,6 +119,8 @@ MonoBehaviour:
   alternateColor: {r: 0.14705884, g: 0.14705884, b: 0.14705884, a: 1}
   tickTime: 0.5
   writeNodeValue: 16
+  enemyNodeValue: 24
+  resolveNodeValue: 8
 --- !u!4 &883482868
 Transform:
   m_ObjectHideFlags: 0

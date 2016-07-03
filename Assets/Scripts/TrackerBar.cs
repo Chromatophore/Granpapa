@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;			// You will need this for IEnumerator, which Coroutines use
-using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
+using System.Collections.Generic;
 
 public class TrackerBar : MonoBehaviour
 {
@@ -25,13 +25,25 @@ public class TrackerBar : MonoBehaviour
 	[SerializeField]
 	private int writeNodeValue = 16;
 
+	[SerializeField]
+	private int enemyNodeValue = 24;
+
+	[SerializeField]
+	private int resolveNodeValue = 8;
+
 	private Coroutine activeCoroutine;
 
 	private Vector3 trackerPoint;
 
+	private Enemy mainEnemy;
+	private Resolver mainResolver;
+
 	void Start()
 	{
 		trackerList = new TrackerList();
+
+		mainEnemy = new Enemy();
+		mainResolver = new Resolver();
 
 		trackerPoint = Vector3.zero;
 		bool altColor = false;
@@ -76,19 +88,19 @@ public class TrackerBar : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
-			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.A);
+			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.A);
 		}
 		if (Input.GetKeyDown(KeyCode.X))
 		{
-			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.B);
+			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.B);
 		}
 		if (Input.GetKeyDown(KeyCode.C))
 		{
-			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.X);
+			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.X);
 		}
 		if (Input.GetKeyDown(KeyCode.V))
 		{
-			trackerList[writeNodeValue].trackerCell.TakeInput(BUTTON.Y);
+			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.Y);
 		}
 	}
 
@@ -113,6 +125,12 @@ public class TrackerBar : MonoBehaviour
 			trackerPoint += trackerWidth;
 
 			firstNode.trackerCell.ResetAllBars();
+
+			// Enemy stuff. No idea what an enemy needs to know yet.
+			mainEnemy.Step(trackerList[enemyNodeValue]);
+
+			// Resolution stuff. Things get resolved here?!
+			mainResolver.Step(trackerList[resolveNodeValue]);
 		}
 	}
 }
