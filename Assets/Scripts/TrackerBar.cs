@@ -36,8 +36,6 @@ public class TrackerBar : MonoBehaviour
 	private Enemy mainEnemy;
 	private Resolver mainResolver;
 
-	private Coroutine activeCoroutine = null;
-
 	private Vector3 currentPosition;
 	private Vector3 targetPosition;
 	private float targetGoalTime;
@@ -48,6 +46,12 @@ public class TrackerBar : MonoBehaviour
 
 	private Vector3 trackerInitResetPoint;
 
+	[SerializeField]
+	private AudioSource myAudio;
+
+	private float timeAccumulator;
+	public float SamplesPerBeat { get; private set; }
+
 	void Start()
 	{
 		trackerList = new TrackerList();
@@ -57,6 +61,9 @@ public class TrackerBar : MonoBehaviour
 
 		trackerInitResetPoint = transform.position;
 		targetPosition = trackerInitResetPoint;
+
+		SamplesPerBeat = 44100f * tickTime;
+
 
 
 		trackerPoint = Vector3.zero;
@@ -94,17 +101,52 @@ public class TrackerBar : MonoBehaviour
 			// Add this data to the end of the linked list
 			trackerList.Add(data);
 		}
-
-		if (activeCoroutine == null)
-			activeCoroutine = StartCoroutine(tickCoroutine());
-
+		
 		var mainNode = trackerList[writeNodeValue];
 		lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
 
 	}
 
+
+	private int lastSamples = 0;
+	private int beatNumber;
+
 	void Update()
 	{
+
+		timeAccumulator += Time.deltaTime;
+
+		if (timeAccumulator >= tickTime)
+		{
+			timeAccumulator -= tickTime;
+
+			int currentSamples = myAudio.timeSamples;
+
+			int difference = currentSamples - lastSamples;
+			//Debug.Log("Beat difference vs Samples: " + difference.ToString());
+
+			if (difference >= 0 && difference < 88200)
+			{
+				beatNumber++;
+				float currentBeatNumber = (currentSamples / SamplesPerBeat);
+				//Debug.Log("Hone Factor: " + currentBeatNumber.ToString() + " vs " + beatNumber.ToString());
+				currentBeatNumber -= beatNumber;
+				currentBeatNumber *= tickTime;
+
+				timeAccumulator = currentBeatNumber;
+			}
+			else
+			{
+				beatNumber = 0;
+			}
+
+			Tick();
+
+			lastSamples = currentSamples;
+		}
+
+
+
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
 			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.A);
@@ -123,7 +165,7 @@ public class TrackerBar : MonoBehaviour
 		}
 
 
-
+		// interpolating between locations:
 		if (targetGoalTime != 0)
 		{
 			timeInMotion = Time.time  - timeMotionStart;
@@ -138,21 +180,6 @@ public class TrackerBar : MonoBehaviour
 				targetGoalTime = 0;
 		}
 
-	}
-
-	// deactivate and restore coroutine on enable/disable:
-	void OnDisable()
-	{
-		if (activeCoroutine != null)
-		{
-			StopCoroutine(activeCoroutine);
-			activeCoroutine = null;
-		}
-	}
-	void OnEnable()
-	{
-		if (activeCoroutine == null)
-			activeCoroutine = StartCoroutine(tickCoroutine());
 	}
 
 	private void MoveTracker(Vector3 amount, float time)
@@ -203,41 +230,35 @@ public class TrackerBar : MonoBehaviour
 		}
 	}
 
-	IEnumerator tickCoroutine()
+
+	private void Tick()
 	{
-		for(;;) {
-			yield return new WaitForSeconds(tickTime);
+		MoveTracker(-trackerWidth, tickTime);
 
-			if (trackerList == null)
-				return false;
+		// take the first node and then remove it
+		var firstNode = trackerList[0];
 
-			MoveTracker(-trackerWidth, tickTime);
+		// Change the color of the current node back.
+		var mainNode = trackerList[writeNodeValue];
+		mainNode.trackerCell.spriteRenderer.color = lastNodeColor;
 
-			// take the first node and then remove it
-			var firstNode = trackerList[0];
+		trackerList.Step();
 
-			// Change the color of the current node back.
-			var mainNode = trackerList[writeNodeValue];
-			mainNode.trackerCell.spriteRenderer.color = lastNodeColor;
+		// Store the color of the new node and change it for a simple, ugly highlight.
+		mainNode = trackerList[writeNodeValue];
+		lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
+		mainNode.trackerCell.spriteRenderer.color = Color.gray;
+		
+		// reposition it to the end of the pile:
+		firstNode.obj.transform.localPosition = trackerPoint;
+		trackerPoint += trackerWidth;
 
-			trackerList.Step();
+		firstNode.trackerCell.ResetAllBars();
 
-			// Store the color of the new node and change it for a simple, ugly highlight.
-			mainNode = trackerList[writeNodeValue];
-			lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
-			mainNode.trackerCell.spriteRenderer.color = Color.gray;
-			
-			// reposition it to the end of the pile:
-			firstNode.obj.transform.localPosition = trackerPoint;
-			trackerPoint += trackerWidth;
+		// Enemy stuff. No idea what an enemy needs to know yet.
+		mainEnemy.Step(trackerList[enemyNodeValue]);
 
-			firstNode.trackerCell.ResetAllBars();
-
-			// Enemy stuff. No idea what an enemy needs to know yet.
-			mainEnemy.Step(trackerList[enemyNodeValue]);
-
-			// Resolution stuff. Things get resolved here?!
-			mainResolver.Step(trackerList[resolveNodeValue]);
-		}
+		// Resolution stuff. Things get resolved here?!
+		mainResolver.Step(trackerList[resolveNodeValue]);
 	}
 }
