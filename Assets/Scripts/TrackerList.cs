@@ -4,7 +4,7 @@ using System.Collections.Generic;	// We use generic for Data Structures with <Yo
 public struct TrackerData
 {
 	public GameObject obj;
-	public TrackerCell trackerCell;
+	public ITrackerDisplay trackerDisplay;
 }
 
 public class TrackerList

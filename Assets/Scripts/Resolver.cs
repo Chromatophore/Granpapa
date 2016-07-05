@@ -18,15 +18,20 @@ public class Resolver
 	{
 		foreach (BUTTON button in System.Enum.GetValues(typeof(BUTTON)))
 		{
+			Dictionary<string, int> playerBars;
+			Dictionary<string, int> enemyBars;
+
+			currentStep.trackerDisplay.TempGetResolutionData(out enemyBars, out playerBars);
+
 			int player = -1;
-			currentStep.trackerCell.playerBars.TryGetValue(button.ToString(), out player);
+			playerBars.TryGetValue(button.ToString(), out player);
 
 			int enemy = -1;
-			currentStep.trackerCell.enemyBars.TryGetValue(button.ToString(), out enemy);
+			enemyBars.TryGetValue(button.ToString(), out enemy);
 
 			if (enemy == player && enemy > 0) // Hey, looks like the actions align!
 			{
-				currentStep.trackerCell.SetColor(button, Color.magenta);
+				currentStep.trackerDisplay.SetColor(button, Color.magenta);
 			}
 			else if (enemy > 0) // Only the enemy went here.
 			{
@@ -34,7 +39,7 @@ public class Resolver
 			}
 			else if (player > 0) // Only the player went here.
 			{
-				currentStep.trackerCell.SetColor(button, Color.gray);
+				currentStep.trackerDisplay.SetColor(button, Color.gray);
 			}
 		}
 	}

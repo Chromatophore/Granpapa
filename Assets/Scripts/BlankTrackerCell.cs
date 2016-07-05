@@ -1,29 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
-public enum BUTTON
+public class BlankTrackerCell : MonoBehaviour
 {
-	A,
-	B,
-	X,
-	Y
-}
-
-// Make sure Unity tries tp display this in the editor:
-[System.Serializable]
-public struct ButtonObjectAssoctiate
-{
-	public BUTTON button;
-	public GameObject obj;
-	public Color startColor;
-}
-
-public class TrackerCell : MonoBehaviour, ITrackerDisplay
-{
-
-	// Tells unity to show private fields in editor:
-	[SerializeField]
-	private ButtonObjectAssoctiate[] DisplayBars;
 
 	public Dictionary<string, int> enemyBars { get; private set; }
 	public Dictionary<string, int> playerBars { get; private set; }
@@ -44,28 +23,13 @@ public class TrackerCell : MonoBehaviour, ITrackerDisplay
 		enemyBars = new Dictionary<string, int>();
 		playerBars = new Dictionary<string, int>();
 
-		foreach (var association in DisplayBars)
-		{
-			DisplayBarsDict[association.button] = association;
-		}
-
-		/*
-		foreach (BUTTON button in System.Enum.GetValues(typeof(BUTTON)))
-		{
-			enemyBars.Add(button.ToString(), 0);
-			playerBars.Add(button.ToString(), 0);
-		}
-		playerBars.Add("Used", 0);
-		 */
-
-
 		if (DeactivateOnStart)
 		{
-			ResetDisplay();
+			ResetAllBars();
 		}
 	}
 
-	public void ResetDisplay()
+	public void ResetAllBars()
 	{
 		foreach (var bar in DisplayBarsDict.Values)
 		{
@@ -75,12 +39,6 @@ public class TrackerCell : MonoBehaviour, ITrackerDisplay
 
 		enemyBars.Clear();
 		playerBars.Clear();
-	}
-
-	public void TempGetResolutionData(out Dictionary<string, int> eBars, out Dictionary<string, int> pBars)
-	{
-		eBars = enemyBars;
-		pBars = playerBars;
 	}
 
 	public void PlayerInput(BUTTON inputButton)
@@ -111,11 +69,6 @@ public class TrackerCell : MonoBehaviour, ITrackerDisplay
 				result.obj.SetActive(true);
 			}
 		}
-	}
-
-	public void ConsumeColor(Color inputColor)
-	{
-		spriteRenderer.color = inputColor;
 	}
 
 	public void SetColor(BUTTON whichBar, Color newColor) // Oh god why am I using buttons everywhere? This needs to change.

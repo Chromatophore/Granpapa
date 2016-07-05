@@ -2,6 +2,16 @@
 using System.Collections;			// You will need this for IEnumerator, which Coroutines use
 using System.Collections.Generic;
 
+public interface ITrackerDisplay
+{
+	void ConsumeColor(Color inputColor);
+	void ResetDisplay();
+	void PlayerInput(BUTTON inputButton);
+	void EnemyInput(BUTTON inputButton);
+	void TempGetResolutionData(out Dictionary<string, int> eBars, out Dictionary<string, int> pBars);
+	void SetColor(BUTTON whichBar, Color newColor);
+}
+
 public class TrackerBar : MonoBehaviour
 {
 	[SerializeField]
@@ -85,16 +95,16 @@ public class TrackerBar : MonoBehaviour
 			var data = new TrackerData();
 			// and populate it
 			data.obj = createdObject;
-			data.trackerCell = createdObject.GetComponent<TrackerCell>();
+			//data.trackerCell = createdObject.GetComponent<TrackerCell>();
+			data.trackerDisplay = createdObject.GetComponent(typeof(ITrackerDisplay)) as ITrackerDisplay;
 
 			// Alternate the background colour of the bar for every other cell
-			SpriteRenderer rend = data.trackerCell.spriteRenderer;
-			if (rend != null)
+			if (data.trackerDisplay != null)
 			{
 				var selectedColor = mainColor;
 				if (altColor)
 					selectedColor = alternateColor;
-				rend.color = selectedColor;
+				data.trackerDisplay.ConsumeColor(selectedColor);
 				altColor = !altColor;
 			}
 
@@ -102,9 +112,6 @@ public class TrackerBar : MonoBehaviour
 			trackerList.Add(data);
 		}
 		
-		var mainNode = trackerList[writeNodeValue];
-		lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
-
 	}
 
 
@@ -149,19 +156,19 @@ public class TrackerBar : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
-			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.A);
+			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.A);
 		}
 		if (Input.GetKeyDown(KeyCode.X))
 		{
-			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.B);
+			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.B);
 		}
 		if (Input.GetKeyDown(KeyCode.C))
 		{
-			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.X);
+			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.X);
 		}
 		if (Input.GetKeyDown(KeyCode.V))
 		{
-			trackerList[writeNodeValue].trackerCell.PlayerInput(BUTTON.Y);
+			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.Y);
 		}
 
 
@@ -238,22 +245,13 @@ public class TrackerBar : MonoBehaviour
 		// take the first node and then remove it
 		var firstNode = trackerList[0];
 
-		// Change the color of the current node back.
-		var mainNode = trackerList[writeNodeValue];
-		mainNode.trackerCell.spriteRenderer.color = lastNodeColor;
-
 		trackerList.Step();
 
-		// Store the color of the new node and change it for a simple, ugly highlight.
-		mainNode = trackerList[writeNodeValue];
-		lastNodeColor = mainNode.trackerCell.spriteRenderer.color;
-		mainNode.trackerCell.spriteRenderer.color = Color.gray;
-		
 		// reposition it to the end of the pile:
 		firstNode.obj.transform.localPosition = trackerPoint;
 		trackerPoint += trackerWidth;
 
-		firstNode.trackerCell.ResetAllBars();
+		firstNode.trackerDisplay.ResetDisplay();
 
 		// Enemy stuff. No idea what an enemy needs to know yet.
 		mainEnemy.Step(trackerList[enemyNodeValue]);

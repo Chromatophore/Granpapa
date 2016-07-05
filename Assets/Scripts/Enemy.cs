@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
-public class Enemy
+public interface IDisplay
+{
+	void Step(TrackerData currentStep);
+}
+
+public class Enemy : IDisplay
 {
 	public Enemy()
 	{
@@ -16,6 +21,6 @@ public class Enemy
 	
 	public void Step(TrackerData currentStep)
 	{
-		currentStep.trackerCell.EnemyInput(GetRandomEnum<BUTTON>());
+		currentStep.trackerDisplay.EnemyInput(GetRandomEnum<BUTTON>());
 	}
 }
