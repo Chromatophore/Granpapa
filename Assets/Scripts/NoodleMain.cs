@@ -92,9 +92,4 @@ public class NoodleMain : MonoBehaviour
 				childObject.GetComponent<SpriteRenderer>().color = prefab.color;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
