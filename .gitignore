@@ -7,3 +7,4 @@ ProjectVersion.txt
 *.cache
 *.sln
 *.suo
+*.TMP

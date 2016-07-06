@@ -10,6 +10,7 @@ public interface ITrackerDisplay
 	void EnemyInput(BUTTON inputButton);
 	void TempGetResolutionData(out Dictionary<string, int> eBars, out Dictionary<string, int> pBars);
 	void SetColor(BUTTON whichBar, Color newColor);
+	void AddChild(GameObject child);
 }
 
 public class TrackerBar : MonoBehaviour, IObserver<BeatData>
@@ -56,8 +57,21 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private Vector3 trackerInitResetPoint;
 
+	[SerializeField]
+	private AudioSource myAudio;
+
+	private float timeAccumulator;
+	public float SamplesPerBeat { get; private set; }
+
+	private NoodleMain noodleMain;
+
 	void Start()
 	{
+		if (noodleMain == null)
+		{
+			noodleMain = NoodleMain.GetSingleRef();
+		}
+
 		trackerList = new TrackerList();
 
 		mainEnemy = new Enemy();
@@ -208,7 +222,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		firstNode.trackerDisplay.ResetDisplay();
 
 		// Enemy stuff. No idea what an enemy needs to know yet.
-		mainEnemy.Step(trackerList[enemyNodeValue]);
+		var enemyAction = mainEnemy.Step(trackerList[enemyNodeValue]);
+		trackerList[enemyNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects[enemyAction]);
 
 		// Resolution stuff. Things get resolved here?!
 		mainResolver.Step(trackerList[resolveNodeValue]);

@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
-public interface IDisplay
-{
-	void Step(TrackerData currentStep);
-}
-
-public class Enemy : IDisplay
+public class Enemy
 {
 	public Enemy()
 	{
@@ -19,8 +14,16 @@ public class Enemy : IDisplay
 		return V;
 	}
 	
-	public void Step(TrackerData currentStep)
+	public string Step(TrackerData currentStep)
 	{
-		currentStep.trackerDisplay.EnemyInput(GetRandomEnum<BUTTON>());
+		//currentStep.trackerDisplay.EnemyInput(GetRandomEnum<BUTTON>());
+		//currentStep.obj.transform;
+		var enemyAttacks = new List<string>();
+		enemyAttacks.Add("en_red");
+		enemyAttacks.Add("en_yellow");
+		enemyAttacks.Add("en_green");
+		enemyAttacks.Add("en_blue");
+
+		return enemyAttacks[(int)(Random.value * enemyAttacks.Count)];
 	}
 }
