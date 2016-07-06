@@ -12,7 +12,7 @@ public interface ITrackerDisplay
 	void SetColor(BUTTON whichBar, Color newColor);
 }
 
-public class TrackerBar : MonoBehaviour
+public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 {
 	[SerializeField]
 	private int trackerCellCount = 32;
@@ -56,12 +56,6 @@ public class TrackerBar : MonoBehaviour
 
 	private Vector3 trackerInitResetPoint;
 
-	[SerializeField]
-	private AudioSource myAudio;
-
-	private float timeAccumulator;
-	public float SamplesPerBeat { get; private set; }
-
 	void Start()
 	{
 		trackerList = new TrackerList();
@@ -71,9 +65,6 @@ public class TrackerBar : MonoBehaviour
 
 		trackerInitResetPoint = transform.position;
 		targetPosition = trackerInitResetPoint;
-
-		SamplesPerBeat = 44100f * tickTime;
-
 
 
 		trackerPoint = Vector3.zero;
@@ -115,45 +106,8 @@ public class TrackerBar : MonoBehaviour
 	}
 
 
-	private int lastSamples = 0;
-	private int beatNumber;
-
 	void Update()
 	{
-
-		timeAccumulator += Time.deltaTime;
-
-		if (timeAccumulator >= tickTime)
-		{
-			timeAccumulator -= tickTime;
-
-			int currentSamples = myAudio.timeSamples;
-
-			int difference = currentSamples - lastSamples;
-			//Debug.Log("Beat difference vs Samples: " + difference.ToString());
-
-			if (difference >= 0 && difference < 88200)
-			{
-				beatNumber++;
-				float currentBeatNumber = (currentSamples / SamplesPerBeat);
-				//Debug.Log("Hone Factor: " + currentBeatNumber.ToString() + " vs " + beatNumber.ToString());
-				currentBeatNumber -= beatNumber;
-				currentBeatNumber *= tickTime;
-
-				timeAccumulator = currentBeatNumber;
-			}
-			else
-			{
-				beatNumber = 0;
-			}
-
-			Tick();
-
-			lastSamples = currentSamples;
-		}
-
-
-
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
 			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.A);
@@ -258,5 +212,27 @@ public class TrackerBar : MonoBehaviour
 
 		// Resolution stuff. Things get resolved here?!
 		mainResolver.Step(trackerList[resolveNodeValue]);
+	}
+
+
+	// IObserver implimentation:
+	public void OnCompleted()
+	{
+
+	}
+	public void OnError(System.Exception exception)
+	{
+
+	}
+	public void OnNext(BeatData data)
+	{
+		Tick();
+	}
+
+
+	private IDisposable unsubscriber;
+	public void Setup(IObservable<BeatData> beatObserver)
+	{
+		unsubscriber = beatObserver.Subscribe(this);
 	}
 }
