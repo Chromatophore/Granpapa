@@ -1,24 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
-public enum BUTTON
-{
-	A,
-	B,
-	X,
-	Y
-}
-
-// Make sure Unity tries tp display this in the editor:
-[System.Serializable]
-public struct ButtonObjectAssoctiate
-{
-	public BUTTON button;
-	public GameObject obj;
-	public Color startColor;
-}
-
-public class TrackerCell : MonoBehaviour, ITrackerDisplay
+public class TrackerCell : MonoBehaviour
 {
 
 	// Tells unity to show private fields in editor:
@@ -124,16 +107,6 @@ public class TrackerCell : MonoBehaviour, ITrackerDisplay
 		if (DisplayBarsDict.TryGetValue(whichBar, out result))
 		{
 			result.obj.GetComponent<SpriteRenderer>().color = newColor;
-		}
-	}
-
-	public void EnemyInput(BUTTON inputButton)
-	{
-		ButtonObjectAssoctiate result;
-		if (DisplayBarsDict.TryGetValue(inputButton, out result))
-		{
-			enemyBars[inputButton.ToString()] = 1;
-			result.obj.SetActive(true);
 		}
 	}
 

@@ -16,8 +16,6 @@ public class Enemy
 	
 	public string Step(TrackerData currentStep)
 	{
-		//currentStep.trackerDisplay.EnemyInput(GetRandomEnum<BUTTON>());
-		//currentStep.obj.transform;
 		var enemyAttacks = new List<string>();
 		enemyAttacks.Add("en_red");
 		enemyAttacks.Add("en_yellow");

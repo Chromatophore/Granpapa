@@ -6,10 +6,6 @@ public interface ITrackerDisplay
 {
 	void ConsumeColor(Color inputColor);
 	void ResetDisplay();
-	void PlayerInput(BUTTON inputButton);
-	void EnemyInput(BUTTON inputButton);
-	void TempGetResolutionData(out Dictionary<string, int> eBars, out Dictionary<string, int> pBars);
-	void SetColor(BUTTON whichBar, Color newColor);
 	void AddChild(GameObject child);
 }
 
@@ -124,19 +120,19 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	{
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
-			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.A);
+			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_a"]);
 		}
 		if (Input.GetKeyDown(KeyCode.X))
 		{
-			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.B);
+			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_b"]);
 		}
 		if (Input.GetKeyDown(KeyCode.C))
 		{
-			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.X);
+			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_x"]);
 		}
 		if (Input.GetKeyDown(KeyCode.V))
 		{
-			trackerList[writeNodeValue].trackerDisplay.PlayerInput(BUTTON.Y);
+			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_y"]);
 		}
 
 

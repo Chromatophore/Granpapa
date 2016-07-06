@@ -1,4 +1,5 @@
-﻿using UnityEngine;using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
+﻿using UnityEngine;
+using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
 public struct PrefabConstruction
 {
@@ -17,22 +18,41 @@ public class NoodleMain : MonoBehaviour
 {
 	// This is singletonish stuff
 	// Maybe use get/set here?
-	public static NoodleMain SingleRef = null;	public static void SetSingleRef(NoodleMain pRef)
+	public static NoodleMain SingleRef = null;
+	public static void SetSingleRef(NoodleMain pRef)
 	{
 		if (SingleRef != null)
 		{
 			Debug.Log("Singleton reference to NoodleMain has been overwritten!");
 		}
 		SingleRef = pRef;
-	}	public static NoodleMain GetSingleRef()
+	}
+	public static NoodleMain GetSingleRef()
 	{
 		return SingleRef;
-	}	[SerializeField]	private GameObject displayParent;	[SerializeField]	private GameObject displayBar;	private List<List<Color>> barColors;
+	}
+
+	[SerializeField]
+	private GameObject displayParent;
+
+	[SerializeField]
+	private GameObject displayBar;
+
+	private List<List<Color>> barColors;
 
 	public List<PrefabConstruction> noodlePrefabs;
 
-	public Dictionary<string, GameObject> createdObjects;	// Use this for initialization	void Start () {
-		NoodleMain.SetSingleRef(this);		var newList = new List<Color>( new Color[] { Color.yellow, Color.blue, Color.red, Color.green } );		barColors = new List<List<Color>>();		barColors.Add(newList);		newList = new List<Color>(new Color[] { Color.yellow, Color.blue, Color.red, Color.green });		barColors.Add(newList);
+	public Dictionary<string, GameObject> createdObjects;
+
+	// Use this for initialization
+	void Start () {
+		NoodleMain.SetSingleRef(this);
+
+		var newList = new List<Color>( new Color[] { Color.yellow, Color.blue, Color.red, Color.green } );
+		barColors = new List<List<Color>>();
+		barColors.Add(newList);
+		newList = new List<Color>(new Color[] { Color.yellow, Color.blue, Color.red, Color.green });
+		barColors.Add(newList);
 
 		noodlePrefabs = new List<PrefabConstruction>();
 		// Enemy doodies
@@ -41,10 +61,10 @@ public class NoodleMain : MonoBehaviour
 		noodlePrefabs.Add(new PrefabConstruction("en_red", Color.red, new Vector3(0, -0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_green", Color.green, new Vector3(0, -0.375f, 0)));
 
-		noodlePrefabs.Add(new PrefabConstruction("pl_a", Color.yellow, new Vector3(0, 0.375f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("pl_b", Color.blue, new Vector3(0, 0.125f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("pl_x", Color.red, new Vector3(0, -0.125f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("pl_y", Color.green, new Vector3(0, -0.375f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("player_a", Color.yellow, new Vector3(0, 0.375f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("player_b", Color.blue, new Vector3(0, 0.125f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("player_x", Color.red, new Vector3(0, -0.125f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("player_y", Color.green, new Vector3(0, -0.375f, 0)));
 
 		createdObjects = new Dictionary<string, GameObject>();
 
@@ -71,4 +91,10 @@ public class NoodleMain : MonoBehaviour
 
 				childObject.GetComponent<SpriteRenderer>().color = prefab.color;
 		}
-	}		// Update is called once per frame	void Update () {		}}
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
