@@ -61,10 +61,10 @@ public class NoodleMain : MonoBehaviour
 		noodlePrefabs.Add(new PrefabConstruction("en_red", Color.red, new Vector3(0, -0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_green", Color.green, new Vector3(0, -0.375f, 0)));
 
-		noodlePrefabs.Add(new PrefabConstruction("player_a", Color.yellow, new Vector3(0, 0.375f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("player_b", Color.blue, new Vector3(0, 0.125f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("player_x", Color.red, new Vector3(0, -0.125f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("player_y", Color.green, new Vector3(0, -0.375f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("player_a", Color.white, new Vector3(0, 0.375f, -0.1f)));
+		noodlePrefabs.Add(new PrefabConstruction("player_b", Color.white, new Vector3(0, 0.125f, -0.1f)));
+		noodlePrefabs.Add(new PrefabConstruction("player_x", Color.white, new Vector3(0, -0.125f, -0.1f)));
+		noodlePrefabs.Add(new PrefabConstruction("player_y", Color.white, new Vector3(0, -0.375f, -0.1f)));
 
 		createdObjects = new Dictionary<string, GameObject>();
 
