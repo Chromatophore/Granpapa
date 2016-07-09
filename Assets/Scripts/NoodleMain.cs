@@ -42,7 +42,7 @@ public class NoodleMain : MonoBehaviour
 
 	public List<PrefabConstruction> noodlePrefabs;
 
-	public Dictionary<string, GameObject> createdObjects;
+	private Dictionary<string, GameObject> createdObjects;
 
 	// Use this for initialization
 	void Start () {
@@ -64,7 +64,7 @@ public class NoodleMain : MonoBehaviour
 		noodlePrefabs.Add(new PrefabConstruction("player_a", Color.white, new Vector3(0, 0.375f, -0.1f)));
 		noodlePrefabs.Add(new PrefabConstruction("player_b", Color.white, new Vector3(0, 0.125f, -0.1f)));
 		noodlePrefabs.Add(new PrefabConstruction("player_x", Color.white, new Vector3(0, -0.125f, -0.1f)));
-		noodlePrefabs.Add(new PrefabConstruction("player_y", Color.white, new Vector3(0, -0.375f, -0.1f)));
+		noodlePrefabs.Add(new PrefabConstruction("jump", Color.white, new Vector3(0, -0.375f, -0.1f)));
 
 		noodlePrefabs.Add(new PrefabConstruction("", Color.clear, Vector3.zero));
 		createdObjects = new Dictionary<string, GameObject>();
@@ -92,5 +92,16 @@ public class NoodleMain : MonoBehaviour
 
 				childObject.GetComponent<SpriteRenderer>().color = prefab.color;
 		}
+	}
+
+	public GameObject GetPrefab(string name)
+	{
+		GameObject prefab;
+
+		if (!createdObjects.TryGetValue(name, out prefab))
+		{
+			prefab = createdObjects[""];
+		}
+		return prefab;
 	}
 }

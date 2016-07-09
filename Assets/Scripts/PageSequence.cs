@@ -23,6 +23,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	// Things that should probably be set elsewhere:
 	private int trackerCellCount = 32;
 	private int enemyNodeValue = 24;
+	private int playerNodeValue = 16;
+	private int resolveNodeValue = 8;
 
 	// Audio tracks associated with this game:
 	[SerializeField]
@@ -41,9 +43,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 
 	// Input to Concept system:
-	[SerializeField]
-	private ButtonConceptMap[] serializedPlayerInputConcept;
-	private Dictionary<BUTTON, string> playerInputConceptDict;
+	//[SerializeField]
+	//private ButtonConceptMap[] serializedPlayerInputConcept;
+	private Dictionary<BUTTON, string[]> playerInputConceptDict;
 
 	// This is the area that will deal with the music of the level:
 
@@ -76,11 +78,13 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			trackerList.Add(new PageTrackerData());
 		}
 
+		/*
 		playerInputConceptDict = new Dictionary<BUTTON, string>();
 		foreach (var map in serializedPlayerInputConcept)
 		{
 			playerInputConceptDict[map.inputButton] = map.concept;
 		}
+		 * */
 
 
 		currentAudio = audioList[0];
@@ -101,7 +105,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	public void PlayerInput(BUTTON inputButton)
 	{
-		string concept;
+		string[] concept;
 
 		bool success = playerInputConceptDict.TryGetValue(inputButton, out concept);
 
@@ -113,9 +117,25 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 	}
 
-	private void ConceptConsumer(int actorID, string inputConcept)
+	private void ConceptConsumer(int actorID, string[] inputConcept)
 	{
-
+		if (actorID == 0)
+		{
+			int i = 0;
+			foreach (var move in inputConcept)
+			{
+				if (trackerList[playerNodeValue + i].player == "")
+				{
+					trackerList[playerNodeValue + i].player = move;
+					trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(move));
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
 	}
 
 
@@ -162,10 +182,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				{
 					trackerList[i + currentAudio.beatsPerBar].enemy = attackList[i];
 				}
+				playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
 			}
 
 			Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy);
-			trackerBar.AddChild(enemyNodeValue, noodleMain.createdObjects[trackerList[0].enemy]);
+			trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[0].enemy));
 
 			if (beatDataObservers != null)
 			{

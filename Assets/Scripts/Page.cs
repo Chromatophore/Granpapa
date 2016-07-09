@@ -3,7 +3,15 @@ using System.Collections.Generic;	// We use generic for Data Structures with <Yo
 
 public class Page
 {
-	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "goomba", "", "goomba"} );
+	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "goomba", "", "goomba"});
+
+	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
+						{ BUTTON.A, new string[] { "jump", "none" } }, 
+						{ BUTTON.B, new string[] { "jump", "none" } }, 
+						{ BUTTON.X, new string[] { "jump", "jump" } }, 
+						{ BUTTON.Y, new string[] { "jump", "jump" } }
+	};
+
 
 	// What might a page deal with?
 	/*
@@ -30,7 +38,6 @@ public class Page
 	*/
 	public Page()
 	{
-
 	}
 
 	public List<string> getAttacks()
@@ -38,4 +45,8 @@ public class Page
 		return enemyAttacks;
 	}
 
+	public Dictionary<BUTTON, string[]> getPlayerInputConceptDict()
+	{
+		return playerInputConceptDict;
+	}
 }

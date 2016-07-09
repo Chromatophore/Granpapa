@@ -40,8 +40,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private Vector3 trackerPoint;
 
-	private Enemy mainEnemy;
-	private Resolver mainResolver;
+	//private Enemy mainEnemy;
+	//private Resolver mainResolver;
 
 	private Vector3 currentPosition;
 	private Vector3 targetPosition;
@@ -70,8 +70,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 		trackerList = new TrackerList<TrackerData>();
 
-		mainEnemy = new Enemy();
-		mainResolver = new Resolver();
+		//mainEnemy = new Enemy();
+		//mainResolver = new Resolver();
 
 		trackerInitResetPoint = transform.position;
 		targetPosition = trackerInitResetPoint;
