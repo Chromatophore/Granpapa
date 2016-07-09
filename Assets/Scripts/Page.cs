@@ -3,6 +3,8 @@ using System.Collections.Generic;	// We use generic for Data Structures with <Yo
 
 public class Page
 {
+	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "goomba", "", "goomba"} );
+
 	// What might a page deal with?
 	/*
 	We want to handle the idae of a single sequence, or at some point, a single enemy.
@@ -29,6 +31,11 @@ public class Page
 	public Page()
 	{
 
-	}	
+	}
+
+	public List<string> getAttacks()
+	{
+		return enemyAttacks;
+	}
 
 }

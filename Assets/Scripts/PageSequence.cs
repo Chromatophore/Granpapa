@@ -1,10 +1,29 @@
 using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
+public class PageTrackerData
+{
+	public string enemy;
+	public string player;
 
+	public PageTrackerData()
+	{
+		Reset();
+	}
+
+	public void Reset()
+	{
+		enemy = "";
+		player = "";
+	}
+}
 
 public class PageSequence : MonoBehaviour, IObservable<BeatData>
 {
+	// Things that should probably be set elsewhere:
+	private int trackerCellCount = 32;
+	private int enemyNodeValue = 24;
+
 	// Audio tracks associated with this game:
 	[SerializeField]
 	private SongStruct[] audioList;
@@ -14,6 +33,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	// List of all pages:
 	private List<Page> pageList;
+	// Which page are we on?
+	private int currentPage;
+
+	// Full tracker bar list
+	private TrackerList<PageTrackerData> trackerList;
 
 
 	// Input to Concept system:
@@ -31,9 +55,26 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private float nextBeatTime = 0f;
 	private float SamplesPerBeat = 0f;
 
+	private NoodleMain noodleMain;
+
 	void Start()
 	{
+		if (noodleMain == null)
+		{
+			noodleMain = NoodleMain.GetSingleRef();
+		}
+
 		pageList = new List<Page>();
+		currentPage = 0;
+
+		Page TestPage = new Page();
+		pageList.Add(TestPage);
+
+		trackerList = new TrackerList<PageTrackerData>();
+		for (int i = 0; i < trackerCellCount; i++)
+		{
+			trackerList.Add(new PageTrackerData());
+		}
 
 		playerInputConceptDict = new Dictionary<BUTTON, string>();
 		foreach (var map in serializedPlayerInputConcept)
@@ -109,12 +150,25 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				beatNumber = 0;
 			}
 
+			int beatInBar = beatNumber % currentAudio.beatsPerBar;
 
+			var lastEntry = trackerList.Step();
+			lastEntry.Reset();
 
+			if (beatInBar == 0)
+			{
+				var attackList = pageList[currentPage].getAttacks();
+				for (int i = 0; i < attackList.Count; i++)
+				{
+					trackerList[i + currentAudio.beatsPerBar].enemy = attackList[i];
+				}
+			}
+
+			Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy);
+			trackerBar.AddChild(enemyNodeValue, noodleMain.createdObjects[trackerList[0].enemy]);
 
 			if (beatDataObservers != null)
 			{
-				int beatInBar = beatNumber % currentAudio.beatsPerBar;
 				var dataPacket = new BeatData(beatNumber, beatInBar);
 
 				foreach (var beatListener in beatDataObservers)

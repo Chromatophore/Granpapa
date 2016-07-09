@@ -7,30 +7,32 @@ public struct TrackerData
 	public ITrackerDisplay trackerDisplay;
 }
 
-public class TrackerList
+public class TrackerList<T>
 {
-	private List<TrackerData> trackerList;
+	private List<T> trackerList;
 	public int Index { get; private set; }
 	private int listLength;
 
 	public TrackerList()
 	{
 		listLength = -1;
-		trackerList = new List<TrackerData>();
+		trackerList = new List<T>();
 	}
 
-	public void Add(TrackerData newData)
+	public void Add(T newData)
 	{
 		trackerList.Add(newData);
 		listLength = trackerList.Count;
 	}
 
-	public void Step()
+	public T Step()
 	{
+		T lastEntry = trackerList[Index];
 		Index = ++Index % listLength;
+		return lastEntry;
 	}
 
-	public TrackerData this[int key]
+	public T this[int key]
 	{
 		get
 		{

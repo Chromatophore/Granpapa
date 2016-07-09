@@ -56,7 +56,7 @@ public class NoodleMain : MonoBehaviour
 
 		noodlePrefabs = new List<PrefabConstruction>();
 		// Enemy doodies
-		noodlePrefabs.Add(new PrefabConstruction("en_yellow", Color.yellow, new Vector3(0, 0.375f, 0)));
+		noodlePrefabs.Add(new PrefabConstruction("goomba", Color.yellow, new Vector3(0, 0.375f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_blue", Color.blue, new Vector3(0, 0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_red", Color.red, new Vector3(0, -0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_green", Color.green, new Vector3(0, -0.375f, 0)));
@@ -66,6 +66,7 @@ public class NoodleMain : MonoBehaviour
 		noodlePrefabs.Add(new PrefabConstruction("player_x", Color.white, new Vector3(0, -0.125f, -0.1f)));
 		noodlePrefabs.Add(new PrefabConstruction("player_y", Color.white, new Vector3(0, -0.375f, -0.1f)));
 
+		noodlePrefabs.Add(new PrefabConstruction("", Color.clear, Vector3.zero));
 		createdObjects = new Dictionary<string, GameObject>();
 
 		foreach (var prefab in noodlePrefabs)

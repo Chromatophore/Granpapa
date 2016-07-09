@@ -27,7 +27,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	[SerializeField]
 	private float tickTime = 0.5f;
 
-	private TrackerList trackerList;
+	private TrackerList<TrackerData> trackerList;
 
 	[SerializeField]
 	private int writeNodeValue = 16;
@@ -68,7 +68,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 			noodleMain = NoodleMain.GetSingleRef();
 		}
 
-		trackerList = new TrackerList();
+		trackerList = new TrackerList<TrackerData>();
 
 		mainEnemy = new Enemy();
 		mainResolver = new Resolver();
@@ -118,6 +118,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	void Update()
 	{
+		/*
 		if (Input.GetKeyDown(KeyCode.Z))
 		{
 			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_a"]);
@@ -134,6 +135,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		{
 			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_y"]);
 		}
+		 */
 
 
 		// interpolating between locations:
@@ -218,11 +220,16 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		firstNode.trackerDisplay.ResetDisplay();
 
 		// Enemy stuff. No idea what an enemy needs to know yet.
-		var enemyAction = mainEnemy.Step(trackerList[enemyNodeValue]);
-		trackerList[enemyNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects[enemyAction]);
+		//var enemyAction = mainEnemy.Step(trackerList[enemyNodeValue]);
+		//trackerList[enemyNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects[enemyAction]);
 
 		// Resolution stuff. Things get resolved here?!
-		mainResolver.Step(trackerList[resolveNodeValue]);
+		//mainResolver.Step(trackerList[resolveNodeValue]);
+	}
+
+	public void AddChild(int position, GameObject child)
+	{
+		trackerList[position].trackerDisplay.AddChild(child);
 	}
 
 
