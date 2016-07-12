@@ -123,6 +123,7 @@ MonoBehaviour:
   enemyNodeValue: 24
   resolveNodeValue: 8
   myAudio: {fileID: 0}
+  smoothBar: 1
 --- !u!4 &883482868
 Transform:
   m_ObjectHideFlags: 0
@@ -477,4 +478,4 @@ MonoBehaviour:
     concept: jump
   trackerBar: {fileID: 883482867}
   currentInputBeat: 0
-  inputNextBeatFudge: 0
+  inputNextBeatFudge: 0.5

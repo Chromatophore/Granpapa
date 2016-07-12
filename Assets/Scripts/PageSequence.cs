@@ -130,7 +130,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	{
 		if (actorID == 0)
 		{
-			int i = 0;
+			int i = 0 + inputFudgeOffset;
 			foreach (var move in inputConcept)
 			{
 				if (trackerList[playerNodeValue + i].player == "")
@@ -153,7 +153,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		int currentSamples = attachedAudioSource.timeSamples;
 		int difference = currentSamples - lastSamples;
 
-		currentInputBeat = (int)(inputNextBeatFudge + (currentSamples / SamplesPerBeat));
+		float beatRatio = (inputNextBeatFudge + (currentSamples / SamplesPerBeat));
+		currentInputBeat = (int)beatRatio;
 		if (currentInputBeat != beatNumber)
 			inputFudgeOffset = 1;
 		else
@@ -161,6 +162,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		if (currentSamples >= nextSampleValue || (difference < 0))
 		{
+			inputFudgeOffset = 0;
 			bool debug = false;
 			if ((Time.time - timeLast) < 0.2f)
 			{
