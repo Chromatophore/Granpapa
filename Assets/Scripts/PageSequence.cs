@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections;	// Needed for Array stuff?
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
 public class PageTrackerData
 {
 	public string enemy;
 	public string player;
+	public bool success;
 
 	public PageTrackerData()
 	{
@@ -15,6 +17,7 @@ public class PageTrackerData
 	{
 		enemy = "";
 		player = "";
+		success = false;
 	}
 }
 
@@ -114,6 +117,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	public void PlayerInput(BUTTON inputButton)
 	{
+		if (playerInputConceptDict == null) { return; }
 		string[] concept;
 
 		bool success = playerInputConceptDict.TryGetValue(inputButton, out concept);
@@ -121,7 +125,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		if (success)
 		{
 			// this button exists and the concept string is in concept
-			Debug.Log(string.Format("Player inputted button: {0} and got concept: {1}", inputButton, concept));
+			//Debug.Log(string.Format("Player inputted button: {0} and got concept: {1}", inputButton, concept));
 			ConceptConsumer(0, concept);
 		}
 	}
@@ -136,7 +140,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				if (trackerList[playerNodeValue + i].player == "")
 				{
 					trackerList[playerNodeValue + i].player = move;
-					trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(move));
+					trackerBar.AddChild(playerNodeValue + i - 1, noodleMain.GetPrefab(move));
 					i++;
 				}
 				else
@@ -196,7 +200,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				var attackList = pageList[currentPage].getAttacks();
 				for (int i = 0; i < attackList.Count; i++)
 				{
-					trackerList[i + currentAudio.beatsPerBar].enemy = attackList[i];
+					trackerList[enemyNodeValue + i].enemy = attackList[i];
 				}
 				playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
 			}
@@ -205,7 +209,21 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy + " time: " + Time.time + " " + (Time.time - timeLast).ToString());
 
 			timeLast = Time.time;
-			trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[0].enemy));
+			trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
+
+			pageList[currentPage].CheckSuccess(trackerList[playerNodeValue - 1]);
+
+			if (trackerList[resolveNodeValue].enemy != "")
+			{
+				if (trackerList[resolveNodeValue].success == false)
+				{
+					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
+				}
+				else
+				{
+					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
+				}
+			}
 
 			if (beatDataObservers != null)
 			{
@@ -218,6 +236,16 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			}
 
 			lastSamples = currentSamples;
+
+			// Why is it so hard to debug this trackerList ;-;
+			/*
+			string tldebug = "";
+			for (int i = 0; i < trackerCellCount; i++)
+			{
+				tldebug += trackerList[i].enemy + "/" + trackerList[i].player + ", ";	
+			}
+			Debug.Log(tldebug);
+			 */
 		}
 	}
 

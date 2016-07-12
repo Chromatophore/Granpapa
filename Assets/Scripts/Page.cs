@@ -1,17 +1,38 @@
 using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
+public class EnemyResolution
+{
+	public List<string> pass;
+
+	public EnemyResolution(List<string> passes)
+	{
+		pass = passes;
+	}
+
+	public static EnemyResolution Quick(string param)
+	{
+		return new EnemyResolution(new List<string>(param.Split(',')));
+	}
+}
+
 public class Page
 {
-	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "goomba", "", "goomba"});
+	private bool hasFailed = false;
+
+	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "pit", "", "goomba"});
 
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
-						{ BUTTON.A, new string[] { "jump", "none" } }, 
-						{ BUTTON.B, new string[] { "jump", "none" } }, 
-						{ BUTTON.X, new string[] { "jump", "jump" } }, 
-						{ BUTTON.Y, new string[] { "jump", "jump" } }
+						{ BUTTON.A, new string[] { "jump" } }, 
+						{ BUTTON.B, new string[] { "jump" } }, 
+						{ BUTTON.X, new string[] { "jump" } }, 
+						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
 	};
 
+	private Dictionary<string, EnemyResolution> resolutionDict = new Dictionary<string, EnemyResolution>() {
+		{"goomba", EnemyResolution.Quick("jump") },
+		{"pit", EnemyResolution.Quick("jump") }
+	};
 
 	// What might a page deal with?
 	/*
@@ -40,6 +61,11 @@ public class Page
 	{
 	}
 
+	public void Reset()
+	{
+		hasFailed = false;
+	}
+
 	public List<string> getAttacks()
 	{
 		return enemyAttacks;
@@ -49,4 +75,39 @@ public class Page
 	{
 		return playerInputConceptDict;
 	}
+
+	public Dictionary<string, EnemyResolution> getResolutionDict()
+	{
+		return resolutionDict;
+	}
+
+	// Should this be here or should the Page just return success/fail given enemy/player inputs?
+	public void CheckSuccess(PageTrackerData thisCell)
+	{
+		var enemy = thisCell.enemy;
+		var player = thisCell.player;
+		EnemyResolution resolutions;
+		if (resolutionDict.TryGetValue(enemy, out resolutions))
+		{
+			if (resolutions.pass.Contains(player) && !hasFailed)
+			{
+				thisCell.success = true;
+			}
+			else
+			{
+				thisCell.success = false;
+				Failure();
+			}
+		}
+		if (thisCell.enemy != "")
+		{
+			Debug.Log(thisCell.enemy + " " + thisCell.player + " " + thisCell.success);
+		}
+	}
+
+	private void Failure()
+	{
+		//hasFailed = true;
+	}
+
 }
