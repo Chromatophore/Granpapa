@@ -61,6 +61,9 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private NoodleMain noodleMain;
 
+	[SerializeField]
+	private bool smoothBar = true;
+
 	void Start()
 	{
 		if (noodleMain == null)
@@ -174,6 +177,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	public float TrackerCurve(float ratio)
 	{
+		if (smoothBar)
+			return ratio;
 		float cosWave = (1f + Mathf.Cos((1 + ratio) * Mathf.PI)) / 2;
 		cosWave *= cosWave;
 		return cosWave;
