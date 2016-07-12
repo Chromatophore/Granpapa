@@ -476,3 +476,5 @@ MonoBehaviour:
   - inputButton: 0
     concept: jump
   trackerBar: {fileID: 883482867}
+  currentInputBeat: 0
+  inputNextBeatFudge: 0

@@ -54,8 +54,15 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private TrackerBar trackerBar;
 	private int lastSamples = 0;
 	private int beatNumber = 0;
-	private float nextBeatTime = 0f;
 	private float SamplesPerBeat = 0f;
+	private int nextSampleValue;
+	[SerializeField]
+	private int currentInputBeat = 0;	// The beat of the track that we would input for from 0 to the length of the song - not very useful
+	private int inputFudgeOffset = 0;	// a Fudge value that we can use in indexing calculations for input:
+	// if NextBeatFudge is 0.5 will be 0 when we are from 0->50% through a beat, and will be 1 from 50% ->100% through
+	[SerializeField]
+	private float inputNextBeatFudge = 0.5f;
+
 
 	private NoodleMain noodleMain;
 
@@ -92,8 +99,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		SamplesPerBeat = 44100f * currentAudio.beatTime;
 		attachedAudioSource.Play();
 
+		nextSampleValue += (int)SamplesPerBeat;
 
-		trackerBar.Setup(this);
+
+		trackerBar.Setup(this, currentAudio.beatTime);
 	}
 
 	void Update()
@@ -138,44 +147,49 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 	}
 
-
-
-
-
-
+	private float timeLast = 0f;
 	private void UpdateBeatBox()
 	{
-		nextBeatTime += Time.deltaTime;
-		if (nextBeatTime >= currentAudio.beatTime)
+		int currentSamples = attachedAudioSource.timeSamples;
+		int difference = currentSamples - lastSamples;
+
+		currentInputBeat = (int)(inputNextBeatFudge + (currentSamples / SamplesPerBeat));
+		if (currentInputBeat != beatNumber)
+			inputFudgeOffset = 1;
+		else
+			inputFudgeOffset = 0;
+
+		if (currentSamples >= nextSampleValue || (difference < 0))
 		{
-			nextBeatTime -= currentAudio.beatTime;
-
-			int currentSamples = attachedAudioSource.timeSamples;
-
-			int difference = currentSamples - lastSamples;
-			//Debug.Log("Beat difference vs Samples: " + difference.ToString());
-
-			if (difference >= 0 && difference < 88200)
+			bool debug = false;
+			if ((Time.time - timeLast) < 0.2f)
 			{
-				beatNumber++;
-				float currentBeatNumber = (currentSamples / SamplesPerBeat);
-				//Debug.Log("Hone Factor: " + currentBeatNumber.ToString() + " vs " + beatNumber.ToString());
-				currentBeatNumber -= beatNumber;
-				currentBeatNumber *= currentAudio.beatTime;
-
-				nextBeatTime = currentBeatNumber;
+				debug = true;
 			}
-			else
-			{
+
+			if (debug)
+				Debug.Log(currentSamples.ToString() + " Beat difference vs Samples: " + difference.ToString());
+
+
+			if (difference < 0)
 				beatNumber = 0;
+			else
+				beatNumber++;
+			
+			nextSampleValue = (int)((beatNumber + 1) * SamplesPerBeat);
+
+			if (nextSampleValue >= currentAudio.audioTrack.samples)
+			{
+				// don't really need to do anything
 			}
 
 			int beatInBar = beatNumber % currentAudio.beatsPerBar;
+			int beatIn2Bar = beatNumber % (currentAudio.beatsPerBar * 2);
 
 			var lastEntry = trackerList.Step();
 			lastEntry.Reset();
 
-			if (beatInBar == 0)
+			if (beatIn2Bar == 0)
 			{
 				var attackList = pageList[currentPage].getAttacks();
 				for (int i = 0; i < attackList.Count; i++)
@@ -185,7 +199,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
 			}
 
-			Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy);
+			if (debug)
+				Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy + " time: " + Time.time + " " + (Time.time - timeLast).ToString());
+
+			timeLast = Time.time;
 			trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[0].enemy));
 
 			if (beatDataObservers != null)

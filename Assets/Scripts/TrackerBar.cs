@@ -249,8 +249,9 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 
 	private IDisposable unsubscriber;
-	public void Setup(IObservable<BeatData> beatObserver)
+	public void Setup(IObservable<BeatData> beatObserver, float tickTime)
 	{
 		unsubscriber = beatObserver.Subscribe(this);
+		this.tickTime = tickTime;
 	}
 }
