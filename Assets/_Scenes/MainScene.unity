@@ -795,6 +795,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3127b48951504d41b4f1876523c10fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClipsList:
+  - name: mariotest
+    clip: {fileID: 8300000, guid: 572c41f7bc1d74f85a64d9de234b680d, type: 3}
   displayParent: {fileID: 127850, guid: ab884ae6c73f87f469db9cd491b7482b, type: 2}
   displayBar: {fileID: 192420, guid: bc5c75ab49985244a8c474ef071db940, type: 2}
 --- !u!4 &1541132534

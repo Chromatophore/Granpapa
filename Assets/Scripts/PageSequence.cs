@@ -81,9 +81,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		pageList = new List<Page>();
 		currentPage = 0;
 
-		Page TestPage = new Page();
-		pageList.Add(TestPage);
-
 		trackerList = new TrackerList<PageTrackerData>();
 		for (int i = 0; i < trackerCellCount; i++)
 		{
@@ -91,8 +88,37 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 
+		Level TestLevel = new Level(this);
+
+	}
+
+	void Update()
+	{
+		UpdateBeatBox();
+
+
+	}
+
+	public void nextPage()
+	{
+		Debug.Log("Moving on to the next page.");
+		currentPage++;
+		if (currentPage == pageList.Count)
+		{
+			Debug.Log("Yay, we beat the level!");
+			currentPage = 0;
+		}
+	}
+
+	public void startLevel(Level thisLevel)
+	{
+		Debug.Log("Starting level...");
+		currentPage = 0;
+		pageList = thisLevel.getPages();
+
 		// select audio from audiolist for this page sequence:
-		currentAudio = audioList[0];
+		//currentAudio = audioList[0];
+		currentAudio = thisLevel.levelAudio;
 		attachedAudioSource.clip = currentAudio.audioTrack;
 
 		// configure beat calcuation values
@@ -106,19 +132,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// Setup the tracker bar for this audio:
 		trackerBar.Setup(this, currentAudio.beatTime);
 
-		// start the song
+		// start the son
 		attachedAudioSource.Play();
 		NewBeat();
 	}
-
-	void Update()
-	{
-		UpdateBeatBox();
-
-
-	}
-
-
 
 	public void PlayerInput(BUTTON inputButton)
 	{
@@ -159,6 +176,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private float timeLast = 0f;
 	private void UpdateBeatBox()
 	{
+		if (pageList == null || pageList.Count == 0) { return; }
 		int currentSamples = attachedAudioSource.timeSamples;
 		int difference = currentSamples - lastSamples;
 
@@ -216,6 +234,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// and reset the last value's information
 		lastEntry.Reset();
 
+		// Check the success of an input the moment it has passed into the previous node:
+		pageList[currentPage].CheckSuccess(trackerList[playerNodeValue - 1]);
+
 		// Now, all indexes into our trackerlist are current.
 		// However we must inform all our observers that a new beat has occured so that they are also aware of it
 		if (beatDataObservers != null)
@@ -233,22 +254,21 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		if (beatIn2Bar == beatsPerBar)
 		{
-			var attackList = pageList[currentPage].getAttacks();
+			pageList[currentPage].Setup(this, this);
+			var attackList = pageList[currentPage].GetAttacks();
 			for (int i = 0; i < attackList.Count; i++)
 			{
 				trackerList[enemyNodeValue + i].enemy = attackList[i];
 
 				// Option 1: Display all enemy attacks at once:
-				//trackerBar.AddChild(enemyNodeValue + i, noodleMain.GetPrefab(trackerList[enemyNodeValue + i].enemy));
+				trackerBar.AddChild(enemyNodeValue + i, noodleMain.GetPrefab(trackerList[enemyNodeValue + i].enemy));
 			}
-			playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
+			pageList[currentPage].UpNext();
+			playerInputConceptDict = pageList[currentPage].GetPlayerInputConceptDict();
 		}
 
 		// Option 2: Add enemy attacks as they scroll past enemyNode:
-		trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
-
-		// Check the success of an input the moment it has passed into the previous node:
-		pageList[currentPage].CheckSuccess(trackerList[playerNodeValue - 1]);
+		//trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
 
 		// For the node that is in the resolve location, reveal the resolution outcome:
 		if (trackerList[resolveNodeValue].enemy != "")

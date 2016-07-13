@@ -14,8 +14,20 @@ public struct PrefabConstruction
 	public Vector3 position;
 }
 
+[System.Serializable]
+public struct SerializeClips
+{
+	public string name;
+	public AudioClip clip;
+}
+
 public class NoodleMain : MonoBehaviour
 {
+	[SerializeField]
+	private SerializeClips[] audioClipsList;
+
+	private Dictionary<string, AudioClip> audioClips;
+
 	// This is singletonish stuff
 	// Maybe use get/set here?
 	public static NoodleMain SingleRef = null;
@@ -47,6 +59,12 @@ public class NoodleMain : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		NoodleMain.SetSingleRef(this);
+
+		audioClips = new Dictionary<string,AudioClip>();
+		foreach (var clip in audioClipsList)
+		{
+			audioClips[clip.name] = clip.clip;
+		}
 
 		var newList = new List<Color>( new Color[] { Color.yellow, Color.blue, Color.red, Color.green } );
 		barColors = new List<List<Color>>();
@@ -105,5 +123,10 @@ public class NoodleMain : MonoBehaviour
 			prefab = createdObjects[""];
 		}
 		return prefab;
+	}
+
+	public AudioClip GetClip(string name)
+	{
+		return audioClips[name];
 	}
 }

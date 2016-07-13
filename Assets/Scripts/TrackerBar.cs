@@ -121,26 +121,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	void Update()
 	{
-		/*
-		if (Input.GetKeyDown(KeyCode.Z))
-		{
-			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_a"]);
-		}
-		if (Input.GetKeyDown(KeyCode.X))
-		{
-			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_b"]);
-		}
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_x"]);
-		}
-		if (Input.GetKeyDown(KeyCode.V))
-		{
-			trackerList[writeNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects["player_y"]);
-		}
-		 */
-
-
 		// interpolating between locations:
 		if (targetGoalTime != 0)
 		{

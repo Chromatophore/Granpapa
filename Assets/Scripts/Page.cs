@@ -16,9 +16,12 @@ public class EnemyResolution
 	}
 }
 
-public class Page
+public class Page : IObserver<BeatData>
 {
-	private bool hasFailed = false;
+	private bool upNext;
+	private bool isPlaying;
+	private bool hasFailed;
+	private int beatCount;
 
 	private List<string> enemyAttacks = new List<string>(new string[] {"goomba", "", "pit", "", "goomba", ""});
 
@@ -57,31 +60,42 @@ public class Page
 	Page Manager continues to beat @ page which can do the game displayed input when needed
 
 	*/
-	public Page()
+	public Page(LevelPageData buildInfo)
 	{
+		enemyAttacks = buildInfo.enemyAttacks;
+		playerInputConceptDict = buildInfo.playerInputConceptDict;
+		resolutionDict = buildInfo.resolutionDict;
+		Reset();
 	}
 
-	public void Reset()
+	private void Reset()
 	{
+		upNext = false;
+		isPlaying = false;
 		hasFailed = false;
+		beatCount = 0;
 	}
 
-	public List<string> getAttacks()
+	public List<string> GetAttacks()
 	{
 		return enemyAttacks;
 	}
 
-	public Dictionary<BUTTON, string[]> getPlayerInputConceptDict()
+	public void UpNext()
+	{
+		upNext = true;
+	}
+
+	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
 	{
 		return playerInputConceptDict;
 	}
 
-	public Dictionary<string, EnemyResolution> getResolutionDict()
+	public Dictionary<string, EnemyResolution> GetResolutionDict()
 	{
 		return resolutionDict;
 	}
 
-	// Should this be here or should the Page just return success/fail given enemy/player inputs?
 	public void CheckSuccess(PageTrackerData thisCell)
 	{
 		var enemy = thisCell.enemy;
@@ -99,15 +113,51 @@ public class Page
 				Failure();
 			}
 		}
-		if (thisCell.enemy != "")
-		{
-			Debug.Log(thisCell.enemy + " " + thisCell.player + " " + thisCell.success);
-		}
 	}
 
 	private void Failure()
 	{
-		//hasFailed = true;
+		hasFailed = true;
 	}
 
+	// IObserver implimentation:
+	public void OnCompleted()
+	{
+
+	}
+	public void OnError(System.Exception exception)
+	{
+
+	}
+	public void OnNext(BeatData data)
+	{
+		// Urgh this is another off by one; Do we need to do the Success Checking earlier in PageSequence?
+		if (data.beatInBar == 0)
+		{
+			if (!hasFailed && isPlaying)
+			{
+				// If we unsubscribe during this process, we modify the hashset while it is being iterated over. Not good.
+				//unsubscriber.Dispose();
+
+				pageSequence.nextPage();
+				Reset();
+			}
+			else if (isPlaying)
+			{
+				Reset();
+			}
+			else if (upNext)
+			{
+				isPlaying = true;
+			}
+		}
+	}
+
+	private PageSequence pageSequence;
+	private IDisposable unsubscriber;
+	public void Setup(IObservable<BeatData> beatObserver, PageSequence ps)
+	{
+		pageSequence = ps;
+		unsubscriber = beatObserver.Subscribe(this);
+	}
 }
