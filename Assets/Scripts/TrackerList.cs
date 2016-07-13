@@ -39,5 +39,15 @@ public class TrackerList<T>
 			return trackerList[(Index + key) % listLength];
 		}
 	}
+
+	public override string ToString()
+	{
+		string o = "";
+		foreach (T t in trackerList)
+		{
+			o += t.ToString() + ", ";
+		}
+		return o;
+	}
 }
 

@@ -25,9 +25,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 {
 	// Things that should probably be set elsewhere:
 	private int trackerCellCount = 32;
-	private int enemyNodeValue = 24;
 	private int playerNodeValue = 16;
-	private int resolveNodeValue = 8;
+
+	// these values are informed by the bar length:
+	private int enemyNodeValue = -1;
+	private int resolveNodeValue = -1;
 
 	// Audio tracks associated with this game:
 	[SerializeField]
@@ -88,29 +90,32 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			trackerList.Add(new PageTrackerData());
 		}
 
-		/*
-		playerInputConceptDict = new Dictionary<BUTTON, string>();
-		foreach (var map in serializedPlayerInputConcept)
-		{
-			playerInputConceptDict[map.inputButton] = map.concept;
-		}
-		 * */
 
-
+		// select audio from audiolist for this page sequence:
 		currentAudio = audioList[0];
 		attachedAudioSource.clip = currentAudio.audioTrack;
-		SamplesPerBeat = 44100f * currentAudio.beatTime;
-		attachedAudioSource.Play();
 
+		// configure beat calcuation values
+		SamplesPerBeat = 44100f * currentAudio.beatTime;
 		nextSampleValue += (int)SamplesPerBeat;
 
+		// configure nodes to write/read from based on bar length:
+		enemyNodeValue = playerNodeValue + currentAudio.beatsPerBar;
+		resolveNodeValue = playerNodeValue - currentAudio.beatsPerBar;
 
+		// Setup the tracker bar for this audio:
 		trackerBar.Setup(this, currentAudio.beatTime);
+
+		// start the song
+		attachedAudioSource.Play();
+		NewBeat();
 	}
 
 	void Update()
 	{
 		UpdateBeatBox();
+
+
 	}
 
 
@@ -140,7 +145,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				if (trackerList[playerNodeValue + i].player == "")
 				{
 					trackerList[playerNodeValue + i].player = move;
-					trackerBar.AddChild(playerNodeValue + i - 1, noodleMain.GetPrefab(move));
+					trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(move));
 					i++;
 				}
 				else
@@ -164,6 +169,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		else
 			inputFudgeOffset = 0;
 
+		// calculate if a new beat has occured yet:
 		if (currentSamples >= nextSampleValue || (difference < 0))
 		{
 			inputFudgeOffset = 0;
@@ -183,70 +189,89 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				beatNumber++;
 			
 			nextSampleValue = (int)((beatNumber + 1) * SamplesPerBeat);
-
-			if (nextSampleValue >= currentAudio.audioTrack.samples)
-			{
-				// don't really need to do anything
-			}
-
-			int beatInBar = beatNumber % currentAudio.beatsPerBar;
-			int beatIn2Bar = beatNumber % (currentAudio.beatsPerBar * 2);
-
-			var lastEntry = trackerList.Step();
-			lastEntry.Reset();
-
-			if (beatIn2Bar == 0)
-			{
-				var attackList = pageList[currentPage].getAttacks();
-				for (int i = 0; i < attackList.Count; i++)
-				{
-					trackerList[enemyNodeValue + i].enemy = attackList[i];
-				}
-				playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
-			}
+			lastSamples = currentSamples;
 
 			if (debug)
 				Debug.Log(beatNumber.ToString() + " " + trackerList[0].enemy + " time: " + Time.time + " " + (Time.time - timeLast).ToString());
-
 			timeLast = Time.time;
-			trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
 
-			pageList[currentPage].CheckSuccess(trackerList[playerNodeValue - 1]);
+			// At this point, we are at the very beginning of the 'next' beat, which is now the value stored in beatnumber
+			NewBeat();
 
-			if (trackerList[resolveNodeValue].enemy != "")
-			{
-				if (trackerList[resolveNodeValue].success == false)
-				{
-					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
-				}
-				else
-				{
-					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
-				}
-			}
-
-			if (beatDataObservers != null)
-			{
-				var dataPacket = new BeatData(beatNumber, beatInBar);
-
-				foreach (var beatListener in beatDataObservers)
-				{
-					beatListener.OnNext(dataPacket);
-				}
-			}
-
-			lastSamples = currentSamples;
-
-			// Why is it so hard to debug this trackerList ;-;
-			/*
-			string tldebug = "";
-			for (int i = 0; i < trackerCellCount; i++)
-			{
-				tldebug += trackerList[i].enemy + "/" + trackerList[i].player + ", ";	
-			}
-			Debug.Log(tldebug);
-			 */
 		}
+
+	}
+
+	// this method is called each time a new beat is detected. It is reponsible for first UPDATING everything, and then also doing certain behaviors
+	private void NewBeat()
+	{
+		int beatsPerBar = currentAudio.beatsPerBar;
+
+		int beatInBar = (beatNumber) % beatsPerBar;
+		int beatIn2Bar = (beatNumber) % (beatsPerBar * 2);
+		int playerIn2Beat = playerNodeValue % (beatsPerBar * 2);
+
+		// We need to update our tracker list to tell it that we are in a new beat, such that 0 now corresponds to the current beat that is occuring at this moment
+		var lastEntry = trackerList.Step(); // (step returns an instance of its template class)
+		// and reset the last value's information
+		lastEntry.Reset();
+
+		// Now, all indexes into our trackerlist are current.
+		// However we must inform all our observers that a new beat has occured so that they are also aware of it
+		if (beatDataObservers != null)
+		{
+			var dataPacket = new BeatData(beatNumber, beatInBar);
+
+			foreach (var beatListener in beatDataObservers)
+			{
+				beatListener.OnNext(dataPacket);
+			}
+		}
+
+		///////////////////
+		/// Below this point, all data structures should have been stepped/informed of the change in indexes etc that needed to have occured.
+
+		if (beatIn2Bar == beatsPerBar)
+		{
+			var attackList = pageList[currentPage].getAttacks();
+			for (int i = 0; i < attackList.Count; i++)
+			{
+				trackerList[enemyNodeValue + i].enemy = attackList[i];
+
+				// Option 1: Display all enemy attacks at once:
+				//trackerBar.AddChild(enemyNodeValue + i, noodleMain.GetPrefab(trackerList[enemyNodeValue + i].enemy));
+			}
+			playerInputConceptDict = pageList[currentPage].getPlayerInputConceptDict();
+		}
+
+		// Option 2: Add enemy attacks as they scroll past enemyNode:
+		trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
+
+		// Check the success of an input the moment it has passed into the previous node:
+		pageList[currentPage].CheckSuccess(trackerList[playerNodeValue - 1]);
+
+		// For the node that is in the resolve location, reveal the resolution outcome:
+		if (trackerList[resolveNodeValue].enemy != "")
+		{
+			if (trackerList[resolveNodeValue].success == false)
+			{
+				trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
+			}
+			else
+			{
+				trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
+			}
+		}
+
+		// Why is it so hard to debug this trackerList ;-;
+		/*
+		string tldebug = "";
+		for (int i = 0; i < trackerCellCount; i++)
+		{
+			tldebug += trackerList[i].enemy + "/" + trackerList[i].player + ", ";	
+		}
+		Debug.Log(tldebug);
+		 */
 	}
 
 	private HashSet<IObserver<BeatData>> beatDataObservers;

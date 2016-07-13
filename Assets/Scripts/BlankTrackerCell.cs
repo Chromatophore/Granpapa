@@ -25,13 +25,16 @@ public class BlankTrackerCell : MonoBehaviour, ITrackerDisplay
 
 	private List<GameObject> myChildren;
 
-	void Start()
+	void Awake()
 	{
 		myChildren = new List<GameObject>();
 	}
 
 	public void ResetDisplay()
 	{
+		if (myChildren == null)
+			return;
+		
 		foreach (var child in myChildren)
 		{
 			Destroy(child);

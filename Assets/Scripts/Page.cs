@@ -20,7 +20,7 @@ public class Page
 {
 	private bool hasFailed = false;
 
-	private List<string> enemyAttacks = new List<string>(new string[] {"", "goomba", "", "pit", "", "goomba"});
+	private List<string> enemyAttacks = new List<string>(new string[] {"goomba", "", "pit", "", "goomba", ""});
 
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
