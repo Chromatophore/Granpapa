@@ -7,13 +7,16 @@ public class LevelPageData
 	public List<string> enemyAttacks;
 	public Dictionary<BUTTON, string[]> playerInputConceptDict;
 	public Dictionary<string, EnemyResolution> resolutionDict;
+	public PlayerAnimMap animMap;
 
-	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, Dictionary<string, EnemyResolution> resolutionDict, SongStruct levelAudio)
+
+	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, Dictionary<string, EnemyResolution> resolutionDict, SongStruct levelAudio, PlayerAnimMap animMap)
 	{
 		this.enemyAttacks = enemyAttacks;
 		this.playerInputConceptDict = playerInputConceptDict;
 		this.resolutionDict = resolutionDict;
 		this.levelAudio = levelAudio;
+		this.animMap = animMap;
 	}
 }
 
@@ -40,6 +43,8 @@ public class Level
 	};
 
 	private List<Page> myPages = new List<Page>();
+
+	private PlayerAnimMap animMap;
 
 	// What might a page deal with?
 	/*
@@ -78,6 +83,15 @@ public class Level
 		levelAudio.beatTime = 0.5f;
 		levelAudio.beatsPerBar = 6;
 
+		animMap = new PlayerAnimMap( new string[] {
+		"", "jump", "Jump",
+		"pit", "jump", "Jump",
+		"pit", "def", "PitNo",
+		"goomba", "jump", "EnemyYes",
+		"goomba", "def", "EnemyNo"
+			});
+
+
 		// This is temporary, we need to know about the PageSequence to talk to it.
 		pageSequence = ps;
 
@@ -90,15 +104,13 @@ public class Level
 			{
 				eA = enemyAttacks2;
 			}
-			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, resolutionDict, levelAudio));
+			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, resolutionDict, levelAudio, animMap));
 		}
 
 		for (int i = 0; i < totalPages; i++)
 		{
 			myPages.Add(new Page(pageBuilder[i]));
 		}
-
-		pageSequence.startLevel(this);
 	}
 
 	public List<Page> getPages()

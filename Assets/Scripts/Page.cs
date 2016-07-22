@@ -16,26 +16,30 @@ public class EnemyResolution
 	}
 }
 
-public class Page : IObserver<BeatData>
+public class Page
 {
 	private bool upNext;
 	private bool isPlaying;
 	private bool hasFailed;
 	private int beatCount;
 
-	private List<string> enemyAttacks = new List<string>(new string[] {"goomba", "", "pit", "", "goomba", ""});
+	private PlayerAnimMap playerAnimMap;
 
-	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
+	public bool useDataMarkers = false;
+
+	private List<string> enemyAttacks;// = new List<string>(new string[] {"goomba", "", "pit", "", "goomba", ""});
+
+	private Dictionary<BUTTON, string[]> playerInputConceptDict;/* = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
 						{ BUTTON.B, new string[] { "jump" } }, 
 						{ BUTTON.X, new string[] { "jump" } }, 
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
-	};
+	};*/
 
-	private Dictionary<string, EnemyResolution> resolutionDict = new Dictionary<string, EnemyResolution>() {
+	private Dictionary<string, EnemyResolution> resolutionDict;/* = new Dictionary<string, EnemyResolution>() {
 		{"goomba", EnemyResolution.Quick("jump") },
 		{"pit", EnemyResolution.Quick("jump") }
-	};
+	};*/
 
 	// What might a page deal with?
 	/*
@@ -65,15 +69,22 @@ public class Page : IObserver<BeatData>
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
 		resolutionDict = buildInfo.resolutionDict;
+		playerAnimMap = buildInfo.animMap;
+
 		Reset();
 	}
 
-	private void Reset()
+	// External objects can call Complete to see if the page feels that it is time to move on
+	public bool Complete { get; private set; }
+
+	public void Reset()
 	{
 		upNext = false;
 		isPlaying = false;
 		hasFailed = false;
 		beatCount = 0;
+
+		Complete = false;
 	}
 
 	public List<string> GetAttacks()
@@ -84,6 +95,7 @@ public class Page : IObserver<BeatData>
 	public void UpNext()
 	{
 		upNext = true;
+		hasFailed = false;
 	}
 
 	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
@@ -94,6 +106,19 @@ public class Page : IObserver<BeatData>
 	public Dictionary<string, EnemyResolution> GetResolutionDict()
 	{
 		return resolutionDict;
+	}
+
+	public void AssessSequence(ICollection<PageTrackerData> dataSequence)
+	{
+		// This method receives the whole sequence of information from start to end
+		// This gives us, as a page, greater options wrt 'if they did this then the next frame behavor changes'
+		foreach (var data in dataSequence)
+		{
+			CheckSuccess(data);
+		}
+
+		if (!hasFailed)
+			Complete = true;
 	}
 
 	public void CheckSuccess(PageTrackerData thisCell)
@@ -113,6 +138,11 @@ public class Page : IObserver<BeatData>
 				Failure();
 			}
 		}
+
+		if (thisCell.resolution == DATAMARKER.END)
+			Complete = true;
+
+		thisCell.playerAnimation = playerAnimMap.GetPlayerAnim(enemy, player);
 	}
 
 	private void Failure()
@@ -120,44 +150,9 @@ public class Page : IObserver<BeatData>
 		hasFailed = true;
 	}
 
-	// IObserver implimentation:
-	public void OnCompleted()
-	{
-
-	}
-	public void OnError(System.Exception exception)
-	{
-
-	}
-	public void OnNext(BeatData data)
-	{
-		// Urgh this is another off by one; Do we need to do the Success Checking earlier in PageSequence?
-		if (data.beatInBar == 0)
-		{
-			if (!hasFailed && isPlaying)
-			{
-				// If we unsubscribe during this process, we modify the hashset while it is being iterated over. Not good.
-				//unsubscriber.Dispose();
-
-				pageSequence.nextPage();
-				Reset();
-			}
-			else if (isPlaying)
-			{
-				Reset();
-			}
-			else if (upNext)
-			{
-				isPlaying = true;
-			}
-		}
-	}
-
 	private PageSequence pageSequence;
-	private IDisposable unsubscriber;
 	public void Setup(IObservable<BeatData> beatObserver, PageSequence ps)
 	{
 		pageSequence = ps;
-		unsubscriber = beatObserver.Subscribe(this);
 	}
 }
