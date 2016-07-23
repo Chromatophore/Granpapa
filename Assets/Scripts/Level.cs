@@ -27,8 +27,8 @@ public class Level
 
 	private NoodleMain noodleMain;
 
-	private List<string> enemyAttacks = new List<string>(new string[] { "goomba", "", "pit", "", "goomba", "goomba" });
-	private List<string> enemyAttacks2 = new List<string>(new string[] { "pit", "", "goomba", "goomba", "", "pit" });
+	private List<string> enemyAttacks = new List<string>(new string[] { "goomba", "", "pit", "", "goomba", "goomba", "", ""});
+	private List<string> enemyAttacks2 = new List<string>(new string[] { "pit", "", "goomba", "goomba", "", "pit", "", ""});
 
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
@@ -80,8 +80,8 @@ public class Level
 		}
 
 		levelAudio.audioTrack = noodleMain.GetClip("mariotest");
-		levelAudio.beatTime = 0.5f;
-		levelAudio.beatsPerBar = 6;
+		levelAudio.beatTime = 0.666666f;
+		levelAudio.beatsPerBar = 8;
 
 		animMap = new PlayerAnimMap( new string[] {
 		"", "jump", "Jump",

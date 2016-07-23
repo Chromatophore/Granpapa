@@ -53,8 +53,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private int resolveNodeValue = -1;
 
 	// Audio tracks associated with this game:
-	[SerializeField]
-	private SongStruct[] audioList;
 	private SongStruct currentAudio;
 	[SerializeField]
 	private AudioSource attachedAudioSource;
@@ -128,6 +126,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	{
 		yield return new WaitForSeconds(delay);
 		StartLevel(levelToLoad);
+
+		Tempo.RegisterBeatBox(this);
 	}
 
 	private void NextPage()
@@ -163,9 +163,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		currentPage = pageList[currentPageIndex];
 
 		// select audio from audiolist for this page sequence:
-		//currentAudio = audioList[0];
 		currentAudio = thisLevel.levelAudio;
 		attachedAudioSource.clip = currentAudio.audioTrack;
+
+		float tempo = 60f / currentAudio.beatTime;
+		Tempo.SetTempo((int)tempo);
 
 		// configure beat calcuation values
 		SamplesPerBeat = 44100f * currentAudio.beatTime;

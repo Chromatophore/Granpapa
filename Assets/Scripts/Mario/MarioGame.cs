@@ -51,7 +51,7 @@ public class MarioGame : MonoBehaviour, IGameDisplay, IObserver<BeatData>
 			GameObject newObject = Instantiate(newObjectPrefab, pos, Quaternion.identity ) as GameObject;
 			newObject.transform.parent = transform;
 
-			Destroy(newObject,20f);
+			Destroy(newObject,40f);
 		}
 
 		creationPoint += horizontalSpacing;

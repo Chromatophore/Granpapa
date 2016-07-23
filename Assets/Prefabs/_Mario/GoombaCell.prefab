@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 481898}
   - 95: {fileID: 9570150}
+  - 114: {fileID: 11477818}
   m_Layer: 0
   m_Name: JiggletronActuator
   m_TagString: Untagged
@@ -188,6 +189,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11477818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 104868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623e6a8bd547b43db9a493fcfd36ab7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 9570150}
+  beatName: BeatA
 --- !u!212 &21207866
 SpriteRenderer:
   m_ObjectHideFlags: 1

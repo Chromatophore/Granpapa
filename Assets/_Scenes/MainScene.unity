@@ -575,6 +575,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 96981116}
   m_RootOrder: 1
+--- !u!1 &700300219 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 187988, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3, type: 2}
+  m_PrefabInternal: {fileID: 95641879}
+--- !u!114 &700300220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 700300219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623e6a8bd547b43db9a493fcfd36ab7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 700300221}
+  hasJig: 1
+  beatName: BeatA
 --- !u!95 &700300221 stripped
 Animator:
   m_PrefabParentObject: {fileID: 9525690, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3,
@@ -982,6 +1000,7 @@ GameObject:
   - 4: {fileID: 1031575430}
   - 95: {fileID: 1031575431}
   - 114: {fileID: 1031575432}
+  - 114: {fileID: 1031575433}
   m_Layer: 0
   m_Name: playerMoveAnimator
   m_TagString: Untagged
@@ -1032,6 +1051,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1031575431}
+--- !u!114 &1031575433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1031575429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623e6a8bd547b43db9a493fcfd36ab7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1031575431}
+  hasJig: 0
+  beatName: BeatA
 --- !u!1 &1150274007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,7 +1202,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1356223640}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268346, w: 0.9238795}
-  m_LocalPosition: {x: 2.98, y: -0.00999999, z: 0}
+  m_LocalPosition: {x: 3.98, y: -0.00999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 342026370}
@@ -1198,7 +1231,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1450324228}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268346, w: 0.9238795}
-  m_LocalPosition: {x: -3.02, y: -0.00999999, z: 0}
+  m_LocalPosition: {x: -4.02, y: -0.00999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1466402815}
@@ -1280,27 +1313,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1466402814}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1506759448 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 120146, guid: 8554b594bc2cf446cb0ce0318bd91109, type: 2}
-  m_PrefabInternal: {fileID: 16161686}
---- !u!114 &1506759449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1506759448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2e2a52af3d34095b5f74c5473096c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 1506759451}
---- !u!95 &1506759451 stripped
-Animator:
-  m_PrefabParentObject: {fileID: 9596302, guid: 8554b594bc2cf446cb0ce0318bd91109,
-    type: 2}
-  m_PrefabInternal: {fileID: 16161686}
 --- !u!1 &1541132532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1330,7 +1342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClipsList:
   - name: mariotest
-    clip: {fileID: 8300000, guid: 572c41f7bc1d74f85a64d9de234b680d, type: 3}
+    clip: {fileID: 8300000, guid: c88e4bfee0b924154b12dc98a8053d70, type: 3}
   displayParent: {fileID: 127850, guid: ab884ae6c73f87f469db9cd491b7482b, type: 2}
   displayBar: {fileID: 192420, guid: bc5c75ab49985244a8c474ef071db940, type: 2}
 --- !u!4 &1541132534
@@ -1540,6 +1552,7 @@ GameObject:
   - 114: {fileID: 2069924534}
   - 114: {fileID: 2069924537}
   - 82: {fileID: 2069924536}
+  - 114: {fileID: 2069924538}
   m_Layer: 0
   m_Name: GameState
   m_TagString: Untagged
@@ -1656,12 +1669,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add7b8cf4c26a425d84b62ea80622e29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioList:
-  - audioTrack: {fileID: 8300000, guid: 572c41f7bc1d74f85a64d9de234b680d, type: 3}
-    beatTime: 0.5
-    beatsPerBar: 6
   attachedAudioSource: {fileID: 2069924536}
   kidAnim: {fileID: 700300221}
   trackerBar: {fileID: 883482867}
   currentInputBeat: 0
   inputNextBeatFudge: 0.75
+--- !u!114 &2069924538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2069924533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86bbe48e19f4540179863a3ec77ec86a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
