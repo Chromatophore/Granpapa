@@ -14,15 +14,5 @@ public class GrandpapaJumpTest : MonoBehaviour
 			animator.SetLayerWeight(1, 1.0f);
 
 		}
-
-		if (Input.GetKeyDown(KeyCode.X))
-		{
-			Tempo.SetTempo(40);
-		}
-
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			Tempo.SetTempo(120);
-		}
 	}
 }

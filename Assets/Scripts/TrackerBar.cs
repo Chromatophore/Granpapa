@@ -17,7 +17,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	private Vector3 trackerWidth;
 
 	[SerializeField]
-	private float resetValue = -50f;
+	private float resetValue = -100f;
 
 	[SerializeField]
 	private GameObject TrackerCellPrefab;
@@ -33,7 +33,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private Vector3 trackerPoint;
 
-	private Vector3 currentPosition;
 	private Vector3 targetPosition;
 	private float targetGoalTime;
 	private float timeMotionStart = 0f;
@@ -51,6 +50,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	[SerializeField]
 	private bool smoothBar = true;
+
+	private Vector3 neededSpeed;
 
 	void Start()
 	{
@@ -112,43 +113,29 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		// interpolating between locations:
 		if (targetGoalTime != 0)
 		{
-			timeInMotion = Time.time  - timeMotionStart;
-
-			float ratio = Mathf.Clamp(timeInMotion / targetGoalTime,0f,1f);
-
-			ratio = TrackerCurve(ratio);
-
-			transform.position = Vector3.Lerp(currentPosition, targetPosition, ratio);
-
-			if (ratio == 1f)
-				targetGoalTime = 0;
+			transform.position += neededSpeed * Time.deltaTime;
 		}
-
 	}
 
 	private void MoveTracker(Vector3 amount, float time)
 	{
-		//transform.position = targetPosition;
-
-		Debug.Log("start : " + targetPosition);
 
 		if (targetPosition.x < resetValue)
 		{
 			// current backlog:
-			float backlock = targetPosition.x - transform.position.x;
+			float backlog = targetPosition.x - transform.position.x;
 
 			TrackerFullReset();
 			//var difference = resetValue - trackerInitResetPoint.x;
-			Debug.Log(backlock);
-			targetPosition.x = transform.position.x + backlock;
+			targetPosition.x = transform.position.x + backlog;
 		}
 
-		timeMotionStart = Time.time;
-		
-		currentPosition = transform.position;
 		targetPosition = targetPosition + amount;
 
-		Debug.Log(targetPosition);
+		// we need to move from where we are to where we want to be within time
+		float speedx = (targetPosition.x - transform.position.x) / time;
+
+		neededSpeed.x = speedx;
 
 		targetGoalTime = time;
 	}
