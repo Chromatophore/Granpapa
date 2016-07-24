@@ -26,6 +26,8 @@ public class NoodleMain : MonoBehaviour
 	[SerializeField]
 	private SerializeClips[] audioClipsList;
 
+	public StringToPrefab[] prefabList;
+
 	private Dictionary<string, AudioClip> audioClips;
 
 	// This is singletonish stuff
@@ -74,20 +76,22 @@ public class NoodleMain : MonoBehaviour
 
 		noodlePrefabs = new List<PrefabConstruction>();
 		// Enemy doodies
-		noodlePrefabs.Add(new PrefabConstruction("goomba", Color.yellow, new Vector3(0, 0.375f, 0)));
-		noodlePrefabs.Add(new PrefabConstruction("pit", Color.blue, new Vector3(0, 0.125f, 0)));
+		//noodlePrefabs.Add(new PrefabConstruction("goomba", Color.yellow, new Vector3(0, 0.375f, 0)));
+		//noodlePrefabs.Add(new PrefabConstruction("pit", Color.blue, new Vector3(0, 0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_red", Color.red, new Vector3(0, -0.125f, 0)));
 		noodlePrefabs.Add(new PrefabConstruction("en_green", Color.green, new Vector3(0, -0.375f, 0)));
 
 		noodlePrefabs.Add(new PrefabConstruction("player_b", Color.white, new Vector3(0, 0.125f, -0.1f)));
 		noodlePrefabs.Add(new PrefabConstruction("jumpend", Color.white, new Vector3(0, -0.125f, -0.1f)));
-		noodlePrefabs.Add(new PrefabConstruction("jump", Color.white, new Vector3(0, -0.375f, -0.1f)));
+		//noodlePrefabs.Add(new PrefabConstruction("jump", Color.white, new Vector3(0, -0.375f, -0.1f)));
 
-		noodlePrefabs.Add(new PrefabConstruction("success", Color.green, new Vector3(0, 0.375f, -0.2f)));
-		noodlePrefabs.Add(new PrefabConstruction("fail", Color.red, new Vector3(0, 0.375f, -0.2f)));
+		//noodlePrefabs.Add(new PrefabConstruction("success", Color.green, new Vector3(0, 0.375f, -0.2f)));
+		//noodlePrefabs.Add(new PrefabConstruction("fail", Color.red, new Vector3(0, 0.375f, -0.2f)));
 
 		noodlePrefabs.Add(new PrefabConstruction("", Color.clear, Vector3.zero));
-		createdObjects = new Dictionary<string, GameObject>();
+
+		// make new dictionary from existing attached prefabs:
+		createdObjects = StringToPrefab.MakeDict(prefabList);
 
 		foreach (var prefab in noodlePrefabs)
 		{
@@ -112,6 +116,8 @@ public class NoodleMain : MonoBehaviour
 
 				childObject.GetComponent<SpriteRenderer>().color = prefab.color;
 		}
+
+
 	}
 
 	public GameObject GetPrefab(string name)
@@ -123,6 +129,11 @@ public class NoodleMain : MonoBehaviour
 			prefab = createdObjects[""];
 		}
 		return prefab;
+	}
+
+	public void AddPrefab(string concept, GameObject prefab)
+	{
+		createdObjects[concept] = prefab;
 	}
 
 	public AudioClip GetClip(string name)

@@ -8,12 +8,14 @@ public struct MarioGameCell
 }
 
 
-public class MarioGame : MonoBehaviour, IGameDisplay, IObserver<BeatData>
+public class MarioGame : MonoBehaviour, IGameDisplay
 {
 	public StringToPrefab[] prefabList;
 	private Dictionary<string, GameObject> prefabDict;
 
-	private IDisposable Unsubscriber;
+	public StringToPrefab[] trackerPrefabs;
+
+	private IDisposable Unsubscriber = null;
 
 	public GameObject playerAvatar;
 	private Vector3 currentPosition;
@@ -114,13 +116,15 @@ public class MarioGame : MonoBehaviour, IGameDisplay, IObserver<BeatData>
 	[SerializeField]
 	private Vector3 creationStart;
 
-
 	void Start()
 	{
 		prefabDict = StringToPrefab.MakeDict(prefabList);
 
-		IObservable<BeatData> beatObservable = GameState.State.CurrentPageSequence as IObservable<BeatData>;
-		Unsubscriber = beatObservable.Subscribe(this);
+		var prefabHandler = NoodleMain.GetSingleRef();
+		foreach (var trackerPrefab in trackerPrefabs)
+		{
+			prefabHandler.AddPrefab(trackerPrefab.concept, trackerPrefab.prefab);
+		}
 
 		// hack:
 		GameState.State.CurrentPageSequence.gameDisplay = this;
@@ -185,22 +189,12 @@ public class MarioGame : MonoBehaviour, IGameDisplay, IObserver<BeatData>
 
 	void OnDestroy()
 	{
-		Unsubscriber.Dispose();
+		if (Unsubscriber != null)
+			Unsubscriber.Dispose();
 	}
 
-	// IObserver implimentation:
-	public void OnCompleted()
+	public void Beat(float beatTime, bool success)
 	{
-
-	}
-	public void OnError(System.Exception exception)
-	{
-
-	}
-	public void OnNext(BeatData data)
-	{
-		if (!data.resolutionBeat)
-			return;
 
 		movementDolly.transform.localPosition = targetPosition;
 
@@ -210,12 +204,12 @@ public class MarioGame : MonoBehaviour, IGameDisplay, IObserver<BeatData>
 		targetPosition = currentPosition;
 		targetPosition.x -= horizontalSpacing;
 
-		targetGoalTime = data.beatTime;
+		targetGoalTime = beatTime;
 
 		var cell = cellQueue.Dequeue();
 		Destroy(cell.cellObject,10f);
 
-		if (cell.playable != null)
+		if (cell.playable != null && success)
 			cell.playable.Play();
 	}
 }

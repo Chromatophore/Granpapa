@@ -17,6 +17,9 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	private Vector3 trackerWidth;
 
 	[SerializeField]
+	private float resetValue = -50f;
+
+	[SerializeField]
 	private GameObject TrackerCellPrefab;
 
 	[SerializeField]
@@ -24,32 +27,17 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	[SerializeField]
 	private Color alternateColor;
 
-	[SerializeField]
 	private float tickTime = 0.5f;
 
 	private TrackerList<TrackerData> trackerList;
 
-	[SerializeField]
-	private int writeNodeValue = 16;
-
-	[SerializeField]
-	private int enemyNodeValue = 24;
-
-	[SerializeField]
-	private int resolveNodeValue = 8;
-
 	private Vector3 trackerPoint;
-
-	//private Enemy mainEnemy;
-	//private Resolver mainResolver;
 
 	private Vector3 currentPosition;
 	private Vector3 targetPosition;
 	private float targetGoalTime;
 	private float timeMotionStart = 0f;
 	private float timeInMotion = 0f;
-
-	private Color lastNodeColor;
 
 	private Vector3 trackerInitResetPoint;
 
@@ -140,17 +128,27 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private void MoveTracker(Vector3 amount, float time)
 	{
-		transform.position = targetPosition;
+		//transform.position = targetPosition;
 
-		if (targetPosition.x < -100f)
+		Debug.Log("start : " + targetPosition);
+
+		if (targetPosition.x < resetValue)
 		{
+			// current backlog:
+			float backlock = targetPosition.x - transform.position.x;
+
 			TrackerFullReset();
+			//var difference = resetValue - trackerInitResetPoint.x;
+			Debug.Log(backlock);
+			targetPosition.x = transform.position.x + backlock;
 		}
 
-		timeMotionStart = Time.time;;
+		timeMotionStart = Time.time;
 		
 		currentPosition = transform.position;
-		targetPosition = currentPosition + amount;
+		targetPosition = targetPosition + amount;
+
+		Debug.Log(targetPosition);
 
 		targetGoalTime = time;
 	}
@@ -166,8 +164,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	public void TrackerFullReset()
 	{
-		// TODO: we would need to reset the position of all of the objects here
-
 		var tempObjectList = new List<Transform>();
 
 		while (transform.childCount != 0)
@@ -178,8 +174,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		}
 
 		trackerPoint += transform.position - trackerInitResetPoint;
-
-
 		transform.position = trackerInitResetPoint;
 
 		foreach (var rechild in tempObjectList)
@@ -203,13 +197,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		trackerPoint += trackerWidth;
 
 		firstNode.trackerDisplay.ResetDisplay();
-
-		// Enemy stuff. No idea what an enemy needs to know yet.
-		//var enemyAction = mainEnemy.Step(trackerList[enemyNodeValue]);
-		//trackerList[enemyNodeValue].trackerDisplay.AddChild(noodleMain.createdObjects[enemyAction]);
-
-		// Resolution stuff. Things get resolved here?!
-		//mainResolver.Step(trackerList[resolveNodeValue]);
 	}
 
 	public void AddChild(int position, GameObject child)

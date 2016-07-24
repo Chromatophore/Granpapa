@@ -365,11 +365,13 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		// NOW THAT ALL OF OUR DATA IS UPDATED:
 		// We can perform graphical and other cosmetic changes.
+
+		var resolveNode = trackerList[resolveNodeValue];
 		
 		// NOW we will inform all our observers that a new beat has occured so that they are also aware of it
 		if (beatDataObservers != null)
 		{
-			var dataPacket = new BeatData(beatNumber, beatInBar, currentAudio.beatTime, trackerList[resolveNodeValue].active);
+			var dataPacket = new BeatData(beatNumber, beatInBar, currentAudio.beatTime, resolveNode.active);
 
 			foreach (var beatListener in beatDataObservers)
 			{
@@ -399,9 +401,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 
 		// For the node that is in the resolve location, reveal the resolution outcome:
-		if (trackerList[resolveNodeValue].enemy != "")
+		if (resolveNode.enemy != "")
 		{
-			if (trackerList[resolveNodeValue].success == false)
+			if (resolveNode.success == false)
 			{
 				trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
 			}
@@ -413,18 +415,17 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 //		Debug.Log(trackerList[resolveNodeValue]);
-		gameDisplay.PassPlayerAnimation(trackerList[resolveNodeValue].playerAnimation);
-		if (trackerList[resolveNodeValue].player == "jump")
+		gameDisplay.PassPlayerAnimation(resolveNode.playerAnimation);
+		if (resolveNode.player == "jump")
 		{
 			kidAnim.CrossFade("Jump", 0.1f, 1, 0f);
 			kidAnim.SetLayerWeight(1, 1.0f);
 		}
 
-
-
-
-
-
+		if (resolveNode.active)
+		{
+			gameDisplay.Beat(currentAudio.beatTime, resolveNode.success);
+		}
 
 		// Why is it so hard to debug this trackerList ;-;
 		/*
