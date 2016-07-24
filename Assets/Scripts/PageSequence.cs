@@ -384,7 +384,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				var thisIndex = enemyNodeValue + i;
 				string attack = trackerList[thisIndex].enemy;
 				if (gameDisplay != null)
-					gameDisplay.SetUpcomingAttack(0, attack);
+					gameDisplay.SetUpcomingAttack(0, attack, i == 0);
 
 				// Draw the attacks onto the tracker bar
 				// Option 1: Display all enemy attacks at once:

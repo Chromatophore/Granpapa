@@ -5,13 +5,10 @@ public class MoveAnimatorA : MonoBehaviour {
 
 	public Animator animator;
 
-	
-
 	void Start()
 	{
 
 	}
-
 
 	public void Play(string animName, bool fade = false)
 	{

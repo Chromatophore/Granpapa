@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public interface IGameDisplay
 {
-	void SetUpcomingAttack(int distanceAhead, string attack);
+	void SetUpcomingAttack(int distanceAhead, string attack, bool firstOfBar);
 	void SetUpcomingAttacks(int distanceAhead, List<string> attacks);
 	void PassPlayerAnimation(string animation);
 }
