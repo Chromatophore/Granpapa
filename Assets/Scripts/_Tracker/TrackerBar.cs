@@ -35,8 +35,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private Vector3 targetPosition;
 	private float targetGoalTime;
-	private float timeMotionStart = 0f;
-	private float timeInMotion = 0f;
 
 	private Vector3 trackerInitResetPoint;
 
@@ -115,6 +113,12 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		{
 			transform.position += neededSpeed * Time.deltaTime;
 		}
+	}
+
+	void OnDestroy()
+	{
+		if (unsubscriber != null)
+			unsubscriber.Dispose();
 	}
 
 	private void MoveTracker(Vector3 amount, float time)

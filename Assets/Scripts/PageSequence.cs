@@ -9,39 +9,6 @@ public enum DATAMARKER
 	END
 }
 
-public class PageTrackerData
-{
-	public string enemy;
-	public string player;
-	public bool success;
-	public bool active;
-	public DATAMARKER resolution;
-
-	public string playerAnimation;
-
-	public PageTrackerData dataStartPoint;
-
-	public PageTrackerData()
-	{
-		Reset();
-	}
-
-	public void Reset()
-	{
-		enemy = "";
-		player = "";
-		success = false;
-		active = false;
-		resolution = DATAMARKER.NONE;
-		dataStartPoint = null;
-	}
-
-	public override string ToString()
-	{
-		return string.Format("'{0}' v '{1}': {2}", enemy, player, playerAnimation);
-	}
-}
-
 public class PageSequence : MonoBehaviour, IObservable<BeatData>
 {
 	// Things that should probably be set elsewhere:
@@ -66,7 +33,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	// Full tracker bar list
 	private TrackerList<PageTrackerData> trackerList;
 
-	public Animator kidAnim;
+	public MoveAnimatorB granpapaAnim;
+	public MoveAnimatorB kidAnim;
 
 
 	// Input to Concept system:
@@ -93,6 +61,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private NoodleMain noodleMain;
 
 	public IGameDisplay gameDisplay;
+	public string gameString;
 
 	void Start()
 	{
@@ -110,8 +79,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			trackerList.Add(new PageTrackerData());
 		}
 
-
-		Level TestLevel = new Level(this);
+		Level TestLevel = new Level();
 
 		StartCoroutine(LoadNewLevelDelayed(1f, TestLevel));
 
@@ -151,6 +119,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private void StartLevel(Level thisLevel)
 	{
 		Debug.Log("Starting level...");
+
+		gameString = thisLevel.gameName;
 
 		pageList = thisLevel.getPages();
 
@@ -197,6 +167,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// this button exists and the concept string is in concept
 			//Debug.Log(string.Format("Player inputted button: {0} and got concept: {1}", inputButton, concept));
 			ConceptConsumer(0, concept);
+
+			// play the animation associated with this:
+			granpapaAnim.Play(gameString, concept[0]);
 		}
 	}
 
@@ -290,6 +263,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		/// Below this point, all our internal structures should have been stepped/informed of the change in indexes etc that needed to have occured.
 
 		// We must first attempt to resolve any data sequences that are now in the resolution zone
+		// We can either assess a whole bar in one go, based on if we are set to use DataMarkers
 		if (currentPage.useDataMarkers && trackerList[resolveNodeValue].resolution == DATAMARKER.START)
 		{
 			var dataSequence = new List<PageTrackerData>();
@@ -305,6 +279,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			Debug.Log(EasyPrint.MakeString(dataSequence));
 			currentPage.AssessSequence(dataSequence);
 		}
+		// Or, we can assess as the events pass behind us, which allows us to move the kid closer to grandpapa
 		else if (!currentPage.useDataMarkers)
 		{
 			// Check the previous entry once it has left us
@@ -316,14 +291,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// This will be the FIRST BEAT of the player having to perform actions
 		if (beatIn2Bar == beatsPerBar)
 		{
-
-			// Actually let's just check the success of input from start to finish all in go so we don't need to subscribe or not really actually
-			// know what our data is and so on and so forth.
-			//currentPage.CheckSuccess(trackerList[playerNodeValue - 1]);
-			
-
 			// if the current page feels that it is completed, we will move to the next page:
-			Debug.Log(currentPage.Complete);
 			if (currentPage.Complete)
 			{
 				NextPage();
@@ -415,16 +383,14 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 //		Debug.Log(trackerList[resolveNodeValue]);
-		gameDisplay.PassPlayerAnimation(resolveNode.playerAnimation);
-		if (resolveNode.player == "jump")
+		if (resolveNode.player != "")
 		{
-			kidAnim.CrossFade("Jump", 0.1f, 1, 0f);
-			kidAnim.SetLayerWeight(1, 1.0f);
+			kidAnim.Play(gameString, resolveNode.player);
 		}
 
 		if (resolveNode.active)
 		{
-			gameDisplay.Beat(currentAudio.beatTime, resolveNode.success);
+			gameDisplay.Beat(currentAudio.beatTime, resolveNode);
 		}
 
 		// Why is it so hard to debug this trackerList ;-;

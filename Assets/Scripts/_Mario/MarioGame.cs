@@ -193,9 +193,8 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			Unsubscriber.Dispose();
 	}
 
-	public void Beat(float beatTime, bool success)
+	public void Beat(float beatTime, PageTrackerData data)
 	{
-
 		movementDolly.transform.localPosition = targetPosition;
 
 		timeMotionStart = Time.time;
@@ -209,7 +208,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		var cell = cellQueue.Dequeue();
 		Destroy(cell.cellObject,10f);
 
-		if (cell.playable != null && success)
-			cell.playable.Play();
+		if (cell.playable != null && data.success)
+			cell.playable.Play(data.enemyAnimation);
+
+		PassPlayerAnimation(data.playerAnimation);
 	}
 }

@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IPlayable
 {
-	void Play();
+	void Play(string anim);
 	GameObject GetGameObject();
 }

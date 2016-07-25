@@ -1,21 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
 
-public class EnemyResolution
-{
-	public List<string> pass;
-
-	public EnemyResolution(List<string> passes)
-	{
-		pass = passes;
-	}
-
-	public static EnemyResolution Quick(string param)
-	{
-		return new EnemyResolution(new List<string>(param.Split(',')));
-	}
-}
-
 public class Page
 {
 	private bool upNext;
@@ -27,19 +12,8 @@ public class Page
 
 	public bool useDataMarkers = false;
 
-	private List<string> enemyAttacks;// = new List<string>(new string[] {"goomba", "", "pit", "", "goomba", ""});
-
-	private Dictionary<BUTTON, string[]> playerInputConceptDict;/* = new Dictionary<BUTTON, string[]>() { 
-						{ BUTTON.A, new string[] { "jump" } }, 
-						{ BUTTON.B, new string[] { "jump" } }, 
-						{ BUTTON.X, new string[] { "jump" } }, 
-						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
-	};*/
-
-	private Dictionary<string, EnemyResolution> resolutionDict;/* = new Dictionary<string, EnemyResolution>() {
-		{"goomba", EnemyResolution.Quick("jump") },
-		{"pit", EnemyResolution.Quick("jump") }
-	};*/
+	private List<string> enemyAttacks;
+	private Dictionary<BUTTON, string[]> playerInputConceptDict;
 
 	// What might a page deal with?
 	/*
@@ -68,7 +42,6 @@ public class Page
 	{
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
-		resolutionDict = buildInfo.resolutionDict;
 		playerAnimMap = buildInfo.animMap;
 
 		Reset();
@@ -103,11 +76,6 @@ public class Page
 		return playerInputConceptDict;
 	}
 
-	public Dictionary<string, EnemyResolution> GetResolutionDict()
-	{
-		return resolutionDict;
-	}
-
 	public void AssessSequence(ICollection<PageTrackerData> dataSequence)
 	{
 		// This method receives the whole sequence of information from start to end
@@ -123,26 +91,15 @@ public class Page
 
 	public void CheckSuccess(PageTrackerData thisCell)
 	{
-		var enemy = thisCell.enemy;
-		var player = thisCell.player;
-		EnemyResolution resolutions;
-		if (resolutionDict.TryGetValue(enemy, out resolutions))
+		int score = playerAnimMap.AssessSuccess(thisCell);
+
+		if (score < 0)
 		{
-			if (resolutions.pass.Contains(player) && !hasFailed)
-			{
-				thisCell.success = true;
-			}
-			else
-			{
-				thisCell.success = false;
-				Failure();
-			}
+			Failure();
 		}
 
 		if (thisCell.resolution == DATAMARKER.END)
 			Complete = true;
-
-		thisCell.playerAnimation = playerAnimMap.GetPlayerAnim(enemy, player);
 	}
 
 	private void Failure()

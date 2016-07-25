@@ -94,7 +94,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 497114, guid: 8554b594bc2cf446cb0ce0318bd91109, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -3.97
+      value: 11.27
       objectReference: {fileID: 0}
     - target: {fileID: 497114, guid: 8554b594bc2cf446cb0ce0318bd91109, type: 2}
       propertyPath: m_LocalPosition.y
@@ -194,7 +194,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 415540, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -7.91
+      value: -11.16
       objectReference: {fileID: 0}
     - target: {fileID: 415540, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3, type: 2}
       propertyPath: m_LocalPosition.y
@@ -324,7 +324,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 12
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -345,7 +345,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 317982008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7, y: 8, z: -100}
+  m_LocalPosition: {x: 9, y: 10, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1228340643}
@@ -575,29 +575,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 96981116}
   m_RootOrder: 1
---- !u!1 &700300219 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 187988, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3, type: 2}
-  m_PrefabInternal: {fileID: 95641879}
---- !u!114 &700300220
+--- !u!114 &700300224 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 700300219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 623e6a8bd547b43db9a493fcfd36ab7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 700300221}
-  hasJig: 1
-  beatName: BeatA
---- !u!95 &700300221 stripped
-Animator:
-  m_PrefabParentObject: {fileID: 9525690, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3,
+  m_PrefabParentObject: {fileID: 11449472, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3,
     type: 2}
   m_PrefabInternal: {fileID: 95641879}
+  m_Script: {fileID: 11500000, guid: f593c246fb8c04c07b1b1d499ac50524, type: 3}
 --- !u!1 &723531336
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,8 +651,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 723531336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.36, y: -2.33, z: 0}
-  m_LocalScale: {x: 12, y: 12, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 18, y: 18, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
@@ -763,7 +746,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -784,7 +767,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 827615091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 30, z: -30}
+  m_LocalPosition: {x: 8, y: 31.5, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -864,6 +847,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 844400505}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &875123764 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11453698, guid: 8554b594bc2cf446cb0ce0318bd91109,
+    type: 2}
+  m_PrefabInternal: {fileID: 16161686}
+  m_Script: {fileID: 11500000, guid: f593c246fb8c04c07b1b1d499ac50524, type: 3}
 --- !u!1 &883482866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1636,6 +1625,8 @@ MonoBehaviour:
     prefab: {fileID: 187936, guid: 4bc58c123e31d4068ba2088b38eed6b4, type: 2}
   - concept: pit
     prefab: {fileID: 125108, guid: e0e6d1e35e44c481fb2a28eec9c49072, type: 2}
+  - concept: hop
+    prefab: {fileID: 167166, guid: eef77a3fed5d8411581b857fc36148d2, type: 2}
   playerAvatar: {fileID: 1228340641}
   creationPoint: 0
   horizontalSpacing: 3
@@ -1728,7 +1719,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1749,7 +1740,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1765747382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 27, z: -30}
+  m_LocalPosition: {x: -8, y: 29, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1883,10 +1874,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachedAudioSource: {fileID: 2069924536}
-  kidAnim: {fileID: 700300221}
+  granpapaAnim: {fileID: 875123764}
+  kidAnim: {fileID: 700300224}
   trackerBar: {fileID: 883482867}
   currentInputBeat: 0
   inputNextBeatFudge: 0.25
+  gameString: 
 --- !u!114 &2069924538
 MonoBehaviour:
   m_ObjectHideFlags: 0

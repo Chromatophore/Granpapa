@@ -4,12 +4,12 @@ using System.Collections;
 public class goombasplat : MonoBehaviour, IPlayable
 {
 	public Animator animator;
-	public void Play()
+	public void Play(string anim)
 	{
 		if (animator == null)
 			return;
 			
-		animator.Play("splat",-1,0f);
+		animator.Play(anim,-1,0f);
 	}
 
 	public GameObject GetGameObject()

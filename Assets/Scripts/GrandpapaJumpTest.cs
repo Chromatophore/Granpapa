@@ -12,7 +12,6 @@ public class GrandpapaJumpTest : MonoBehaviour
 		{
 			animator.CrossFade("Jump", 0.1f, 1, 0f);
 			animator.SetLayerWeight(1, 1.0f);
-
 		}
 	}
 }

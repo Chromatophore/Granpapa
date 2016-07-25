@@ -6,15 +6,13 @@ public class LevelPageData
 	public SongStruct levelAudio;
 	public List<string> enemyAttacks;
 	public Dictionary<BUTTON, string[]> playerInputConceptDict;
-	public Dictionary<string, EnemyResolution> resolutionDict;
 	public PlayerAnimMap animMap;
 
 
-	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, Dictionary<string, EnemyResolution> resolutionDict, SongStruct levelAudio, PlayerAnimMap animMap)
+	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, SongStruct levelAudio, PlayerAnimMap animMap)
 	{
 		this.enemyAttacks = enemyAttacks;
 		this.playerInputConceptDict = playerInputConceptDict;
-		this.resolutionDict = resolutionDict;
 		this.levelAudio = levelAudio;
 		this.animMap = animMap;
 	}
@@ -23,6 +21,8 @@ public class LevelPageData
 
 public class Level
 {
+	public string gameName = "Mario";
+
 	public SongStruct levelAudio;
 
 	private NoodleMain noodleMain;
@@ -32,14 +32,9 @@ public class Level
 
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
-						{ BUTTON.B, new string[] { "jump" } }, 
+						{ BUTTON.B, new string[] { "hop" } }, 
 						{ BUTTON.X, new string[] { "jump" } }, 
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
-	};
-
-	private Dictionary<string, EnemyResolution> resolutionDict = new Dictionary<string, EnemyResolution>() {
-		{"goomba", EnemyResolution.Quick("jump") },
-		{"pit", EnemyResolution.Quick("jump") }
 	};
 
 	private List<Page> myPages = new List<Page>();
@@ -70,9 +65,8 @@ public class Level
 
 	*/
 
-	PageSequence pageSequence;
 
-	public Level(PageSequence ps)
+	public Level()
 	{
 		if (noodleMain == null)
 		{
@@ -84,16 +78,14 @@ public class Level
 		levelAudio.beatsPerBar = 8;
 
 		animMap = new PlayerAnimMap( new string[] {
-		"", "jump", "Jump",
-		"pit", "jump", "Jump",
-		"pit", "def", "PitNo",
-		"goomba", "jump", "EnemyYes",
-		"goomba", "def", "EnemyNo"
+		"", "jump", "Jump", "", "0",
+		"", "hop", "Hop", "", "0",
+		"pit", "jump", "Jump", "", "1",
+		"pit", "def", "PitNo", "", "-1",
+		"goomba", "jump", "Jump", "", "1",
+		"goomba", "hop", "EnemyYes", "splat", "2",
+		"goomba", "def", "EnemyNo", "", "-1"
 			});
-
-
-		// This is temporary, we need to know about the PageSequence to talk to it.
-		pageSequence = ps;
 
 		List<LevelPageData> pageBuilder = new List<LevelPageData>();
 		int totalPages = 6;
@@ -104,7 +96,7 @@ public class Level
 			{
 				eA = enemyAttacks2;
 			}
-			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, resolutionDict, levelAudio, animMap));
+			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, levelAudio, animMap));
 		}
 
 		for (int i = 0; i < totalPages; i++)
