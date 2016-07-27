@@ -3,18 +3,91 @@ using System.Collections.Generic;	// We use generic for Data Structures with <Yo
 
 public class Page
 {
+	public bool useDataMarkers = false;
+
+	public bool DisplaySuccess { get; protected set; }
+
+	// External objects can call Complete to see if the page feels that it is time to move on
+	public bool Complete { get; protected set; }
+
+	protected List<string> enemyAttacks;
+	protected Dictionary<BUTTON, string[]> playerInputConceptDict;
+
 	private bool upNext;
 	private bool isPlaying;
 	private bool hasFailed;
 	private int beatCount;
+	protected PlayerAnimMap playerAnimMap;
 
-	private PlayerAnimMap playerAnimMap;
+	public virtual void UpNext()
+	{
+		upNext = true;
+		hasFailed = false;
+	}
+	private void Failure()
+	{
+		hasFailed = true;
+	}
 
-	public bool useDataMarkers = false;
+	public Page()
+	{
+		DisplaySuccess = false;
+	}
 
-	private List<string> enemyAttacks;
-	private Dictionary<BUTTON, string[]> playerInputConceptDict;
+	public virtual void Reset()
+	{
+		upNext = false;
+		isPlaying = false;
+		hasFailed = false;
+		beatCount = 0;
 
+		Complete = false;
+	}
+
+	public List<string> GetAttacks()
+	{
+		return enemyAttacks;
+	}
+
+	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
+	{
+		return playerInputConceptDict;
+	}
+
+	public void AssessSequence(ICollection<PageTrackerData> dataSequence)
+	{
+		// This method receives the whole sequence of information from start to end
+		// This gives us, as a page, greater options wrt 'if they did this then the next frame behavor changes'
+		foreach (var data in dataSequence)
+		{
+			CheckSuccess(data);
+		}
+
+		if (!hasFailed)
+			Complete = true;
+	}
+
+	public virtual void CheckSuccess(PageTrackerData thisCell)
+	{
+		int score = 0;
+
+		if (playerAnimMap != null)
+			score = playerAnimMap.AssessSuccess(thisCell);
+
+		if (score < 0)
+		{
+			Failure();
+		}
+
+		if (thisCell.resolution == DATAMARKER.END)
+			Complete = true;
+	}
+}
+
+
+
+public class GamePlayPage : Page
+{
 	// What might a page deal with?
 	/*
 	We want to handle the idae of a single sequence, or at some point, a single enemy.
@@ -38,78 +111,101 @@ public class Page
 	Page Manager continues to beat @ page which can do the game displayed input when needed
 
 	*/
-	public Page(LevelPageData buildInfo)
+	public GamePlayPage(LevelPageData buildInfo)
 	{
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
 		playerAnimMap = buildInfo.animMap;
 
 		Reset();
+
+		DisplaySuccess = true;
 	}
+}
 
-	// External objects can call Complete to see if the page feels that it is time to move on
-	public bool Complete { get; private set; }
+public class CutscenePage : Page, IObserver<BeatData>
+{
+	private int beatsSoFar = 0;
+	private int length = 0;
 
-	public void Reset()
+	private string inputString;
+
+	private IDisposable _unsubscriber = null;
+	private IDisposable Unsubscriber
 	{
-		upNext = false;
-		isPlaying = false;
-		hasFailed = false;
-		beatCount = 0;
-
-		Complete = false;
-	}
-
-	public List<string> GetAttacks()
-	{
-		return enemyAttacks;
-	}
-
-	public void UpNext()
-	{
-		upNext = true;
-		hasFailed = false;
-	}
-
-	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
-	{
-		return playerInputConceptDict;
-	}
-
-	public void AssessSequence(ICollection<PageTrackerData> dataSequence)
-	{
-		// This method receives the whole sequence of information from start to end
-		// This gives us, as a page, greater options wrt 'if they did this then the next frame behavor changes'
-		foreach (var data in dataSequence)
+		get
 		{
-			CheckSuccess(data);
+			return _unsubscriber;
 		}
-
-		if (!hasFailed)
-			Complete = true;
-	}
-
-	public void CheckSuccess(PageTrackerData thisCell)
-	{
-		int score = playerAnimMap.AssessSuccess(thisCell);
-
-		if (score < 0)
+		set
 		{
-			Failure();
+			if (_unsubscriber != null)
+			{
+				_unsubscriber.Dispose();
+			}
+
+			_unsubscriber = value;
 		}
-
-		if (thisCell.resolution == DATAMARKER.END)
-			Complete = true;
 	}
 
-	private void Failure()
+	public CutscenePage(int length, string testString)
 	{
-		hasFailed = true;
+		enemyAttacks = new List<string>();
+
+		length /= 2;
+
+		this.length = length;
+		inputString = testString;
+
+		for (int j = 0; j < length; j++)
+		{
+			enemyAttacks.Add("cutscene");
+		}
 	}
 
-	private PageSequence pageSequence;
-	public void Setup(IObservable<BeatData> beatObserver, PageSequence ps)
+	public override void Reset()
 	{
-		pageSequence = ps;
+		//
+	}
+
+	public override void UpNext()
+	{
+
+	}
+
+	public void ActiveBeat(IObservable<BeatData> dataSource)
+	{
+		if (beatsSoFar == 0)
+		{
+			Unsubscriber = dataSource.Subscribe(this);
+			Cutscener.SetText(inputString);
+		}
+	}
+
+	public void ResolveBeat()
+	{
+		
+	}
+
+	// IObserver implimentation:
+	public void OnCompleted()
+	{
+
+	}
+	public void OnError(System.Exception exception)
+	{
+
+	}
+	public void OnNext(BeatData data)
+	{
+		beatsSoFar++;
+
+		if (beatsSoFar == length * 2)
+		{
+			base.Reset();
+			Cutscener.Hide();
+			beatsSoFar = 0;
+			Unsubscriber = null;
+		}
 	}
 }

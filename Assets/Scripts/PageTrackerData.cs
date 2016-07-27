@@ -12,6 +12,8 @@ public class PageTrackerData
 	public string enemyAnimation;
 	public int score;
 
+	public Page originPage;
+
 	public PageTrackerData dataStartPoint;
 
 	public PageTrackerData()
@@ -31,6 +33,8 @@ public class PageTrackerData
 		score = 0;
 		playerAnimation = "";
 		enemyAnimation = "";
+
+		originPage = null;
 	}
 
 	public override string ToString()

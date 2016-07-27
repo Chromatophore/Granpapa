@@ -7,6 +7,7 @@ public interface ITrackerDisplay
 	void ConsumeColor(Color inputColor);
 	void ResetDisplay();
 	void AddChild(GameObject child);
+	void SetTemporaryColor(Color inputColor);
 }
 
 public class TrackerBar : MonoBehaviour, IObserver<BeatData>
@@ -21,6 +22,9 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	[SerializeField]
 	private GameObject TrackerCellPrefab;
+
+	[SerializeField]
+	private GameObject scalerObject;
 
 	[SerializeField]
 	private Color mainColor;
@@ -51,6 +55,14 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	private Vector3 neededSpeed;
 
+	[SerializeField]
+	private bool needsScaleLerp = false;
+	private bool lastNeeds = false;
+	[SerializeField]
+	private Vector3 targetScale = Vector3.one;
+	private Vector3 scaleVelocity = Vector3.zero;
+	private float timeRemaining = 0f;
+
 	void Start()
 	{
 		if (noodleMain == null)
@@ -63,11 +75,12 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		//mainEnemy = new Enemy();
 		//mainResolver = new Resolver();
 
-		trackerInitResetPoint = transform.position;
+		trackerInitResetPoint = transform.localPosition;
 		targetPosition = trackerInitResetPoint;
 
 
 		trackerPoint = Vector3.zero;
+		trackerPoint.y = -1f;
 		bool altColor = false;
 		for (int j = 0; j < trackerCellCount; j++)
 		{
@@ -76,8 +89,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 			// Parent them to us so they are held within us in the heirarchy
 			// (There is also a SetParent method but this is mostly useful to apply aspects of our transform)
 			// (I'm always just lazy and reposition it after creation:)
-			createdObject.transform.parent = transform;
 
+			createdObject.transform.SetParent(transform,false);
 			createdObject.transform.localPosition = trackerPoint;
 			// spaced out by the specified width
 			trackerPoint += trackerWidth;
@@ -111,7 +124,24 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		// interpolating between locations:
 		if (targetGoalTime != 0)
 		{
-			transform.position += neededSpeed * Time.deltaTime;
+			transform.localPosition += neededSpeed * Time.deltaTime;
+		}
+
+
+		if (needsScaleLerp != lastNeeds)
+			timeRemaining = 3f;
+		lastNeeds = needsScaleLerp;
+
+		if (needsScaleLerp)
+		{
+			var outputScale = Vector3.SmoothDamp(scalerObject.transform.localScale,
+										targetScale, ref scaleVelocity, 1f);
+			scalerObject.transform.localScale = outputScale;
+			timeRemaining -= Time.deltaTime;
+			if (outputScale == targetScale || (timeRemaining < 0f))
+			{
+				needsScaleLerp = false;
+			}
 		}
 	}
 
@@ -127,17 +157,17 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 		if (targetPosition.x < resetValue)
 		{
 			// current backlog:
-			float backlog = targetPosition.x - transform.position.x;
+			float backlog = targetPosition.x - transform.localPosition.x;
 
 			TrackerFullReset();
 			//var difference = resetValue - trackerInitResetPoint.x;
-			targetPosition.x = transform.position.x + backlog;
+			targetPosition.x = transform.localPosition.x + backlog;
 		}
 
 		targetPosition = targetPosition + amount;
 
 		// we need to move from where we are to where we want to be within time
-		float speedx = (targetPosition.x - transform.position.x) / time;
+		float speedx = (targetPosition.x - transform.localPosition.x) / time;
 
 		neededSpeed.x = speedx;
 
@@ -164,8 +194,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 			tempObjectList.Add(childTrans);
 		}
 
-		trackerPoint += transform.position - trackerInitResetPoint;
-		transform.position = trackerInitResetPoint;
+		trackerPoint += transform.localPosition - trackerInitResetPoint;
+		transform.localPosition = trackerInitResetPoint;
 
 		foreach (var rechild in tempObjectList)
 		{
@@ -192,7 +222,13 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 	public void AddChild(int position, GameObject child)
 	{
-		trackerList[position].trackerDisplay.AddChild(child);
+		if (child != null)
+			trackerList[position].trackerDisplay.AddChild(child);
+	}
+
+	public void SetCellActive(int position)
+	{
+		// we could do something here maybe
 	}
 
 
@@ -216,5 +252,16 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	{
 		unsubscriber = beatObserver.Subscribe(this);
 		this.tickTime = tickTime;
+	}
+
+	public void SetBeatsPerPhase(int beats)
+	{
+		// 8 beats = 1.0 scale
+		float defBeats = 8f;
+		defBeats /= beats;
+
+		needsScaleLerp = true;
+		targetScale = new Vector3(defBeats, defBeats, 1f);
+		timeRemaining = 3f;
 	}
 }

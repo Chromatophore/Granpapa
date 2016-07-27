@@ -6,8 +6,9 @@ public class GenericUnsubscriber<T> : IDisposable
 {
 	private ICollection<IObserver<T>> observers;
 	private IObserver<T> observer;
+	private bool addMode = false;
 
-	public GenericUnsubscriber(ICollection<IObserver<T>> observers, IObserver<T> observer)
+	public GenericUnsubscriber(ICollection<IObserver<T>> observers, IObserver<T> observer, bool addMode = false)
 	{
 		this.observers = observers;
 		this.observer = observer;
@@ -16,7 +17,15 @@ public class GenericUnsubscriber<T> : IDisposable
 	// for IDisposable:
 	public void Dispose() 
 	{
-		if (!(observer == null))
-			observers.Remove(observer);
+		if (addMode)
+		{
+			if (!(observer == null))
+				observers.Add(observer);
+		}
+		else
+		{
+			if (!(observer == null))
+				observers.Remove(observer);
+		}
 	}
 }

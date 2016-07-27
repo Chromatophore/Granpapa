@@ -93,6 +93,7 @@ public class NoodleMain : MonoBehaviour
 		// make new dictionary from existing attached prefabs:
 		createdObjects = StringToPrefab.MakeDict(prefabList);
 
+		/*
 		foreach (var prefab in noodlePrefabs)
 		{
 				// Create all our tracker cells from the prefab:
@@ -116,6 +117,7 @@ public class NoodleMain : MonoBehaviour
 
 				childObject.GetComponent<SpriteRenderer>().color = prefab.color;
 		}
+		*/
 
 
 	}
@@ -126,7 +128,7 @@ public class NoodleMain : MonoBehaviour
 
 		if (!createdObjects.TryGetValue(name, out prefab))
 		{
-			prefab = createdObjects[""];
+			prefab = null;//createdObjects[""];
 		}
 		return prefab;
 	}

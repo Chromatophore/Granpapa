@@ -27,8 +27,8 @@ public class Level
 
 	private NoodleMain noodleMain;
 
-	private List<string> enemyAttacks = new List<string>(new string[] { "goomba", "", "pit", "", "goomba", "goomba", "", ""});
-	private List<string> enemyAttacks2 = new List<string>(new string[] { "pit", "", "goomba", "goomba", "", "pit", "", ""});
+	private List<string> enemyAttacks = new List<string>(new string[] { "goomba", "", "pit", "" }); // , "goomba", "goomba", "", ""});
+	private List<string> enemyAttacks2 = new List<string>(new string[] { "pit", "", "goomba", "goomba" }); //, "", "pit", "", ""});
 
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
@@ -75,7 +75,7 @@ public class Level
 
 		levelAudio.audioTrack = noodleMain.GetClip("mariotest");
 		levelAudio.beatTime = 0.666666f;
-		levelAudio.beatsPerBar = 8;
+		levelAudio.beatsPerBar = 4;
 
 		animMap = new PlayerAnimMap( new string[] {
 		"", "jump", "Jump", "", "0",
@@ -99,10 +99,9 @@ public class Level
 			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, levelAudio, animMap));
 		}
 
-		for (int i = 0; i < totalPages; i++)
-		{
-			myPages.Add(new Page(pageBuilder[i]));
-		}
+		myPages.Add(new GamePlayPage(pageBuilder[0]));
+		myPages.Add(new CutscenePage(8, "Hello I am a test! :)!"));
+		myPages.Add(new GamePlayPage(pageBuilder[1]));
 	}
 
 	public List<Page> getPages()

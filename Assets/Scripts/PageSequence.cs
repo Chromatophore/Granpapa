@@ -113,7 +113,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 		currentPage = pageList[currentPageIndex];
-		currentPage.Setup(this, this);
+
+		// Tell the current page that it is being accessed
+		currentPage.UpNext();
 	}
 
 	private void StartLevel(Level thisLevel)
@@ -133,7 +135,13 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		currentPage = pageList[currentPageIndex];
 
 		// select audio from audiolist for this page sequence:
-		currentAudio = thisLevel.levelAudio;
+
+		SetAudio(thisLevel.levelAudio);
+	}
+
+	private void SetAudio(SongStruct inputAudio)
+	{
+		currentAudio = inputAudio;
 		attachedAudioSource.clip = currentAudio.audioTrack;
 
 		float tempo = 60f / currentAudio.beatTime;
@@ -150,7 +158,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// Setup the tracker bar for this audio:
 		trackerBar.Setup(this, currentAudio.beatTime);
 
-		// start the son
+		trackerBar.SetBeatsPerPhase(currentAudio.beatsPerBar);
+
+		// start the song
 		attachedAudioSource.Play();
 		NewBeat();
 	}
@@ -180,9 +190,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			int i = 0 + inputFudgeOffset;
 			foreach (var move in inputConcept)
 			{
-				if (trackerList[playerNodeValue + i].player == "")
+				var node = trackerList[playerNodeValue + i];
+				if (node.active && node.player == "")
 				{
-					trackerList[playerNodeValue + i].player = move;
+					node.player = move;
 					trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(move));
 					i++;
 				}
@@ -297,9 +308,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				NextPage();
 			}
 
-			// Tell the current page that it is being accessed
-			currentPage.UpNext();
-
 			// Load the input map from this page, in case it chaneges:
 			playerInputConceptDict = currentPage.GetPlayerInputConceptDict();
 
@@ -324,6 +332,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				thisNode.dataStartPoint = dataStartPoint;
 				thisNode.active = true;
 				lastAccessed = thisNode;
+
+				trackerBar.SetCellActive(thisIndex);
+
+				thisNode.originPage = currentPage;
 			}
 
 			if (lastAccessed != null)
@@ -334,6 +346,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// NOW THAT ALL OF OUR DATA IS UPDATED:
 		// We can perform graphical and other cosmetic changes.
 
+		var playerNode = trackerList[playerNodeValue];
 		var resolveNode = trackerList[resolveNodeValue];
 		
 		// NOW we will inform all our observers that a new beat has occured so that they are also aware of it
@@ -344,6 +357,15 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			foreach (var beatListener in beatDataObservers)
 			{
 				beatListener.OnNext(dataPacket);
+			}
+
+			if (beatDataObserversToRemove.Count != 0)
+			{
+				foreach (var beatListenerToRemove in beatDataObserversToRemove)
+				{
+					beatDataObservers.Remove(beatListenerToRemove);
+				}
+				beatDataObserversToRemove.Clear();
 			}
 		}
 
@@ -360,26 +382,55 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				// Option 1: Display all enemy attacks at once:
 				if (attack != "")
 					trackerBar.AddChild(thisIndex, noodleMain.GetPrefab(attack));
+
+				if (i == 0)
+				{
+					trackerBar.AddChild(thisIndex, noodleMain.GetPrefab("barstart"));
+				}
+				else if (i + 1 == beatsPerBar)
+				{
+					trackerBar.AddChild(thisIndex, noodleMain.GetPrefab("barend"));
+				}
 			}
 
 		}
 
 		// Option 2: Add enemy attacks as they scroll past enemyNode:
 		//trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
+		if (playerNode.enemy == "cutscene")
+		{
+			CutscenePage cutscenePage = currentPage as CutscenePage;
 
+			if (cutscenePage != null)
+			{
+				cutscenePage.ActiveBeat(this);
+			}
+		}
 
 		// For the node that is in the resolve location, reveal the resolution outcome:
 		if (resolveNode.enemy != "")
 		{
-			if (resolveNode.success == false)
+			if (resolveNode.originPage.DisplaySuccess)
 			{
-				trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
-			}
-			else
-			{
-				trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
+				if (resolveNode.success == false)
+				{
+					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
+				}
+				else
+				{
+					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
+				}
 			}
 
+			if (resolveNode.enemy == "cutscene")
+			{
+				CutscenePage cutscenePage = resolveNode.originPage as CutscenePage;
+
+				if (cutscenePage != null)
+				{
+					cutscenePage.ResolveBeat();
+				}
+			}
 		}
 
 //		Debug.Log(trackerList[resolveNodeValue]);
@@ -405,15 +456,19 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	}
 
 	private HashSet<IObserver<BeatData>> beatDataObservers;
+	private HashSet<IObserver<BeatData>> beatDataObserversToRemove;
 	public IDisposable Subscribe(IObserver<BeatData> observer)
 	{
 		// Generate list for game setting observers
 		if (beatDataObservers == null)
 			beatDataObservers = new HashSet<IObserver<BeatData>>();
+		// Generate list for game setting observers
+		if (beatDataObserversToRemove == null)
+			beatDataObserversToRemove = new HashSet<IObserver<BeatData>>();
 
 		beatDataObservers.Add(observer);
 
 		// Now, return an IDisposable implimentation to whatever called us so that it can unsubscribe from our updates:
-		return new GenericUnsubscriber<BeatData>(beatDataObservers, observer);
+		return new GenericUnsubscriber<BeatData>(beatDataObserversToRemove, observer, true);
 	}
 }

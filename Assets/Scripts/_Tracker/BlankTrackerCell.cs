@@ -20,8 +20,10 @@ public struct ButtonObjectAssoctiate
 
 public class BlankTrackerCell : MonoBehaviour, ITrackerDisplay
 {
+	[SerializeField]
+	private SpriteRenderer spriteRenderer;
 
-	public SpriteRenderer spriteRenderer;
+	private Color storedColor;
 
 	private List<GameObject> myChildren;
 
@@ -40,9 +42,17 @@ public class BlankTrackerCell : MonoBehaviour, ITrackerDisplay
 			Destroy(child);
 		}
 		myChildren.Clear();
+
+		spriteRenderer.color = storedColor;
 	}
 
 	public void ConsumeColor(Color inputColor)
+	{
+		storedColor = inputColor;
+		spriteRenderer.color = inputColor;
+	}
+
+	public void SetTemporaryColor(Color inputColor)
 	{
 		spriteRenderer.color = inputColor;
 	}
@@ -52,10 +62,7 @@ public class BlankTrackerCell : MonoBehaviour, ITrackerDisplay
 		// Create all our tracker cells from the prefab:
 		GameObject childObject = Instantiate(child, Vector3.zero, Quaternion.identity) as GameObject;
 		// Parent them to us so they are held within us in the heirarchy
-		// (There is also a SetParent method but this is mostly useful to apply aspects of our transform)
-		// (I'm always just lazy and reposition it after creation:)
-		childObject.transform.parent = transform;
-
+		childObject.transform.SetParent(transform,false);
 		childObject.transform.localPosition = new Vector3(0.0f, 0.0f, -0.1f);
 
 		myChildren.Add(childObject);

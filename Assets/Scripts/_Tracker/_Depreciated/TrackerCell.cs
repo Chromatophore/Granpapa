@@ -115,10 +115,7 @@ public class TrackerCell : MonoBehaviour
 		// Create all our tracker cells from the prefab:
 		GameObject parentObject = Instantiate(child, Vector3.zero, Quaternion.identity) as GameObject;
 		// Parent them to us so they are held within us in the heirarchy
-		// (There is also a SetParent method but this is mostly useful to apply aspects of our transform)
-		// (I'm always just lazy and reposition it after creation:)
-		parentObject.transform.parent = transform;
-
+		parentObject.transform.SetParent(transform,false);
 		parentObject.transform.localPosition = new Vector3(0.0f, 0.0f, -0.1f);
 	}
 }
