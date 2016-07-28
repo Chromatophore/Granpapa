@@ -44,6 +44,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	//[SerializeField]
 	//private ButtonConceptMap[] serializedPlayerInputConcept;
 	private Dictionary<BUTTON, string[]> playerInputConceptDict;
+	private Dictionary<string, string[]> mainSoundDict;
 
 	// This is the area that will deal with the music of the level:
 
@@ -196,6 +197,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			// play the animation associated with this:
 			granpapaAnim.Play(gameString, concept[0]);
+
+			if (trackerList[playerNodeValue].originPage != null)
+			{
+				granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue].originPage.ResolveSound(concept[0])));
+			}
 		}
 	}
 
@@ -340,6 +346,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			// Load the input map from this page, in case it chaneges:
 			playerInputConceptDict = currentPage.GetPlayerInputConceptDict();
+			mainSoundDict = currentPage.GetMainSoundDict();
 
 			// Load some attacks from page:
 			var attackList = currentPage.GetAttacks();

@@ -4,6 +4,7 @@ using System.Collections;
 public class MoveAnimatorB : MonoBehaviour {
 
 	public Animator animator;
+	public AudioSource audiosource;
 
 	public void Play(string gameName, string animation)
 	{
@@ -22,5 +23,9 @@ public class MoveAnimatorB : MonoBehaviour {
 		}
 	}
 
-		
+	public void MakeSound(AudioClip sound)
+	{
+		audiosource.clip = sound;
+		audiosource.Play();
+	}
 }

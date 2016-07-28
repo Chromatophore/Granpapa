@@ -12,6 +12,8 @@ public class Page
 
 	protected List<string> enemyAttacks;
 	protected Dictionary<BUTTON, string[]> playerInputConceptDict;
+	protected Dictionary<string, string[]> mainSoundDict;
+	protected Dictionary<string, string[]> customSoundDict;
 
 	private bool upNext;
 	private bool isPlaying;
@@ -55,6 +57,16 @@ public class Page
 		return playerInputConceptDict;
 	}
 
+	public Dictionary<string, string[]> GetMainSoundDict()
+	{
+		return mainSoundDict;
+	}
+
+	public void AddCustomSounds(Dictionary<string, string[]> custom)
+	{
+		customSoundDict = custom;
+	}
+
 	public void AssessSequence(ICollection<PageTrackerData> dataSequence)
 	{
 		// This method receives the whole sequence of information from start to end
@@ -66,6 +78,16 @@ public class Page
 
 		//if (!hasFailed)
 			Complete = true;
+	}
+
+	public string ResolveSound(string concept)
+	{
+		string[] sound;
+		if (customSoundDict == null || !customSoundDict.TryGetValue(concept, out sound))
+		{
+			mainSoundDict.TryGetValue(concept, out sound);
+		}
+		return sound[Random.Range(0, sound.Length)];
 	}
 
 	public virtual void CheckSuccess(PageTrackerData thisCell)
@@ -129,6 +151,7 @@ public class GamePlayPage : Page
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
 		playerAnimMap = buildInfo.animMap;
+		mainSoundDict = buildInfo.mainSoundDict;
 
 		Reset();
 

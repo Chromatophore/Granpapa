@@ -7,14 +7,16 @@ public class LevelPageData
 	public List<string> enemyAttacks;
 	public Dictionary<BUTTON, string[]> playerInputConceptDict;
 	public PlayerAnimMap animMap;
+	public Dictionary<string, string[]> mainSoundDict;
 
 
-	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, SongStruct levelAudio, PlayerAnimMap animMap)
+	public LevelPageData(List<string> enemyAttacks, Dictionary<BUTTON, string[]> playerInputConceptDict, SongStruct levelAudio, PlayerAnimMap animMap, Dictionary<string, string[]> mainSoundDict)
 	{
 		this.enemyAttacks = enemyAttacks;
 		this.playerInputConceptDict = playerInputConceptDict;
 		this.levelAudio = levelAudio;
 		this.animMap = animMap;
+		this.mainSoundDict = mainSoundDict;
 	}
 }
 
@@ -35,6 +37,11 @@ public class Level
 						{ BUTTON.B, new string[] { "hop" } }, 
 						{ BUTTON.X, new string[] { "jump" } }, 
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
+	};
+
+	private Dictionary<string, string[]> mainSoundDict = new Dictionary<string, string[]>() { 
+						{ "jump", new string[] { "jump" } }, 
+						{ "hop", new string[] { "bop" } }
 	};
 
 	private List<Page> myPages = new List<Page>();
@@ -96,13 +103,16 @@ public class Level
 			{
 				eA = enemyAttacks2;
 			}
-			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, levelAudio, animMap));
+			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, levelAudio, animMap, mainSoundDict));
 		}
 
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
 		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!"));
 		myPages.Add(qpg (new string[] { "", "", "goomba", "" } ));
+		Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
+		customSoundDict.Add("jump", new string[] {"bop"});
+		myPages[myPages.Count - 1].AddCustomSounds(customSoundDict);
 		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" } ));
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" } ));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" } ));
@@ -128,7 +138,7 @@ public class Level
 	private GamePlayPage qpg(string[] input)
 	{
 		List<string> lst = new List<string>(input);
-		return new GamePlayPage(new LevelPageData(lst, playerInputConceptDict, levelAudio, animMap));
+		return new GamePlayPage(new LevelPageData(lst, playerInputConceptDict, levelAudio, animMap, mainSoundDict));
 	}
 
 	public List<Page> getPages()
