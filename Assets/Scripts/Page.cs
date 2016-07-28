@@ -32,6 +32,7 @@ public class Page
 	public Page()
 	{
 		DisplaySuccess = false;
+		Complete = false;
 	}
 
 	public virtual void Reset()
@@ -63,13 +64,15 @@ public class Page
 			CheckSuccess(data);
 		}
 
-		if (!hasFailed)
+		//if (!hasFailed)
 			Complete = true;
 	}
 
 	public virtual void CheckSuccess(PageTrackerData thisCell)
 	{
 		int score = 0;
+
+		thisCell.resolved = true;
 
 		if (playerAnimMap != null)
 			score = playerAnimMap.AssessSuccess(thisCell);
@@ -80,7 +83,17 @@ public class Page
 		}
 
 		if (thisCell.resolution == DATAMARKER.END)
-			Complete = true;
+		{
+			hasFailed = false;
+			if (!hasFailed)
+				Complete = true;
+		}
+		
+	}
+
+	public virtual int PhaseBeats()
+	{
+		return 4;
 	}
 }
 
@@ -127,6 +140,7 @@ public class CutscenePage : Page, IObserver<BeatData>
 {
 	private int beatsSoFar = 0;
 	private int length = 0;
+	private int beatsTillEnd = -1;
 
 	private string inputString;
 
@@ -173,13 +187,12 @@ public class CutscenePage : Page, IObserver<BeatData>
 
 	}
 
-	public void ActiveBeat(IObservable<BeatData> dataSource)
+	public void ActivateBeat(IObservable<BeatData> dataSource)
 	{
-		if (beatsSoFar == 0)
-		{
-			Unsubscriber = dataSource.Subscribe(this);
-			Cutscener.SetText(inputString);
-		}
+
+		beatsTillEnd = length * 2;
+		Unsubscriber = dataSource.Subscribe(this);
+		Cutscener.SetText(inputString);
 	}
 
 	public void ResolveBeat()
@@ -198,13 +211,16 @@ public class CutscenePage : Page, IObserver<BeatData>
 	}
 	public void OnNext(BeatData data)
 	{
-		beatsSoFar++;
+		if (Unsubscriber == null)
+			return;
 
-		if (beatsSoFar == length * 2)
+		beatsTillEnd--;
+		//Debug.Log(beatsTillEnd);
+		if (beatsTillEnd == 0)
 		{
 			base.Reset();
 			Cutscener.Hide();
-			beatsSoFar = 0;
+			beatsTillEnd = -1;
 			Unsubscriber = null;
 		}
 	}

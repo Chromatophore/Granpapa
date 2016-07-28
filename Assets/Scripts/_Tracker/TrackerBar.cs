@@ -13,7 +13,10 @@ public interface ITrackerDisplay
 public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 {
 	[SerializeField]
-	private int trackerCellCount = 32;
+	private float barChangeTime = 6f;
+
+	[SerializeField]
+	private int trackerCellCount = 128;
 	[SerializeField]
 	private Vector3 trackerWidth;
 
@@ -129,13 +132,13 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 
 		if (needsScaleLerp != lastNeeds)
-			timeRemaining = 3f;
+			timeRemaining = barChangeTime;
 		lastNeeds = needsScaleLerp;
 
 		if (needsScaleLerp)
 		{
 			var outputScale = Vector3.SmoothDamp(scalerObject.transform.localScale,
-										targetScale, ref scaleVelocity, 1f);
+										targetScale, ref scaleVelocity, timeRemaining);
 			scalerObject.transform.localScale = outputScale;
 			timeRemaining -= Time.deltaTime;
 			if (outputScale == targetScale || (timeRemaining < 0f))
@@ -262,6 +265,6 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 
 		needsScaleLerp = true;
 		targetScale = new Vector3(defBeats, defBeats, 1f);
-		timeRemaining = 3f;
+		timeRemaining = barChangeTime;
 	}
 }

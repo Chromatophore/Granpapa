@@ -99,9 +99,36 @@ public class Level
 			pageBuilder.Add(new LevelPageData(eA, playerInputConceptDict, levelAudio, animMap));
 		}
 
-		myPages.Add(new GamePlayPage(pageBuilder[0]));
-		myPages.Add(new CutscenePage(8, "Hello I am a test! :)!"));
-		myPages.Add(new GamePlayPage(pageBuilder[1]));
+		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
+		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!"));
+		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!"));
+		myPages.Add(qpg (new string[] { "", "", "goomba", "" } ));
+		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" } ));
+		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" } ));
+		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" } ));
+		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes"));
+		myPages.Add(qpg (new string[] { "", "", "goomba", "" } ));
+		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" } ));
+		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" } ));
+		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" } ));
+		myPages.Add(new CutscenePage(8, "8 bar interlude"));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(new CutscenePage(8, "8 bar interlude"));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
+		myPages.Add(new CutscenePage(16, "Well done, you can go on to the next stage now..."));
+		myPages.Add(new CutscenePage(2, "*fill*"));
+	}
+
+	private GamePlayPage qpg(string[] input)
+	{
+		List<string> lst = new List<string>(input);
+		return new GamePlayPage(new LevelPageData(lst, playerInputConceptDict, levelAudio, animMap));
 	}
 
 	public List<Page> getPages()

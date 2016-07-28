@@ -205,11 +205,14 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 		targetGoalTime = beatTime;
 
-		var cell = cellQueue.Dequeue();
-		Destroy(cell.cellObject,10f);
+		if (cellQueue.Count > 0)
+		{
+			var cell = cellQueue.Dequeue();
+			Destroy(cell.cellObject,10f);
 
-		if (cell.playable != null && data.success)
-			cell.playable.Play(data.enemyAnimation);
+			if (cell.playable != null && data.success)
+				cell.playable.Play(data.enemyAnimation);
+		}
 
 		PassPlayerAnimation(data.playerAnimation);
 	}

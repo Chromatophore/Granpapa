@@ -74,8 +74,8 @@
         <obj_info name="hair3" type="bone" w="57.4167" h="10"/>
         <obj_info name="hair4" type="bone" w="108.702" h="10"/>
         <obj_info name="mouth" type="bone" w="69.6048" h="10"/>
-        <obj_info name="browL" type="bone" w="68.0725" h="10"/>
-        <obj_info name="browR" type="bone" w="54.6999" h="10"/>
+        <obj_info name="browR" type="bone" w="68.0725" h="10"/>
+        <obj_info name="browL" type="bone" w="54.6999" h="10"/>
         <obj_info name="eyeBone" type="bone" w="53.6107" h="10"/>
         <obj_info name="armR" type="bone" w="69.3333" h="10"/>
         <obj_info name="armRlo" type="bone" w="74.2222" h="10"/>
@@ -133,6 +133,13 @@
                     <object_ref id="24" parent="11" timeline="20" key="0" z_index="24"/>
                     <object_ref id="25" parent="10" timeline="48" key="0" z_index="25"/>
                     <object_ref id="26" parent="22" timeline="49" key="0" z_index="26"/>
+                    <object_ref id="27" parent="17" timeline="50" key="0" z_index="27"/>
+                    <object_ref id="28" parent="18" timeline="51" key="0" z_index="28"/>
+                    <object_ref id="29" parent="19" timeline="52" key="0" z_index="29"/>
+                    <object_ref id="30" parent="19" timeline="53" key="0" z_index="30"/>
+                    <object_ref id="31" parent="16" timeline="54" key="0" z_index="31"/>
+                    <object_ref id="32" parent="16" timeline="55" key="0" z_index="32"/>
+                    <object_ref id="33" parent="16" timeline="56" key="0" z_index="33"/>
                 </key>
             </mainline>
             <timeline id="0" name="footL">
@@ -345,12 +352,12 @@
                     <bone x="18.877157" y="-3.948311" angle="271.396247"/>
                 </key>
             </timeline>
-            <timeline id="42" obj="17" name="browL" object_type="bone">
+            <timeline id="42" obj="17" name="browR" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
             </timeline>
-            <timeline id="43" obj="18" name="browR" object_type="bone">
+            <timeline id="43" obj="18" name="browL" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="97.209755" y="4.467588" angle="87.422587"/>
                 </key>
@@ -383,6 +390,41 @@
             <timeline id="49" name="handSplayedR">
                 <key id="0" spin="0">
                     <object folder="4" file="2" x="3.556471" y="1.679804" angle="359.045035"/>
+                </key>
+            </timeline>
+            <timeline id="50" name="eyebrowAngry">
+                <key id="0" spin="0">
+                    <object folder="5" file="11" x="16.801975" y="0.089454" angle="358.264295"/>
+                </key>
+            </timeline>
+            <timeline id="51" name="eyebrowAngry_000">
+                <key id="0" spin="0">
+                    <object folder="5" file="11" x="-0.774643" y="0.212412" angle="182.700629" scale_x="-1"/>
+                </key>
+            </timeline>
+            <timeline id="52" name="eyesBlink">
+                <key id="0" spin="0">
+                    <object folder="5" file="4" x="-0.256712" y="-1.933049" angle="359.449095"/>
+                </key>
+            </timeline>
+            <timeline id="53" name="eyesPain">
+                <key id="0" spin="0">
+                    <object folder="5" file="3" x="0.208236" y="-2.407025" angle="359.449095"/>
+                </key>
+            </timeline>
+            <timeline id="54" name="mouthOpen">
+                <key id="0" spin="0">
+                    <object folder="5" file="9" x="2.83758" y="-0.365047" angle="358.726969"/>
+                </key>
+            </timeline>
+            <timeline id="55" name="mouthSideOpen">
+                <key id="0" spin="0">
+                    <object folder="5" file="8" x="-0.969514" y="-2.628443" angle="358.726969"/>
+                </key>
+            </timeline>
+            <timeline id="56" name="mouthTongue">
+                <key id="0" spin="0">
+                    <object folder="5" file="10" x="3.849328" y="2.899666" angle="358.726969"/>
                 </key>
             </timeline>
         </animation>
@@ -749,7 +791,7 @@
                     <bone x="18.877157" y="-3.948311" angle="271.396247"/>
                 </key>
             </timeline>
-            <timeline id="17" obj="17" name="browL" object_type="bone">
+            <timeline id="17" obj="17" name="browR" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
@@ -757,7 +799,7 @@
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
             </timeline>
-            <timeline id="18" obj="18" name="browR" object_type="bone">
+            <timeline id="18" obj="18" name="browL" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="97.209755" y="4.467588" angle="87.422587"/>
                 </key>
@@ -1397,7 +1439,7 @@
                     <bone x="18.877157" y="-3.948311" angle="271.396247"/>
                 </key>
             </timeline>
-            <timeline id="17" obj="17" name="browL" object_type="bone">
+            <timeline id="17" obj="17" name="browR" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
@@ -1405,7 +1447,7 @@
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
             </timeline>
-            <timeline id="18" obj="18" name="browR" object_type="bone">
+            <timeline id="18" obj="18" name="browL" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="97.209755" y="4.467588" angle="87.422587"/>
                 </key>
@@ -2610,7 +2652,7 @@
                     <bone x="18.877157" y="-3.948311" angle="271.396247"/>
                 </key>
             </timeline>
-            <timeline id="12" obj="17" name="browL" object_type="bone">
+            <timeline id="12" obj="17" name="browR" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
@@ -2618,7 +2660,7 @@
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
             </timeline>
-            <timeline id="13" obj="18" name="browR" object_type="bone">
+            <timeline id="13" obj="18" name="browL" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="97.209755" y="4.467588" angle="87.422587"/>
                 </key>
@@ -3561,7 +3603,7 @@
                     <bone x="18.877157" y="-3.948311" angle="271.396247"/>
                 </key>
             </timeline>
-            <timeline id="12" obj="17" name="browL" object_type="bone">
+            <timeline id="12" obj="17" name="browR" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
@@ -3569,7 +3611,7 @@
                     <bone x="98.261743" y="-5.323987" angle="271.858921"/>
                 </key>
             </timeline>
-            <timeline id="13" obj="18" name="browR" object_type="bone">
+            <timeline id="13" obj="18" name="browL" object_type="bone">
                 <key id="0" spin="0">
                     <bone x="97.209755" y="4.467588" angle="87.422587"/>
                 </key>

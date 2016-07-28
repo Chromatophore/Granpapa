@@ -16,6 +16,11 @@ public class PageTrackerData
 
 	public PageTrackerData dataStartPoint;
 
+	public int offsetToEndOfSequence = -1;
+	public int phaseLength = -1;
+
+	public bool resolved = false;
+
 	public PageTrackerData()
 	{
 		Reset();
@@ -35,10 +40,13 @@ public class PageTrackerData
 		enemyAnimation = "";
 
 		originPage = null;
+		offsetToEndOfSequence = -1;
+		phaseLength = -1;
+		resolved = false;
 	}
 
 	public override string ToString()
 	{
-		return string.Format("'{0}' v '{1}': {2}", enemy, player, playerAnimation);
+		return string.Format("'{0}' v '{1}': {2} {3} {4}", enemy, player, resolution, offsetToEndOfSequence, phaseLength);
 	}
 }
