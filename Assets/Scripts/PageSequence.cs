@@ -19,6 +19,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	// these values are informed by the bar length:
 	private int enemyNodeValue = -1;
 	private int resolveNodeValue = -1;
+	private int nextResolveNodeValue = -1;
 
 	// Audio tracks associated with this game:
 	private SongStruct currentAudio;
@@ -154,7 +155,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		SamplesPerBeat = 44100f * currentAudio.beatTime;
 		nextSampleValue += (int)SamplesPerBeat;
 
-		SetPhaseLength(0);
+		SetPhaseLength(4);
 
 		// Setup the tracker bar for this audio:
 		trackerBar.Setup(this, currentAudio.beatTime);
@@ -171,9 +172,13 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	{
 		// configure nodes to write/read from based on bar length:
 		enemyNodeValue = playerNodeValue + beats;
-		resolveNodeValue = playerNodeValue - beats;
+		nextResolveNodeValue =  playerNodeValue - beats;
+
+		if (resolveNodeValue == -1)
+			resolveNodeValue = nextResolveNodeValue;
 
 		trackerBar.SetBeatsPerPhase(beats);
+		gameDisplay.SetBeatsPerPhase(beats);
 	}
 
 	public void PlayerInput(BUTTON inputButton)
@@ -514,6 +519,17 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		if (resolveNode.active)
 		{
 			gameDisplay.Beat(currentAudio.beatTime, resolveNode);
+			resolveNode.active = false;
+		}
+
+		// if there is a pending resolution node change:
+		if (resolveNodeValue != nextResolveNodeValue)
+		{
+			
+			if (trackerList[resolveNodeValue].resolution == DATAMARKER.END)
+			{
+				resolveNodeValue = nextResolveNodeValue;
+			}
 		}
 
 		// Why is it so hard to debug this trackerList ;-;

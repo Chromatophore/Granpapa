@@ -122,7 +122,7 @@ public class Level
 		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
 		myPages.Add(qpg (new string[] { "", "goomba", "pit", "", "", "goomba", "pit", ""} ));
 		myPages.Add(new CutscenePage(16, "Well done, you can go on to the next stage now..."));
-		myPages.Add(new CutscenePage(2, "*fill*"));
+		myPages.Add(new CutscenePage(4, "*fill*"));
 	}
 
 	private GamePlayPage qpg(string[] input)

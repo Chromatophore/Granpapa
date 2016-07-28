@@ -260,6 +260,8 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	public void SetBeatsPerPhase(int beats)
 	{
 		// 8 beats = 1.0 scale
+		if (beats < 4)
+			beats = 4;
 		float defBeats = 8f;
 		defBeats /= beats;
 

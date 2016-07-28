@@ -374,6 +374,7 @@ GameObject:
   - 124: {fileID: 317982011}
   - 92: {fileID: 317982010}
   - 81: {fileID: 317982009}
+  - 114: {fileID: 317982014}
   m_Layer: 0
   m_Name: PretendGameCamera
   m_TagString: Untagged
@@ -443,11 +444,25 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 317982008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 5, z: -100}
+  m_LocalPosition: {x: 5, y: 5, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1228340643}
   m_RootOrder: 0
+--- !u!114 &317982014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 317982008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815b15190bfce4025a631f79cc5d0d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeTime: 4
+  fixedPoint: {x: -2, y: -2, z: 0}
+  cam: {fileID: 317982012}
 --- !u!1 &342026369
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,7 +559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &571350497
 Transform:
   m_ObjectHideFlags: 0
@@ -677,6 +692,84 @@ Transform:
   m_Children: []
   m_Father: {fileID: 96981116}
   m_RootOrder: 1
+--- !u!1 &642418286 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 120146, guid: 8554b594bc2cf446cb0ce0318bd91109, type: 2}
+  m_PrefabInternal: {fileID: 221862146}
+--- !u!82 &642418287
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 642418286}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &700300224 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11449472, guid: 8eb1ef502f0e941c2b6456c0a4e60ae3,
@@ -1044,7 +1137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6212949bb4dbf45d192ed961a0e9317a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barChangeTime: 6
+  barChangeTime: 4
   trackerCellCount: 128
   trackerWidth: {x: 2, y: 0, z: 0}
   resetValue: -300
@@ -1995,6 +2088,7 @@ MonoBehaviour:
   - concept: hop
     prefab: {fileID: 167166, guid: eef77a3fed5d8411581b857fc36148d2, type: 2}
   playerAvatar: {fileID: 1228340641}
+  camScaler: {fileID: 317982014}
   creationPoint: 0
   horizontalSpacing: 3
   creationStart: {x: -4, y: -3, z: 0}

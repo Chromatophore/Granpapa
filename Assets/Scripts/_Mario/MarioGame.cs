@@ -29,6 +29,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 	private GameObject movementDolly;
 
+	[SerializeField]
+	private CameraEasyScaler camScaler; 
+
 	public float MoveCurve(float ratio)
 	{
 		return ratio;/*
@@ -215,5 +218,18 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		}
 
 		PassPlayerAnimation(data.playerAnimation);
+	}
+
+	public void SetBeatsPerPhase(int beats)
+	{
+		if (beats == 4)
+		{
+			camScaler.ChangeSize(7);
+			//camScaler.ChangeSize(13);
+		}
+		else if (beats == 8)
+		{
+			camScaler.ChangeSize(13);
+		}
 	}
 }
