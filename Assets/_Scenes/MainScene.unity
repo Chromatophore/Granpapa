@@ -528,7 +528,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 889672609}
   m_RootOrder: 3
@@ -698,7 +697,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 349782017}
   m_Father: {fileID: 1582334233}
@@ -930,7 +928,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 889672609}
   m_Father: {fileID: 269877047}
@@ -1020,7 +1017,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 889672609}
   m_RootOrder: 1
@@ -1800,7 +1796,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1281154968}
   - {fileID: 367146329}
@@ -2072,7 +2067,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 889672609}
   m_RootOrder: 0
@@ -2677,6 +2671,9 @@ MonoBehaviour:
     prefab: {fileID: 115502, guid: 8565e6c409597448aade5cb154a8f14a, type: 2}
   - concept: chomp
     prefab: {fileID: 172268, guid: 87450bd2c5ab648fc8b134f89bd32327, type: 2}
+  makeInsteadOfAnimatePrefabs:
+  - concept: Flame
+    prefab: {fileID: 166432, guid: 4f5912d06b3f6460489a65418dcaaecc, type: 2}
   trackerPrefabs:
   - concept: goomba
     prefab: {fileID: 155700, guid: 5be02a6582f504771bb8fb6e595eff74, type: 2}
@@ -2752,7 +2749,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 889672609}
   m_RootOrder: 2

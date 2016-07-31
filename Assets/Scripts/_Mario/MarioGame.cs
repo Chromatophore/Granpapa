@@ -14,6 +14,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 	public StringToPrefab[] prefabList;
 	private Dictionary<string, GameObject> prefabDict;
 
+	public StringToPrefab[] makeInsteadOfAnimatePrefabs;
+	private Dictionary<string, GameObject> makeInsteadDict;
+
 	public StringToPrefab[] trackerPrefabs;
 
 	private IDisposable Unsubscriber = null;
@@ -116,7 +119,17 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 	{
 		if (playerAnimator == null)
 			return;
-		playerAnimator.Play(animation);
+
+		GameObject makePrefab;
+		if (makeInsteadDict.TryGetValue(animation, out makePrefab))
+		{
+			playerAnimator.MakeObject(makePrefab);
+		}
+		else
+		{
+			playerAnimator.Play(animation);
+		}
+		
 	}
 
 	[SerializeField]
@@ -129,6 +142,8 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 	void Start()
 	{
 		prefabDict = StringToPrefab.MakeDict(prefabList);
+
+		makeInsteadDict = StringToPrefab.MakeDict(makeInsteadOfAnimatePrefabs);
 
 		var prefabHandler = NoodleMain.GetSingleRef();
 		foreach (var trackerPrefab in trackerPrefabs)

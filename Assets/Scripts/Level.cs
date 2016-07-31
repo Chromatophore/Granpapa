@@ -89,6 +89,7 @@ public class Level
 		animMap = new PlayerAnimMap( new string[] {
 		"", "jump", "Jump", "", "0",
 		"", "hop", "Hop", "", "0",
+		"", "flame", "Flame", "", "0",
 		"pit", "jump", "Jump", "", "1",
 		"pit", "def", "PitNo", "", "-1",
 		"goomba", "jump", "Jump", "", "1",

@@ -97,6 +97,8 @@ public class Page
 				return "";
 			}
 		}
+		if (sound == null)
+			return "";
 		return sound[Random.Range(0, sound.Length)];
 	}
 
