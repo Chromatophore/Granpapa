@@ -31,9 +31,6 @@ public class Level
 
 	private NoodleMain noodleMain;
 
-	private List<string> enemyAttacks = new List<string>(new string[] { "goomba", "", "pit", "" }); // , "goomba", "goomba", "", ""});
-	private List<string> enemyAttacks2 = new List<string>(new string[] { "pit", "", "goomba", "goomba" }); //, "", "pit", "", ""});
-
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
 						{ BUTTON.B, new string[] { "hop" } }, 
@@ -122,14 +119,14 @@ public class Level
 		"coingoomba", "jump", "Jump", "collect", "1",
 		"coingoomba", "hop", "EnemyYes", "splat", "2",
 		"coingoomba", "def", "EnemyNo", "", "-1",
-		
+
 			});
 
-		//myPages.Add(new CutscenePage(8, "*No Speaky!*"));
-		//myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!"));
+		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
+		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "jump"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", thirdActiveInputDict));
 		//myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
-		myPages.Add(qpg (new string[] { "", "", "", "", "", "", "", ""}, 1));
+		myPages.Add(qpg (new string[] { "", "", "goomba", ""}, 1));
 		Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
 		customSoundDict.Add("jump", new string[] {"bop"});
 		myPages[myPages.Count - 1].AddCustomSounds(customSoundDict);

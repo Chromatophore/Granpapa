@@ -25,6 +25,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private SongStruct currentAudio;
 	[SerializeField]
 	private AudioSource attachedAudioSource;
+	[SerializeField]
+	private AudioSource additionalAudio;
 
 	// List of all pages:
 	private List<Page> pageList;
@@ -524,6 +526,16 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			if (cutscenePage != null)
 			{
 				cutscenePage.ActivateBeat(this);
+				string customAudioName = cutscenePage.GetCustomAudio();
+				if (customAudioName != "")
+				{
+					AudioClip customClip = noodleMain.GetClip(customAudioName);
+					if (customClip != null)
+					{
+						additionalAudio.clip = customClip;
+						additionalAudio.Play();
+					}
+				}
 			}
 		}
 

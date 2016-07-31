@@ -239,6 +239,7 @@ public class CutscenePage : Page, IObserver<BeatData>
 	private int beatsTillEnd = -1;
 
 	private string inputString;
+	private string customAudio;
 
 	private IDisposable _unsubscriber = null;
 	private IDisposable Unsubscriber
@@ -258,13 +259,14 @@ public class CutscenePage : Page, IObserver<BeatData>
 		}
 	}
 
-	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null)
+	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null, string customAudio = "")
 	{
 		enemyAttacks = new List<string>();
 
 		length /= 2;
 
 		this.length = length;
+		this.customAudio = customAudio;
 		inputString = testString;
 
 		for (int j = 0; j < length; j++)
@@ -290,10 +292,14 @@ public class CutscenePage : Page, IObserver<BeatData>
 
 	public void ActivateBeat(IObservable<BeatData> dataSource)
 	{
-
 		beatsTillEnd = length * 2;
 		Unsubscriber = dataSource.Subscribe(this);
 		Cutscener.SetText(inputString);
+	}
+
+	public string GetCustomAudio()
+	{
+		return customAudio;
 	}
 
 	public void ResolveBeat()
