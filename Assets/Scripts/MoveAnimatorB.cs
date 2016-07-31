@@ -25,6 +25,10 @@ public class MoveAnimatorB : MonoBehaviour {
 
 	public void MakeSound(AudioClip sound)
 	{
+		if (sound == null)
+		{
+			return;
+		}
 		audiosource.clip = sound;
 		audiosource.Play();
 	}

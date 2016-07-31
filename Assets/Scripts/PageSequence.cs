@@ -67,6 +67,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	public IGameDisplay gameDisplay;
 	public string gameString;
 
+	[SerializeField]
+	private UIScoreDisplay scoreDisplay;
+
 	void Start()
 	{
 		if (noodleMain == null)
@@ -338,6 +341,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// if the current page feels that it is completed, we will move to the next page:
 			if (currentPage == null || currentPage.Complete)
 			{
+				if (currentPage != null)
+				{
+					scoreDisplay.PageScore(currentPage.AssessScore());
+				}
 				NextPage();
 			}
 

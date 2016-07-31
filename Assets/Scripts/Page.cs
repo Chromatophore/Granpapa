@@ -20,6 +20,8 @@ public class Page
 	private bool hasFailed;
 	private int beatCount;
 	protected PlayerAnimMap playerAnimMap;
+	private int pageScore;
+	protected int maxScore;
 
 	public virtual void UpNext()
 	{
@@ -43,6 +45,7 @@ public class Page
 		isPlaying = false;
 		hasFailed = false;
 		beatCount = 0;
+		pageScore = 0;
 
 		Complete = false;
 	}
@@ -85,7 +88,14 @@ public class Page
 		string[] sound;
 		if (customSoundDict == null || !customSoundDict.TryGetValue(concept, out sound))
 		{
-			mainSoundDict.TryGetValue(concept, out sound);
+			if (mainSoundDict != null)
+			{
+				mainSoundDict.TryGetValue(concept, out sound);
+			}
+			else
+			{
+				return "";
+			}
 		}
 		return sound[Random.Range(0, sound.Length)];
 	}
@@ -97,7 +107,10 @@ public class Page
 		thisCell.resolved = true;
 
 		if (playerAnimMap != null)
+		{
 			score = playerAnimMap.AssessSuccess(thisCell);
+			pageScore += score;
+		}
 
 		if (score < 0)
 		{
@@ -111,6 +124,26 @@ public class Page
 				Complete = true;
 		}
 		
+	}
+
+	public int AssessScore()
+	{
+		if (pageScore > maxScore)
+		{
+			return 2;
+		}
+		else if (pageScore == maxScore && maxScore != 0)
+		{
+			return 1;
+		}
+		else if (pageScore >= maxScore * 0.5f || maxScore == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 
 	public virtual int PhaseBeats()
@@ -152,6 +185,7 @@ public class GamePlayPage : Page
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
 		playerAnimMap = buildInfo.animMap;
 		mainSoundDict = buildInfo.mainSoundDict;
+		maxScore = buildInfo.maxScore;
 
 		Reset();
 

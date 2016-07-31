@@ -140,6 +140,8 @@ public class NoodleMain : MonoBehaviour
 
 	public AudioClip GetClip(string name)
 	{
-		return audioClips[name];
+		AudioClip value = null;
+		audioClips.TryGetValue(name, out value);
+		return value;
 	}
 }
