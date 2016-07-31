@@ -146,18 +146,22 @@ public class Level
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
 		myPages.Add(new CutscenePage(8, "8 bar interlude"));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
+		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
 		myPages.Add(new CutscenePage(16, "Well done, you can go on to the next stage now..."));
 		myPages.Add(new CutscenePage(4, "*fill*"));
 	}
 
-	private GamePlayPage qpg(string[] input, int maxscore = 0)
+	private GamePlayPage qpg(string[] input, int maxscore = 0, bool noBreaks = false)
 	{
 		List<string> lst = new List<string>(input);
-		return new GamePlayPage(new LevelPageData(lst, playerInputConceptDict, levelAudio, animMap, mainSoundDict, maxscore));
+		return new GamePlayPage(new LevelPageData(lst, playerInputConceptDict, levelAudio, animMap, mainSoundDict, maxscore), noBreaks);
 	}
 
 	public List<Page> getPages()

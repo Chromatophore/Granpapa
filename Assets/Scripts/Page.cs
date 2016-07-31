@@ -24,6 +24,8 @@ public class Page
 	private int pageScore;
 	protected int maxScore;
 
+	public bool NoBreaks { get; protected set; }
+
 	public virtual void UpNext()
 	{
 		upNext = true;
@@ -199,7 +201,7 @@ public class GamePlayPage : Page
 	Page Manager continues to beat @ page which can do the game displayed input when needed
 
 	*/
-	public GamePlayPage(LevelPageData buildInfo)
+	public GamePlayPage(LevelPageData buildInfo, bool noBreaks = false)
 	{
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
@@ -210,6 +212,8 @@ public class GamePlayPage : Page
 		Reset();
 
 		DisplaySuccess = true;
+
+		NoBreaks = noBreaks;
 	}
 
 	public override void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
@@ -262,6 +266,8 @@ public class CutscenePage : Page, IObserver<BeatData>
 	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null, string customAudio = "")
 	{
 		enemyAttacks = new List<string>();
+
+		NoBreaks = false;
 
 		length /= 2;
 

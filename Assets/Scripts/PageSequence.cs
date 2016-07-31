@@ -76,6 +76,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	[SerializeField]
 	private UIButtonDisplay buttonDisplay;
 
+	private bool lastBreak = false;
+
 	void Start()
 	{
 		if (noodleMain == null)
@@ -182,11 +184,13 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	}
 
 	
-	private void SetPhaseLength(int beats)
+	private void SetPhaseLength(int beats, int resolveBeats = -1)
 	{
+		if (resolveBeats == -1)
+			resolveBeats = beats;
 		// configure nodes to write/read from based on bar length:
 		enemyNodeValue = playerNodeValue + beats;
-		nextResolveNodeValue =  playerNodeValue - beats;
+		nextResolveNodeValue =  playerNodeValue - resolveBeats;
 
 		if (resolveNodeValue == -1)
 			resolveNodeValue = nextResolveNodeValue;
@@ -208,14 +212,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// this button exists and the concept string is in concept
 			//Debug.Log(string.Format("Player inputted button: {0} and got concept: {1}", inputButton, concept));
 			ConceptConsumer(0, concept);
-
-			// play the animation associated with this:
-			granpapaAnim.Play(gameString, concept[0]);
-
-			if (trackerList[playerNodeValue].originPage != null)
-			{
-				granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue].originPage.ResolveSound(concept[0])));
-			}
 		}
 	}
 
@@ -248,6 +244,14 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				{
 					break;
 				}
+			}
+
+			// play the animation associated with this:
+			granpapaAnim.Play(gameString, inputConcept[0]);
+
+			if (trackerList[playerNodeValue + inputFudgeOffset].originPage != null)
+			{
+				granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue + inputFudgeOffset].originPage.ResolveSound(inputConcept[0])));
 			}
 		}
 	}
@@ -320,9 +324,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		// We must first attempt to resolve any data sequences that are now in the resolution zone
 		// We can either assess a whole bar in one go, based on if we are set to use DataMarkers
-		if (currentPage != null)
+		var assessPage = trackerList[resolveNodeValue].originPage;
+		if (assessPage != null)
 		{
-			if (currentPage.useDataMarkers && trackerList[resolveNodeValue].resolution == DATAMARKER.START)
+			if (assessPage.useDataMarkers && trackerList[resolveNodeValue].resolution == DATAMARKER.START)
 			{
 				var dataSequence = new List<PageTrackerData>();
 				int index = resolveNodeValue;
@@ -335,17 +340,17 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				}
 
 				Debug.Log(EasyPrint.MakeString(dataSequence));
-				currentPage.AssessSequence(dataSequence);
+				assessPage.AssessSequence(dataSequence);
 			}
 			// Or, we can assess as the events pass behind us, which allows us to move the kid closer to grandpapa
-			else if (!currentPage.useDataMarkers)
+			else if (!assessPage.useDataMarkers)
 			{
 				// Check the previous entry once it has left us
-				currentPage.CheckSuccess(trackerList[ playerNodeValue - 1] );
+				assessPage = trackerList[playerNodeValue - 1].originPage;
+				assessPage.CheckSuccess(trackerList[ playerNodeValue - 1]);
 			}
 		}
 		
-
 		var playerNode = trackerList[playerNodeValue];
 
 		// if we are midway through the current point, ie, we are transitioning from the end of our input to the player playing.
@@ -354,6 +359,19 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// if the previous node was the end of a pattern, we need to
 		// a) worry about the next pattern
 		bool dealWithNewAttacks = (trackerList[ playerNodeValue - 1].resolution == DATAMARKER.END);
+
+		if (playerNode.originPage != null && lastBreak != playerNode.originPage.NoBreaks)
+		{
+			if (lastBreak == false)
+			{
+				dealWithNewAttacks = true;
+				lastBreak = true;
+			}
+			else
+				lastBreak = false;
+
+		}
+
 		int newEnemyDisplayStart = -1;
 		int newEnemyDisplayCount = -1;
 
@@ -361,7 +379,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		//if (beatIn2Bar == beatsPerPhase)
 		{
 			// if the current page feels that it is completed, we will move to the next page:
-			if (currentPage == null || currentPage.Complete)
+			if (currentPage == null || currentPage.Complete || (currentPage.NoBreaks))
 			{
 				if (currentPage != null)
 				{
@@ -407,56 +425,86 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				enemyWriteLocation += playerNodeValue;
 			}
 
-			newEnemyDisplayStart = enemyWriteLocation;
-			newEnemyDisplayCount = attackLength;
-
-			SetPhaseLength(attackLength);
-
-			//Debug.Log("Attack location: " + enemyWriteLocation);
-
-			PageTrackerData lastAccessed = null;
-			PageTrackerData dataStartPoint = null;
-			int offsetRemaining = (2 * attackLength);
-			for (int i = 0; i < 2 * attackLength; i++)
+			// we need to be multiple ahead during no break mode
+			bool multipleAhead = trackerList[enemyWriteLocation].active;
+			bool abandonPass = false;
+			if (multipleAhead)
 			{
-				var thisIndex = enemyWriteLocation + i;
-				var thisNode = trackerList[thisIndex];
-
-				if (i == 0)
+				if (currentPage.NoBreaks == true)
 				{
-					thisNode.resolution = DATAMARKER.START;
-					dataStartPoint = thisNode;
+					while (trackerList[enemyWriteLocation].active == true)
+					{
+						enemyWriteLocation += trackerList[enemyWriteLocation].offsetToEndOfSequence;
+					}
 				}
-
-				if (i < attackList.Count)
-					thisNode.enemy = attackList[i];
-
-				if (i < attackLength)
-				{
-				
-					thisNode.active = true;
-					thisNode.phaseLength = attackLength;
-				}
-				thisNode.dataStartPoint = dataStartPoint;
-				thisNode.offsetToEndOfSequence = offsetRemaining;
-				thisNode.sequenceNumber = i;
-
-				//Debug.Log("Setting index " + thisIndex + " offset to " + offsetRemaining);
-
-				if (i == attackLength - 1)
-					thisNode.resolution = DATAMARKER.END;
-
-				trackerBar.SetCellActive(thisIndex);
-
-				thisNode.originPage = currentPage;
-
-
-
-				offsetRemaining--;
+				else
+					abandonPass = true;	// if we can have breaks then we do not need this
 			}
 
+			if (!abandonPass)
+			{
+				newEnemyDisplayStart = enemyWriteLocation;
+				newEnemyDisplayCount = attackLength;
 
-			trackerList[enemyWriteLocation + 2 * attackLength].resolution = DATAMARKER.SYNC;
+				PageTrackerData lastAccessed = null;
+				PageTrackerData dataStartPoint = null;
+				int cap = 2 * attackLength;
+				bool breaks = true;
+				if (currentPage.NoBreaks)
+				{
+					breaks = false;
+					cap = attackLength;
+					SetPhaseLength(attackLength, 0);
+				}
+				else
+				{
+					SetPhaseLength(attackLength);
+				}
+
+				int offsetRemaining = cap;
+				
+
+				for (int i = 0; i < cap; i++)
+				{
+					var thisIndex = enemyWriteLocation + i;
+					var thisNode = trackerList[thisIndex];
+
+					if (i == 0)
+					{
+						thisNode.resolution = DATAMARKER.START;
+						dataStartPoint = thisNode;
+					}
+
+					if (i < attackList.Count || breaks == false)
+						thisNode.enemy = attackList[i];
+
+					if (i < attackLength || breaks == false)
+					{
+					
+						thisNode.active = true;
+						thisNode.phaseLength = attackLength;
+					}
+					thisNode.dataStartPoint = dataStartPoint;
+					thisNode.offsetToEndOfSequence = offsetRemaining;
+					thisNode.sequenceNumber = i;
+
+					//Debug.Log("Setting index " + thisIndex + " offset to " + offsetRemaining);
+
+					if (i == attackLength - 1)
+						thisNode.resolution = DATAMARKER.END;
+
+					trackerBar.SetCellActive(thisIndex);
+
+					thisNode.originPage = currentPage;
+
+
+
+					offsetRemaining--;
+				}
+
+
+				//trackerList[enemyWriteLocation + cap].resolution = DATAMARKER.SYNC;
+			}
 		}
 
 		// NOW THAT ALL OF OUR DATA IS UPDATED:
@@ -580,12 +628,12 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// if there is a pending resolution node change:
 		if (resolveNodeValue != nextResolveNodeValue)
 		{
-			
 			if (trackerList[resolveNodeValue].resolution == DATAMARKER.END)
 			{
 				resolveNodeValue = nextResolveNodeValue;
 			}
 		}
+		//Debug.Log(playerNode);
 
 		// Why is it so hard to debug this trackerList ;-;
 		/*
