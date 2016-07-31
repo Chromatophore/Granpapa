@@ -224,7 +224,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			int i = 0 + inputFudgeOffset;
 			int sequenceNumber = 0;
 
-			if (trackerList[playerNodeValue + inputConcept.Length + i].active == false)
+			if (inputConcept.Length > 1 && trackerList[playerNodeValue + inputConcept.Length - 1 + i].active == false)
 			{
 				return;
 			}
