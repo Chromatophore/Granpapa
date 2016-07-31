@@ -107,6 +107,21 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	void Update()
 	{
 		UpdateBeatBox();
+
+
+		var originPage = trackerList[playerNodeValue + inputFudgeOffset].originPage;
+		// Load the input map from this page, in case it chaneges:
+		if (originPage != null)
+		{
+			playerInputConceptDict = originPage.GetPlayerInputConceptDict();
+			var inputcheck = originPage.GetPageActiveInputDict();
+			if (inputcheck != null)
+			{
+				pageActiveInputDict = inputcheck;
+				buttonDisplay.ParseActiveInputDict(pageActiveInputDict);
+			}
+			mainSoundDict = originPage.GetMainSoundDict();
+		}
 	}
 
 	private IEnumerator LoadNewLevelDelayed(float delay, Level levelToLoad)
@@ -201,6 +216,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	public void PlayerInput(BUTTON inputButton)
 	{
+		int i = 0 + inputFudgeOffset;
+		int sequenceNumber = 0;
+
 		if (playerInputConceptDict == null) { return; }
 		if (pageActiveInputDict == null || !pageActiveInputDict.ContainsKey(inputButton)) { return; }
 		string[] concept;
@@ -222,29 +240,35 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			int i = 0 + inputFudgeOffset;
 			int sequenceNumber = 0;
 
+			var originPage = trackerList[playerNodeValue + i].originPage;
+
 			if (inputConcept.Length > 1 && trackerList[playerNodeValue + inputConcept.Length - 1 + i].active == false)
 			{
-				return;
+				
 			}
-			foreach (var move in inputConcept)
+			else
 			{
-				var node = trackerList[playerNodeValue + i];
-				if (node.active && node.player == "")
+				foreach (var move in inputConcept)
 				{
-					string moveFeedback = move;
-					node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
+					var node = trackerList[playerNodeValue + i];
+					if (node.active && node.player == "")
+					{
+						string moveFeedback = move;
+						node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
 
-					if (move != "")
-						trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
+						if (move != "")
+							trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
 
-					sequenceNumber++;
-					i++;
-				}
-				else
-				{
-					break;
+						sequenceNumber++;
+						i++;
+					}
+					else
+					{
+						break;
+					}
 				}
 			}
+			
 
 			// play the animation associated with this:
 			granpapaAnim.Play(gameString, inputConcept[0]);
@@ -390,16 +414,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			if (currentPage != null)
 				currentPage.UpNext();
-
-			// Load the input map from this page, in case it chaneges:
-			playerInputConceptDict = currentPage.GetPlayerInputConceptDict();
-			var inputcheck = currentPage.GetPageActiveInputDict();
-			if (inputcheck != null)
-			{
-				pageActiveInputDict = inputcheck;
-				buttonDisplay.ParseActiveInputDict(pageActiveInputDict);
-			}
-			mainSoundDict = currentPage.GetMainSoundDict();
 
 			// Load some attacks from page:
 			var attackList = currentPage.GetAttacks();
@@ -617,6 +631,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		if (resolveNode.player != "")
 		{
 			kidAnim.Play(gameString, resolveNode.player);
+			kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(resolveNode.player)));
 		}
 
 		if (resolveNode.active)
