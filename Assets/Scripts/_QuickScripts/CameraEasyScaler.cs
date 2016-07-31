@@ -56,8 +56,6 @@ public class CameraEasyScaler : MonoBehaviour
 		{
 			lastSize = Mathf.SmoothDamp(lastSize, newSize, ref sizeChangeSpeed, remainingTime);
 
-			Debug.Log(lastSize);
-
 			cam.orthographicSize = lastSize;
 			lastPosition = offset * lastSize + fixedPoint;
 			lastPosition.z = -100;

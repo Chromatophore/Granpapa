@@ -11,6 +11,7 @@ public class PageTrackerData
 	public string playerAnimation;
 	public string enemyAnimation;
 	public int score;
+	public int sequenceNumber = 0;
 
 	public Page originPage;
 
@@ -45,6 +46,7 @@ public class PageTrackerData
 		offsetToEndOfSequence = -1;
 		phaseLength = -1;
 		resolved = false;
+		sequenceNumber = 0;
 	}
 
 	public override string ToString()

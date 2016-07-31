@@ -18,7 +18,7 @@ public class MarioCloudScipt : MonoBehaviour {
 
 	void Start()
 	{
-		Destroy(gameObject,30f);
+		Destroy(gameObject,50f);
 	}
 
 	// Update is called once per frame

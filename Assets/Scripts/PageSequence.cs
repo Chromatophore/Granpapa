@@ -437,6 +437,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				}
 				thisNode.dataStartPoint = dataStartPoint;
 				thisNode.offsetToEndOfSequence = offsetRemaining;
+				thisNode.sequenceNumber = i;
 
 				//Debug.Log("Setting index " + thisIndex + " offset to " + offsetRemaining);
 
@@ -446,6 +447,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				trackerBar.SetCellActive(thisIndex);
 
 				thisNode.originPage = currentPage;
+
+
 
 				offsetRemaining--;
 			}

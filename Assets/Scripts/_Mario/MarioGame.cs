@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public struct MarioGameCell
 {
 	public GameObject cellObject;
-	public IPlayable playable;
+	public List<IPlayable> playables;
 }
 
 
@@ -55,6 +55,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			case "goomba":
 			case "pit":
 			case "chomp":
+			case "coinhi":
+			case "coinlo":
+			case "coingoomba":
 				break;
 			case "reset":
 				marioB.SetActive(false);
@@ -84,11 +87,11 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 				}
 			}
 
-			IPlayable playable = newObject.GetComponentInChildren<IPlayable>();
+			List<IPlayable> playables = new List<IPlayable>(newObject.GetComponentsInChildren<IPlayable>());
 
 			var newCell = new MarioGameCell();
 			newCell.cellObject = newObject;
-			newCell.playable = playable;
+			newCell.playables = playables;
 
 			cellQueue.Enqueue(newCell);
 
@@ -168,7 +171,8 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		//SetUpcomingAttacks(0, null);
 	}
 
-	private float nextCloud = 0f;
+	private float nextCloud = -13f;
+	private int firstClouds = -12;
 
 	void Update()
 	{
@@ -194,8 +198,8 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			{
 				Vector3 pos = playerAvatar.transform.position;
 				pos.y += 3f + Random.value * 7f;
-				pos.x += 20f;
-				pos.z = 10;
+				pos.x += 30f + firstClouds;
+				pos.z = 100 + (20 * (int)Random.value);
 				GameObject newCloud = Instantiate(newObjectPrefab, pos , Quaternion.identity ) as GameObject;
 				var script = newCloud.GetComponent<MarioCloudScipt>();
 
@@ -203,9 +207,14 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 				if (script != null)
 				{
-					script.lookTarget = playerAvatar;
+					script.lookTarget = marioA;
 					script.movementSpeed = new Vector3(-0.8f + -0.4f * Random.value,0f,0f);
 				}
+
+				if (firstClouds < 0)
+					firstClouds += 5;
+				else
+					firstClouds = 0;
 			}
 
 			nextCloud += 6f + Random.value * 4f;
@@ -235,8 +244,11 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			var cell = cellQueue.Dequeue();
 			Destroy(cell.cellObject,10f);
 
-			if (cell.playable != null && data.success)
-				cell.playable.Play(data.enemyAnimation);
+			if (cell.playables != null && data.success)
+			{
+				foreach (var playable in cell.playables)
+					playable.Play(data.enemyAnimation);
+			}
 
 			if (data.enemy == "firemario")
 				StartCoroutine(MarioChange());
@@ -245,10 +257,11 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			{
 				var nextCell = cellQueue.Peek();
 				var nextData = data.next;
-				if (nextCell.playable != null)// && nextData.enemy == "")
+				if (nextCell.playables != null)// && nextData.enemy == "")
 				{
 					nextData.enemy = "";
-					nextCell.playable.Play("kill");
+					foreach (var playable in nextCell.playables)
+						playable.Play("kill");
 				}
 			}
 		}

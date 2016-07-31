@@ -110,13 +110,20 @@ public class Page
 
 	public virtual void CheckSuccess(PageTrackerData thisCell)
 	{
-		int score = 0;
+		int score = thisCell.score;
 
 		thisCell.resolved = true;
 
+		if (thisCell.enemy == "chomp")
+		{
+			int modulo = thisCell.sequenceNumber % 4;
+			if (modulo == 1 || modulo == 2)
+				thisCell.enemy = "";
+		}
+
 		if (playerAnimMap != null)
 		{
-			score = playerAnimMap.AssessSuccess(thisCell);
+			score += playerAnimMap.AssessSuccess(thisCell);
 			pageScore += score;
 		}
 
@@ -209,9 +216,13 @@ public class GamePlayPage : Page
 	{
 		if (move == "kill")
 		{
-			if (node.enemy == "goomba")
+			if (node.enemy == "goomba" || node.enemy == "chomp")
 			{
 				node.enemy = "";
+			}
+			else if (node.enemy == "coingoomba")
+			{
+				node.enemy = "coinhi";
 			}
 			move = "";
 		}
