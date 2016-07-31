@@ -22,11 +22,6 @@ public class UIScoreDisplay : MonoBehaviour {
 		Reset();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	public void Reset()
 	{
 		displayCase = 6;
