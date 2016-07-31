@@ -55,8 +55,9 @@ public class Level
 
 
 	private Dictionary<string, string[]> mainSoundDict = new Dictionary<string, string[]>() { 
-						{ "jump", new string[] { "jump" } }, 
-						{ "hop", new string[] { "bop" } }
+						{ "jump", new string[] { "hop1", "hop2", "hop3" } }, 
+						{ "hop", new string[] { "bop1", "bop2", "bop3" } },
+						{ "flame", new string[] { "burn1", "burn2", "burn3" } }
 	};
 
 	private List<Page> myPages = new List<Page>();
@@ -123,20 +124,20 @@ public class Level
 			});
 
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
-		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "jump"));
+		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "mariointro"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", thirdActiveInputDict));
 		//myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
 		myPages.Add(qpg (new string[] { "", "", "goomba", ""}, 1));
-		Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
-		customSoundDict.Add("jump", new string[] {"bop"});
-		myPages[myPages.Count - 1].AddCustomSounds(customSoundDict);
-		myPages.Add(qpg (new string[] { "coinhi", "pit", "coinlo", "goomba" }, 2));
-		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
+		//Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
+		//customSoundDict.Add("jump", new string[] {"bop"});
+		//myPages[myPages.Count - 1].AddCustomSounds(customSoundDict);
+		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 2));
+		myPages.Add(qpg(new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
-		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", thirdActiveInputDict));
+		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", thirdActiveInputDict, "mariotwo"));
 		//myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", secondActiveInputDict));
-		myPages.Add(qpg (new string[] { "", "", "goomba", "" }, 1));
-		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" }, 2));
+		myPages.Add(qpg (new string[] { "", "goomba", "", "" }, 1));
+		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 2));
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
 		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict));
