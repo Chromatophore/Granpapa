@@ -14,6 +14,7 @@ public class Page
 	protected Dictionary<BUTTON, string[]> playerInputConceptDict;
 	protected Dictionary<string, string[]> mainSoundDict;
 	protected Dictionary<string, string[]> customSoundDict;
+	protected Dictionary<BUTTON, string> pageActiveInputDict;
 
 	private bool upNext;
 	private bool isPlaying;
@@ -58,6 +59,11 @@ public class Page
 	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
 	{
 		return playerInputConceptDict;
+	}
+
+	public Dictionary<BUTTON, string> GetPageActiveInputDict()
+	{
+		return pageActiveInputDict;
 	}
 
 	public Dictionary<string, string[]> GetMainSoundDict()
@@ -221,7 +227,7 @@ public class CutscenePage : Page, IObserver<BeatData>
 		}
 	}
 
-	public CutscenePage(int length, string testString)
+	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null)
 	{
 		enemyAttacks = new List<string>();
 
@@ -233,6 +239,11 @@ public class CutscenePage : Page, IObserver<BeatData>
 		for (int j = 0; j < length; j++)
 		{
 			enemyAttacks.Add("cutscene");
+		}
+
+		if (pageActiveInputDict != null)
+		{
+			this.pageActiveInputDict = pageActiveInputDict;
 		}
 	}
 

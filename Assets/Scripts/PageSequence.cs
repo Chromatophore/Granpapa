@@ -45,6 +45,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	//private ButtonConceptMap[] serializedPlayerInputConcept;
 	private Dictionary<BUTTON, string[]> playerInputConceptDict;
 	private Dictionary<string, string[]> mainSoundDict;
+	private Dictionary<BUTTON, string> pageActiveInputDict;
 
 	// This is the area that will deal with the music of the level:
 
@@ -69,6 +70,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	[SerializeField]
 	private UIScoreDisplay scoreDisplay;
+
+	[SerializeField]
+	private UIButtonDisplay buttonDisplay;
 
 	void Start()
 	{
@@ -188,6 +192,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	public void PlayerInput(BUTTON inputButton)
 	{
 		if (playerInputConceptDict == null) { return; }
+		if (pageActiveInputDict == null || !pageActiveInputDict.ContainsKey(inputButton)) { return; }
 		string[] concept;
 
 		bool success = playerInputConceptDict.TryGetValue(inputButton, out concept);
@@ -353,6 +358,12 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			// Load the input map from this page, in case it chaneges:
 			playerInputConceptDict = currentPage.GetPlayerInputConceptDict();
+			var inputcheck = currentPage.GetPageActiveInputDict();
+			if (inputcheck != null)
+			{
+				pageActiveInputDict = inputcheck;
+				buttonDisplay.ParseActiveInputDict(pageActiveInputDict);
+			}
 			mainSoundDict = currentPage.GetMainSoundDict();
 
 			// Load some attacks from page:

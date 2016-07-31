@@ -41,6 +41,22 @@ public class Level
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
 	};
 
+	private Dictionary<BUTTON, string> firstActiveInputDict = new Dictionary<BUTTON, string>() { 
+						{ BUTTON.A, "Jump" }
+	};
+
+	private Dictionary<BUTTON, string> secondActiveInputDict = new Dictionary<BUTTON, string>() { 
+						{ BUTTON.A, "Jump" }, 
+						{ BUTTON.B, "Hop" }
+	};
+
+	private Dictionary<BUTTON, string> thirdActiveInputDict = new Dictionary<BUTTON, string>() { 
+						{ BUTTON.A, "Jump" }, 
+						{ BUTTON.B, "Hop" }, 
+						{ BUTTON.X, "Flame" }
+	};
+
+
 	private Dictionary<string, string[]> mainSoundDict = new Dictionary<string, string[]>() { 
 						{ "jump", new string[] { "jump" } }, 
 						{ "hop", new string[] { "bop" } }
@@ -101,7 +117,7 @@ public class Level
 
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
 		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!"));
-		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!"));
+		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
 		myPages.Add(qpg (new string[] { "", "", "goomba", "" }, 1));
 		Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
 		customSoundDict.Add("jump", new string[] {"bop"});
@@ -109,12 +125,12 @@ public class Level
 		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" }, 2));
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
-		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes"));
+		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", secondActiveInputDict));
 		myPages.Add(qpg (new string[] { "", "", "goomba", "" }, 1));
 		myPages.Add(qpg (new string[] { "", "pit", "", "goomba" }, 2));
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
-		myPages.Add(new CutscenePage(8, "8 bar interlude"));
+		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
