@@ -240,6 +240,17 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 			if (data.enemy == "firemario")
 				StartCoroutine(MarioChange());
+
+			if (data.player == "flame")
+			{
+				var nextCell = cellQueue.Peek();
+				var nextData = data.next;
+				if (nextCell.playable != null)// && nextData.enemy == "")
+				{
+					nextData.enemy = "";
+					nextCell.playable.Play("kill");
+				}
+			}
 		}
 
 		PassPlayerAnimation(data.playerAnimation);

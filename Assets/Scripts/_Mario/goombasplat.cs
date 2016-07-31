@@ -3,9 +3,20 @@ using System.Collections;
 
 public class goombasplat : MonoBehaviour, IPlayable
 {
+	public PhysPop popper;
+
 	public Animator animator;
 	public void Play(string anim)
 	{
+		if (anim == "kill")
+		{
+			if (popper != null)
+			{
+				popper.Pop(transform);
+				popper = null;
+			}
+			return;
+		}
 		if (animator == null)
 			return;
 			
@@ -16,4 +27,6 @@ public class goombasplat : MonoBehaviour, IPlayable
 	{
 		return gameObject;
 	}
+
+
 }

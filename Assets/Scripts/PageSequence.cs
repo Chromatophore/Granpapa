@@ -89,6 +89,10 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		{
 			trackerList.Add(new PageTrackerData());
 		}
+		for (int i = 0; i < trackerCellCount; i++)
+		{
+			trackerList[i].next = trackerList[i + 1];
+		}
 
 		Level TestLevel = new Level();
 
@@ -218,13 +222,24 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		if (actorID == 0)
 		{
 			int i = 0 + inputFudgeOffset;
+			int sequenceNumber = 0;
+
+			if (trackerList[playerNodeValue + inputConcept.Length + i].active == false)
+			{
+				return;
+			}
 			foreach (var move in inputConcept)
 			{
 				var node = trackerList[playerNodeValue + i];
 				if (node.active && node.player == "")
 				{
-					node.player = move;
-					trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(move));
+					string moveFeedback = move;
+					node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
+
+					if (move != "")
+						trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
+
+					sequenceNumber++;
 					i++;
 				}
 				else

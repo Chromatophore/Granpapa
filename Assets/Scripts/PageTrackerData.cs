@@ -21,6 +21,8 @@ public class PageTrackerData
 
 	public bool resolved = false;
 
+	public PageTrackerData next = null;
+
 	public PageTrackerData()
 	{
 		Reset();

@@ -158,6 +158,11 @@ public class Page
 	{
 		return 4;
 	}
+
+	public virtual void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
+	{
+
+	}
 }
 
 
@@ -198,6 +203,21 @@ public class GamePlayPage : Page
 		Reset();
 
 		DisplaySuccess = true;
+	}
+
+	public override void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
+	{
+		if (move == "kill")
+		{
+			if (node.enemy == "goomba")
+			{
+				node.enemy = "";
+			}
+			move = "";
+		}
+
+		if (move != "")
+			node.player = move;
 	}
 }
 

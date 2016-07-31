@@ -37,7 +37,7 @@ public class Level
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
 						{ BUTTON.B, new string[] { "hop" } }, 
-						{ BUTTON.X, new string[] { "flame" } }, 
+						{ BUTTON.X, new string[] { "flame", "kill" } }, 
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
 	};
 
