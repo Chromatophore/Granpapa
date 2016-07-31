@@ -15,6 +15,8 @@ public class MoveAnimatorB : MonoBehaviour {
 			anim = "Jump";
 		else if (animation == "hop")
 			anim = "Hop";
+		else if (animation == "flame")
+			anim = "Flame";
 
 		if (anim != "")
 		{

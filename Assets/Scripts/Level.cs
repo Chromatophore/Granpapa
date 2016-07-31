@@ -37,7 +37,7 @@ public class Level
 	private Dictionary<BUTTON, string[]> playerInputConceptDict = new Dictionary<BUTTON, string[]>() { 
 						{ BUTTON.A, new string[] { "jump" } }, 
 						{ BUTTON.B, new string[] { "hop" } }, 
-						{ BUTTON.X, new string[] { "jump" } }, 
+						{ BUTTON.X, new string[] { "flame" } }, 
 						{ BUTTON.Y, new string[] { "jump", "jumpend" } }
 	};
 
@@ -93,7 +93,9 @@ public class Level
 		"pit", "def", "PitNo", "", "-1",
 		"goomba", "jump", "Jump", "", "1",
 		"goomba", "hop", "EnemyYes", "splat", "2",
-		"goomba", "def", "EnemyNo", "", "-1"
+		"goomba", "def", "EnemyNo", "", "-1",
+		"chomp", "jump", "Jump", "", "1",
+		"chomp", "def", "EnemyNo", "", "-1"
 			});
 
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));

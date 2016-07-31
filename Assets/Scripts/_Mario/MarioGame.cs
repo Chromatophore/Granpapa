@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public struct MarioGameCell
@@ -29,6 +30,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 	private GameObject movementDolly;
 
+	public GameObject marioA;
+	public GameObject marioB;
+
 	[SerializeField]
 	private CameraEasyScaler camScaler; 
 
@@ -46,10 +50,13 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		switch(key)
 		{
 			case "goomba":
-				//Debug.Log("Goomba!");
-				break;
 			case "pit":
-				//Debug.Log("Scary pit!");
+			case "chomp":
+				break;
+			case "reset":
+				marioB.SetActive(false);
+				marioA.SetActive(true);
+				key = "default";
 				break;
 			default:
 				key = "default";
@@ -215,6 +222,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 			if (cell.playable != null && data.success)
 				cell.playable.Play(data.enemyAnimation);
+
+			if (data.enemy == "firemario")
+				StartCoroutine(MarioChange());
 		}
 
 		PassPlayerAnimation(data.playerAnimation);
@@ -231,5 +241,21 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		{
 			camScaler.ChangeSize(13);
 		}
+	}
+
+	IEnumerator MarioChange()
+	{
+		bool toggle = false;
+
+		for (int j = 0; j < 6; j++)
+		{
+			marioA.SetActive(toggle);
+			marioB.SetActive(!toggle);
+			toggle = !toggle;
+			yield return new WaitForSeconds(0.333f);
+		}
+
+		marioA.SetActive(false);
+		marioB.SetActive(true);
 	}
 }
