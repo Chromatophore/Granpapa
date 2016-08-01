@@ -62,7 +62,7 @@ public class UIScoreDisplay : MonoBehaviour {
 		{
 			displayCase = 0;
 		}
-		Debug.Log("Scores: " + score + " " + displayCase + " " + direction);
+		//Debug.Log("Scores: " + score + " " + displayCase + " " + direction);
 		DrawScore();
 	}
 

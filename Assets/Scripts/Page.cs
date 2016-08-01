@@ -116,17 +116,24 @@ public class Page
 
 		thisCell.resolved = true;
 
+		//if (thisCell.enemy != "")
+			//Debug.Log("Check Succes: " + thisCell.enemy);
+
 		if (thisCell.enemy == "chomp")
 		{
 			int modulo = thisCell.sequenceNumber % 4;
 			if (modulo == 1 || modulo == 2)
+			{
 				thisCell.enemy = "";
+			}
 		}
 
 		if (playerAnimMap != null)
 		{
 			score += playerAnimMap.AssessSuccess(thisCell);
+			//Debug.Log("Cell " + thisCell.sequenceNumber + " final score: " + score);
 			pageScore += score;
+			//Debug.Log("Page score " + pageScore);
 		}
 
 		if (score < 0)
@@ -145,6 +152,7 @@ public class Page
 
 	public int AssessScore()
 	{
+		Debug.Log("Score: " + pageScore + " vs max: " + maxScore);
 		if (pageScore > maxScore)
 		{
 			return 2;
@@ -218,15 +226,33 @@ public class GamePlayPage : Page
 
 	public override void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
 	{
+		if (move == "flame")
+		{
+			if (node.enemy == "goomba" || node.enemy == "pit" || (node.enemy == "chomp" && (node.sequenceNumber % 4 == 0 || node.sequenceNumber % 4 == 3)))
+			{
+				move = "flamefail";
+			}
+		}
+
 		if (move == "kill")
 		{
-			if (node.enemy == "goomba" || node.enemy == "chomp")
+			if (node.enemy == "goomba")
 			{
 				node.enemy = "";
+				node.score += 2;
+			}
+			else if (node.enemy == "chomp")
+			{
+				int smod = node.sequenceNumber % 4;
+				//if (smod == 1 || smod == 2)
+				node.enemy = "";
+
+				node.score += 2;
 			}
 			else if (node.enemy == "coingoomba")
 			{
 				node.enemy = "coinhi";
+				node.score += 2;
 			}
 			move = "";
 		}

@@ -31,11 +31,11 @@ public class CameraEasyScaler : MonoBehaviour
 
 		offset = baseLocal - fixedPoint;
 
-		Debug.Log(offset);
+		//Debug.Log(offset);
 
 		offset /= baseSize;
 
-		Debug.Log(offset);
+		//Debug.Log(offset);
 
 	}
 	

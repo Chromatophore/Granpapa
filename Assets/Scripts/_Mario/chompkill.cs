@@ -12,11 +12,11 @@ public class chompkill : MonoBehaviour, IPlayable
 		if (animator == null)
 			return;
 
-		if (!tester.canDie && anim == "kill")
-			return;
+		//if (!tester.canDie && anim == "kill")
+			//return;
 			
 		if (anim != "")
-			animator.Play(anim,-1,0f);
+			animator.CrossFade(anim,0.1f,-1,0f);
 
 		if (anim == "kill")
 			animator = null;

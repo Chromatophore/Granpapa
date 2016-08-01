@@ -54,7 +54,7 @@ public class Tempo : MonoBehaviour, IObservable<TempoData>, IObserver<BeatData>
 
 		animSpeedScale = tempoScale;
 
-		Debug.Log("anim scale set to " + animSpeedScale);
+		//Debug.Log("anim scale set to " + animSpeedScale);
 
 		UpdateObservers(false);
 	}

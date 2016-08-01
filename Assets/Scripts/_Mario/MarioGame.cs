@@ -244,10 +244,15 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			var cell = cellQueue.Dequeue();
 			Destroy(cell.cellObject,10f);
 
-			if (cell.playables != null && data.success)
+			if (data.enemyAnimation != "")
 			{
-				foreach (var playable in cell.playables)
-					playable.Play(data.enemyAnimation);
+				if (cell.playables != null && data.success)
+				{
+					foreach (var playable in cell.playables)
+					{
+						playable.Play(data.enemyAnimation);
+					}
+				}
 			}
 
 			if (data.enemy == "firemario")

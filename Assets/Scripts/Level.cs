@@ -57,7 +57,8 @@ public class Level
 	private Dictionary<string, string[]> mainSoundDict = new Dictionary<string, string[]>() { 
 						{ "jump", new string[] { "hop1", "hop2", "hop3" } }, 
 						{ "hop", new string[] { "bop1", "bop2", "bop3" } },
-						{ "flame", new string[] { "burn1", "burn2", "burn3" } }
+						{ "flame", new string[] { "burn1", "burn2", "burn3" } },
+						{ "flamefail", new string[] { "burn1", "burn2", "burn3" } }
 	};
 
 	private List<Page> myPages = new List<Page>();
@@ -120,7 +121,9 @@ public class Level
 		"coingoomba", "jump", "Jump", "collect", "1",
 		"coingoomba", "hop", "EnemyYes", "splat", "2",
 		"coingoomba", "def", "EnemyNo", "", "-1",
-
+		"usefire", "jump", "Jump", "", "0",
+		"usefire", "hop", "Hop", "", "0",
+		"usefire", "flame", "Flame", "", "0",
 			});
 
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
@@ -141,10 +144,11 @@ public class Level
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
 		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
-		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4));
+		myPages.Add(qpg(new string[] { "", "", "usefire", "chomp" }, 2));
+		myPages.Add(qpg(new string[] { "", "goomba", "", "coingoomba" }, 4));
+		myPages.Add(qpg(new string[] { "", "coingoomba", "usefire", "chomp", "chomp", "pit", "chomp", "pit" }, 8));	// (the -2 position chomp is safe)
+		myPages.Add(qpg(new string[] { "chomp", "", "coingoomba", "pit", "usefire", "goomba", "goomba", "coingoomba" }, 10));
+		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));
 		myPages.Add(new CutscenePage(8, "8 bar interlude"));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));
 		myPages.Add(qpg(new string[] { "", "goomba", "pit", "", "", "goomba", "pit", "" }, 4, true));

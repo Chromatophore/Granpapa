@@ -108,7 +108,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	{
 		UpdateBeatBox();
 
+		GetCurrentDicts();
+	}
 
+	private void GetCurrentDicts()
+	{
 		var originPage = trackerList[playerNodeValue + inputFudgeOffset].originPage;
 		// Load the input map from this page, in case it chaneges:
 		if (originPage != null)
@@ -134,7 +138,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	private void NextPage()
 	{
-		Debug.Log("Moving on to the next page.");
+		//Debug.Log("Moving on to the next page.");
 
 		// inform previous page that it's task is completed
 		if (currentPage != null)
@@ -143,7 +147,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		currentPageIndex++;
 		if (currentPageIndex == pageList.Count)
 		{
-			Debug.Log("Yay, we beat the level!");
+			//Debug.Log("Yay, we beat the level!");
 			currentPageIndex = 0;
 		}
 
@@ -155,7 +159,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	private void StartLevel(Level thisLevel)
 	{
-		Debug.Log("Starting level...");
+		//Debug.Log("Starting level...");
 
 		gameString = thisLevel.gameName;
 
@@ -216,9 +220,6 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 	public void PlayerInput(BUTTON inputButton)
 	{
-		int i = 0 + inputFudgeOffset;
-		int sequenceNumber = 0;
-
 		if (playerInputConceptDict == null) { return; }
 		if (pageActiveInputDict == null || !pageActiveInputDict.ContainsKey(inputButton)) { return; }
 		string[] concept;
@@ -237,6 +238,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	{
 		if (actorID == 0)
 		{
+			AssessInputBeat();
+			GetCurrentDicts();
+
 			int i = 0 + inputFudgeOffset;
 			int sequenceNumber = 0;
 
@@ -248,6 +252,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			}
 			else
 			{
+				bool abandon = false;
 				foreach (var move in inputConcept)
 				{
 					var node = trackerList[playerNodeValue + i];
@@ -256,11 +261,21 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 						string moveFeedback = move;
 						node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
 
+						if (moveFeedback == "flamefail")
+						{
+							abandon = true;
+						}
+
 						if (move != "")
+						{
 							trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
+						}
 
 						sequenceNumber++;
 						i++;
+
+						if (abandon)
+							break;
 					}
 					else
 					{
@@ -281,9 +296,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	}
 
 	private float timeLast = 0f;
-	private void UpdateBeatBox()
+
+	private void AssessInputBeat()
 	{
-		if (pageList == null || pageList.Count == 0) { return; }
 		int currentSamples = attachedAudioSource.timeSamples;
 		int difference = currentSamples - lastSamples;
 
@@ -293,6 +308,16 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			inputFudgeOffset = 1;
 		else
 			inputFudgeOffset = 0;
+	}
+
+	private void UpdateBeatBox()
+	{
+		if (pageList == null || pageList.Count == 0) { return; }
+
+		AssessInputBeat();
+
+		int currentSamples = attachedAudioSource.timeSamples;
+		int difference = currentSamples - lastSamples;
 
 		// calculate if a new beat has occured yet:
 		if (currentSamples >= nextSampleValue || (difference < 0))
@@ -628,7 +653,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 //		Debug.Log(trackerList[resolveNodeValue]);
-		if (resolveNode.player != "")
+		if (resolveNode.player != "" && resolveNode.resolved == true)
 		{
 			kidAnim.Play(gameString, resolveNode.player);
 			kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(resolveNode.player)));
@@ -638,6 +663,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		{
 			gameDisplay.Beat(currentAudio.beatTime, resolveNode);
 			resolveNode.active = false;
+			resolveNode.resolved = false;
 		}
 
 		// if there is a pending resolution node change:
