@@ -246,7 +246,7 @@ public class GamePlayPage : Page
 			}
 		}
 
-		Debug.Log("Incoming Move: " + move + " on " + node);
+		//Debug.Log("Incoming Move: " + move + " on " + node);
 
 		if (move == "kill")
 		{
@@ -274,7 +274,7 @@ public class GamePlayPage : Page
 		if (move != "" && node.auto == "")
 			node.player = move;
 
-		Debug.Log("Result: " + node);
+		//Debug.Log("Result: " + node);
 	}
 }
 
@@ -305,7 +305,7 @@ public class CutscenePage : Page, IObserver<BeatData>
 		}
 	}
 
-	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null, string customAudio = "")
+	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null, string customAudio = "", string special = "")
 	{
 		enemyAttacks = new List<string>();
 
@@ -325,6 +325,11 @@ public class CutscenePage : Page, IObserver<BeatData>
 		if (pageActiveInputDict != null)
 		{
 			this.pageActiveInputDict = pageActiveInputDict;
+		}
+
+		if (special != "")
+		{
+			enemyAttacks[0] = "cutscene" + special;
 		}
 	}
 

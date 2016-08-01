@@ -38,12 +38,14 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 	public Sprite dungeonSprite;
 
-	public bool dungeonMode = true;
+	public bool dungeonMode = false;
 
 	[SerializeField]
 	private CameraEasyScaler camScaler; 
 
 	public GameObject bowser;
+
+	public finale ending;
 
 	public float MoveCurve(float ratio)
 	{
@@ -248,6 +250,10 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 	public void Beat(float beatTime, PageTrackerData data)
 	{
+		if (data.enemy == "cutsceneending")
+			ending.Activate();
+
+
 		movementDolly.transform.localPosition = targetPosition;
 
 		timeMotionStart = Time.time;
@@ -274,7 +280,7 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 				}
 			}
 
-			if (data.enemy == "firemario")
+			if (data.enemy == "cutscenefiremario")
 				StartCoroutine(MarioChange());
 
 			if (data.player == "flame" || data.auto == "flame")

@@ -20,6 +20,10 @@ public class goombasplat : MonoBehaviour, IPlayable
 		if (animator == null)
 			return;
 			
+		
+		if (anim == "collect")
+			return;
+		
 		animator.Play(anim,-1,0f);
 	}
 

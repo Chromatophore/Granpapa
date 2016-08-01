@@ -1327,6 +1327,34 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 349782016}
+--- !u!1 &362843141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 362843142}
+  m_Layer: 0
+  m_Name: marioRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &362843142
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 362843141}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1031575430}
+  m_Father: {fileID: 1228340643}
+  m_RootOrder: 1
 --- !u!1 &367146328
 GameObject:
   m_ObjectHideFlags: 0
@@ -2549,8 +2577,8 @@ Transform:
   m_Children:
   - {fileID: 246529350}
   - {fileID: 571350497}
-  m_Father: {fileID: 1228340643}
-  m_RootOrder: 1
+  m_Father: {fileID: 362843142}
+  m_RootOrder: 0
 --- !u!95 &1031575431
 Animator:
   serializedVersion: 3
@@ -2740,7 +2768,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 317982013}
-  - {fileID: 1031575430}
+  - {fileID: 362843142}
   m_Father: {fileID: 1617974968}
   m_RootOrder: 0
 --- !u!1 &1281154967
@@ -3529,6 +3557,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 1617974968}
   - 114: {fileID: 1617974969}
+  - 114: {fileID: 1617974970}
+  - 95: {fileID: 1617974972}
+  - 114: {fileID: 1617974971}
   m_Layer: 0
   m_Name: MarioGame
   m_TagString: Untagged
@@ -3623,9 +3654,60 @@ MonoBehaviour:
   dungeonMode: 1
   camScaler: {fileID: 317982014}
   bowser: {fileID: 1780659553}
+  ending: {fileID: 1617974970}
   creationPoint: 0
   horizontalSpacing: 3
   creationStart: {x: -4, y: -3, z: 0}
+--- !u!114 &1617974970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1617974967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f4194603ab94a1388bf7ca017c4d4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ps: {fileID: 2069924537}
+  mario: {fileID: 362843141}
+  bowser: {fileID: 1780659553}
+  FirebreathPrefab: {fileID: 138902, guid: 66830f1cffe6b4d51912cc5b6cf98d5e, type: 2}
+  longFrebreathPrefab: {fileID: 190010, guid: 9b71cefe476f44d10853be80185b6de5, type: 2}
+  finaleAnimator: {fileID: 1617974972}
+  bowserAnim: {fileID: 1780659556}
+  marioAnim: {fileID: 1031575431}
+--- !u!114 &1617974971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1617974967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623e6a8bd547b43db9a493fcfd36ab7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1617974972}
+  hasJig: 0
+  beatName: BeatA
+--- !u!95 &1617974972
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1617974967}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c8dbb6a21b97e437db06504e398c54b4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1640663325
 GameObject:
   m_ObjectHideFlags: 0
@@ -3924,6 +4006,11 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 177126, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
   m_PrefabInternal: {fileID: 2027737526}
+--- !u!95 &1780659556 stripped
+Animator:
+  m_PrefabParentObject: {fileID: 9582582, guid: 25096a4a7a45144ee98cc2975b5ad2f9,
+    type: 2}
+  m_PrefabInternal: {fileID: 2027737526}
 --- !u!4 &1780659557 stripped
 Transform:
   m_PrefabParentObject: {fileID: 475746, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
@@ -4149,41 +4236,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 177126, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21218970, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
+    - target: {fileID: 9582582, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
       propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21200974, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21253454, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21225164, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21207130, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21208946, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21251170, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21272570, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
-      propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 25096a4a7a45144ee98cc2975b5ad2f9, type: 2}
@@ -4245,7 +4300,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 0.1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   Priority: 128

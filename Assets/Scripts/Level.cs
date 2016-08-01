@@ -131,10 +131,12 @@ public class Level
 		"blue", "def", "EnemyNo", "", "-1",
 			});
 
-
+		/*
 		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
 		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "mariointro"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", thirdActiveInputDict));
+
+		
 		//myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
 		myPages.Add(qpg (new string[] { "", "", "goomba", ""}, 1));
 		//Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
@@ -149,15 +151,18 @@ public class Level
 		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 2));
 		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
 		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
-		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict));
+		
+		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict, "mariothree", "firemario"));
 		myPages.Add(qpg(new string[] { "", "", "usefire", "chomp" }, 2));
 		myPages.Add(qpg(new string[] { "", "goomba", "", "coingoomba" }, 4));
 		myPages.Add(qpg(new string[] { "", "coingoomba", "usefire", "chomp", "chomp", "pit", "chomp", "pit" }, 8));	// (the -2 position chomp is safe)
 		myPages.Add(qpg(new string[] { "chomp", "", "coingoomba", "pit", "usefire", "goomba", "goomba", "coingoomba" }, 10));
-		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));
-		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict));
-		
-		
+		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));  */
+		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict, "mariofour", "ending"));
+
+		// Beat 176 is the start of this.
+		// Fireballs take 6 beats to arive
+		/*
 		myPages.Add(qpg(new string[] { "cpit", "goomba", "", "coingoomba"}, 4, true, new string[] { "jump", "hop", "flame", "jump"} ));
 		myPages.Add(qpg(new string[] { "", "goomba", "", "coingoomba"}, 4, true, new string[] { "none", "hop", "flame", "jump"} ));
 		myPages.Add(qpg(new string[] { "blue", "chomp", "coingoomba", "cpit"}, 4, true, new string[] { "hop", "flame", "jump", "jump" } ));
@@ -166,13 +171,14 @@ public class Level
 		myPages.Add(qpg(new string[] { "cpit", "", "chomp", "cpit" }, 4, true, new string[] { "jump", "flame", "none", "jump" } ));
 		myPages.Add(qpg(new string[] { "", "blue", "chomp", "coinhi"}, 4, true, new string[] { "none", "hop", "none", "jump"} ));
 		myPages.Add(qpg(new string[] { "coinlo", "", "blue", "cpit" }, 4, true, new string[] { "hop", "none", "hop", "jump" } ));
-
+		*/
+		// 32?
 		myPages.Add(qpg(new string[] { "b1", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "none", "none", "none", "none", "none", "none", "none" } ));
-		myPages.Add(qpg(new string[] { "b2", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "jump", "none", "flame", "none", "hop", "none", "jump" } ));
-		myPages.Add(qpg(new string[] { "b3", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "flame", "none", "jump", "none", "jump", "none", "flame" } ));
+		myPages.Add(qpg(new string[] { "b2", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "jump", "none", "hop", "none", "flame", "none", "jump" } ));
+		myPages.Add(qpg(new string[] { "b3", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "flame", "none", "jump", "none", "hop", "none", "flame" } ));
 		myPages.Add(qpg(new string[] { "b4", "", "", "", "", "", "", "gameover" }, 4, true, new string[] { "none", "hop", "none", "jump", "none", "hop", "none", "jump" } ));
-		myPages.Add(new CutscenePage(16, "Well done, you can go on to the next stage now..."));
-		myPages.Add(new CutscenePage(4, "*fill*"));
+		myPages.Add(qpg(new string[] { "b5", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "none", "none", "none", "none", "none", "none", "none" } ));
+		myPages.Add(new CutscenePage(16, "Well done! You can go on to the next game now!\nTHE END APPARENTLY"));
 	}
 
 	private GamePlayPage qpg(string[] input, int maxscore = 0, bool noBreaks = false, string[] autos = null)

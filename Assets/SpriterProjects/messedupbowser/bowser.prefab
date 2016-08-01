@@ -182,6 +182,7 @@ GameObject:
   - 95: {fileID: 9582582}
   - 114: {fileID: 11435236}
   - 114: {fileID: 11486772}
+  - 114: {fileID: 11499632}
   m_Layer: 0
   m_Name: bowser
   m_TagString: Untagged
@@ -440,7 +441,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.63, y: -31.83, z: 0}
+  m_LocalPosition: {x: 14, y: -3, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 425438}
@@ -3103,6 +3104,24 @@ MonoBehaviour:
   animator: {fileID: 9582582}
   hasJig: 1
   beatName: BeatA
+--- !u!114 &11499632
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eea45aca27a6e48a2a044b97539e7726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hammerPrefabHigh: {fileID: 129586, guid: a5a76372575854cbf8773284ea0b7baa, type: 2}
+  hammerPrefabLow: {fileID: 100258, guid: 78029eabe53b3452695a453002d94ee5, type: 2}
+  fireLo: 0
+  fireHi: 0
+  refire: 0.1
+  lastFire: 0
+  hammerCreationPoint: {fileID: 179534}
 --- !u!212 &21200974
 SpriteRenderer:
   m_ObjectHideFlags: 1

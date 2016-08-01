@@ -644,7 +644,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		// Option 2: Add enemy attacks as they scroll past enemyNode:
 		//trackerBar.AddChild(enemyNodeValue, noodleMain.GetPrefab(trackerList[enemyNodeValue].enemy));
-		if (playerNode.enemy == "cutscene" && playerNode.resolution == DATAMARKER.START)
+		if (playerNode.enemy.IndexOf("cutscene") == 0 && playerNode.resolution == DATAMARKER.START)
 		{
 			CutscenePage cutscenePage = currentPage as CutscenePage;
 
@@ -749,7 +749,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			}
 		}
 
-		if (resolveNode.enemy == "cutscene")
+		if (resolveNode.enemy.IndexOf("cutscene") == 0)
 		{
 			CutscenePage cutscenePage = resolveNode.originPage as CutscenePage;
 
