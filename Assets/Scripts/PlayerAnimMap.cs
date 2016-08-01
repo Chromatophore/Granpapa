@@ -80,6 +80,11 @@ public class PlayerAnimMap
 		int score = 0;
 
 		Dictionary<string, AnimMapSet> actionAnimMap;
+		if (situation.auto != "")
+		{
+			player = situation.auto;
+		}
+
 		if (map.TryGetValue(enemy, out actionAnimMap))
 		{
 			AnimMapSet animSet;
@@ -91,6 +96,8 @@ public class PlayerAnimMap
 				situation.score = score;
 
 				situation.success = score >= 0;
+
+
 			}
 		}
 

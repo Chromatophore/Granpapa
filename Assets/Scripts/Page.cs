@@ -23,6 +23,7 @@ public class Page
 	protected PlayerAnimMap playerAnimMap;
 	private int pageScore;
 	protected int maxScore;
+	protected List<string> autoActions;
 
 	public bool NoBreaks { get; protected set; }
 
@@ -56,6 +57,11 @@ public class Page
 	public List<string> GetAttacks()
 	{
 		return enemyAttacks;
+	}
+
+	public List<string> GetAutos()
+	{
+		return autoActions;
 	}
 
 	public Dictionary<BUTTON, string[]> GetPlayerInputConceptDict()
@@ -209,7 +215,7 @@ public class GamePlayPage : Page
 	Page Manager continues to beat @ page which can do the game displayed input when needed
 
 	*/
-	public GamePlayPage(LevelPageData buildInfo, bool noBreaks = false)
+	public GamePlayPage(LevelPageData buildInfo, bool noBreaks = false, string[] autoActions = null)
 	{
 		enemyAttacks = buildInfo.enemyAttacks;
 		playerInputConceptDict = buildInfo.playerInputConceptDict;
@@ -218,6 +224,12 @@ public class GamePlayPage : Page
 		maxScore = buildInfo.maxScore;
 
 		Reset();
+
+		if (autoActions != null)
+		{
+			this.autoActions = new List<string>(autoActions);
+		}
+
 
 		DisplaySuccess = true;
 
@@ -233,6 +245,8 @@ public class GamePlayPage : Page
 				move = "flamefail";
 			}
 		}
+
+		Debug.Log("Incoming Move: " + move + " on " + node);
 
 		if (move == "kill")
 		{
@@ -257,8 +271,10 @@ public class GamePlayPage : Page
 			move = "";
 		}
 
-		if (move != "")
+		if (move != "" && node.auto == "")
 			node.player = move;
+
+		Debug.Log("Result: " + node);
 	}
 }
 

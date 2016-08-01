@@ -4,6 +4,7 @@ public class PageTrackerData
 {
 	public string enemy;
 	public string player;
+	public string auto;
 	public bool success;
 	public bool active;
 	public DATAMARKER resolution;
@@ -47,10 +48,15 @@ public class PageTrackerData
 		phaseLength = -1;
 		resolved = false;
 		sequenceNumber = 0;
+
+		auto = "";
 	}
 
 	public override string ToString()
 	{
-		return string.Format("'{0}' v '{1}': {2} {3} {4}", enemy, player, resolution, offsetToEndOfSequence, phaseLength);
+		if (auto != "")
+			return string.Format("'{0}' v '{1}': {2} {3} {4}", enemy, auto, enemyAnimation, playerAnimation, player);
+		else
+			return string.Format("'{0}' v '{1}': {2} {3} {4}", enemy, player, resolution, offsetToEndOfSequence, phaseLength);
 	}
 }

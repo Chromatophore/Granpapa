@@ -34,6 +34,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private int currentPageIndex;
 	private Page currentPage;
 
+	private bool gameover = false;
+
 	// Full tracker bar list
 	private TrackerList<PageTrackerData> trackerList;
 
@@ -77,6 +79,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private UIButtonDisplay buttonDisplay;
 
 	private bool lastBreak = false;
+	private bool breakMode = false;
 
 	void Start()
 	{
@@ -259,16 +262,39 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 					if (node.active && node.player == "")
 					{
 						string moveFeedback = move;
-						node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
+
+						if (!breakMode)
+							node.originPage.ProcessConcept(node, ref moveFeedback, sequenceNumber);
+						else
+						{
+							if (node.auto != "")
+							{
+								if (moveFeedback == node.auto)
+								{
+									node.success = true;
+								}
+								if (moveFeedback != "" && moveFeedback != "kill")
+									node.player = move;
+
+								node.score = 1;
+							}
+						}
 
 						if (moveFeedback == "flamefail")
 						{
 							abandon = true;
 						}
 
-						if (move != "")
+						if (move != "" && move != "kill")
 						{
 							trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
+							if (breakMode)
+							{
+								//if (node.auto == "")
+									//node.success = true;
+
+								AddSuccessObject(playerNodeValue + i);
+							}
 						}
 
 						sequenceNumber++;
@@ -288,7 +314,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// play the animation associated with this:
 			granpapaAnim.Play(gameString, inputConcept[0]);
 
-			if (trackerList[playerNodeValue + inputFudgeOffset].originPage != null)
+			if (!breakMode && trackerList[playerNodeValue + inputFudgeOffset].originPage != null)
 			{
 				granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue + inputFudgeOffset].originPage.ResolveSound(inputConcept[0])));
 			}
@@ -396,6 +422,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			{
 				// Check the previous entry once it has left us
 				assessPage = trackerList[playerNodeValue - 1].originPage;
+				if (breakMode)
+				{
+					if (trackerList[ playerNodeValue - 1].player == "")
+						trackerList[ playerNodeValue - 1].player = "none";
+				}
 				assessPage.CheckSuccess(trackerList[ playerNodeValue - 1]);
 			}
 		}
@@ -442,6 +473,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			// Load some attacks from page:
 			var attackList = currentPage.GetAttacks();
+			var autoList = currentPage.GetAutos();
 
 			// increase attack length if needed so that it is a multiple of a length of a bar?
 			// maybe not?
@@ -491,6 +523,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				bool breaks = true;
 				if (currentPage.NoBreaks)
 				{
+					breakMode = true;
 					breaks = false;
 					cap = attackLength;
 					SetPhaseLength(attackLength, 0);
@@ -516,6 +549,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 					if (i < attackList.Count || breaks == false)
 						thisNode.enemy = attackList[i];
+
+					if (autoList != null && i < autoList.Count)
+						thisNode.auto = autoList[i];
 
 					if (i < attackLength || breaks == false)
 					{
@@ -590,6 +626,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 				// Draw the attacks onto the tracker bar
 				// Option 1: Display all enemy attacks at once:
+				if (trackerList[thisIndex].auto != "")
+					attack = "auto" + trackerList[thisIndex].auto;
 				if (attack != "")
 					trackerBar.AddChild(thisIndex, noodleMain.GetPrefab(attack));
 
@@ -627,43 +665,49 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 
 		// For the node that is in the resolve location, reveal the resolution outcome:
-		if (resolveNode.enemy != "")
+		if (!breakMode && resolveNode.enemy != "")
 		{
-			if (resolveNode.originPage.DisplaySuccess)
-			{
-				if (resolveNode.success == false)
-				{
-					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("fail"));
-				}
-				else
-				{
-					trackerBar.AddChild(resolveNodeValue, noodleMain.GetPrefab("success"));
-				}
-			}
-
-			if (resolveNode.enemy == "cutscene")
-			{
-				CutscenePage cutscenePage = resolveNode.originPage as CutscenePage;
-
-				if (cutscenePage != null)
-				{
-					cutscenePage.ResolveBeat();
-				}
-			}
+			AddSuccessObject(resolveNodeValue);
 		}
 
 //		Debug.Log(trackerList[resolveNodeValue]);
-		if (resolveNode.player != "" && resolveNode.resolved == true)
+		if (resolveNode.auto != "" || resolveNode.player != "" && resolveNode.resolved == true)
 		{
-			kidAnim.Play(gameString, resolveNode.player);
-			kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(resolveNode.player)));
+			string rn = resolveNode.player;
+			if (resolveNode.auto != "")
+				rn = resolveNode.auto;
+
+			if (gameover == false)
+				kidAnim.Play(gameString, rn);
+
+			if (!breakMode && gameover == false)
+				kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(rn)));
 		}
 
 		if (resolveNode.active)
 		{
-			gameDisplay.Beat(currentAudio.beatTime, resolveNode);
-			resolveNode.active = false;
-			resolveNode.resolved = false;
+			if (breakMode)
+			{
+				resolveNode.originPage.CheckSuccess(resolveNode);
+				string moveFeedback = resolveNode.auto;
+				resolveNode.originPage.ProcessConcept(resolveNode, ref moveFeedback, 0);
+
+				if (resolveNode.auto == "flame")
+				{
+					var nextNode = resolveNode.next;
+					moveFeedback = "kill";
+					nextNode.originPage.ProcessConcept(nextNode, ref moveFeedback, 1);
+				}
+			}
+
+			if (gameover == false)
+				gameDisplay.Beat(currentAudio.beatTime, resolveNode);
+
+			if (!breakMode)
+			{
+				resolveNode.active = false;
+				resolveNode.resolved = false;
+			}
 		}
 
 		// if there is a pending resolution node change:
@@ -674,6 +718,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				resolveNodeValue = nextResolveNodeValue;
 			}
 		}
+
+		if (resolveNode.enemy == "gameover")
+			gameover = true;
 		//Debug.Log(playerNode);
 
 		// Why is it so hard to debug this trackerList ;-;
@@ -685,6 +732,32 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		}
 		Debug.Log(tldebug);
 		 */
+	}
+
+	private void AddSuccessObject(int nodeNumber)
+	{
+		PageTrackerData resolveNode = trackerList[nodeNumber];
+		if (resolveNode.originPage.DisplaySuccess)
+		{
+			if (resolveNode.success == false)
+			{
+				trackerBar.AddChild(nodeNumber, noodleMain.GetPrefab("fail"));
+			}
+			else
+			{
+				trackerBar.AddChild(nodeNumber, noodleMain.GetPrefab("success"));
+			}
+		}
+
+		if (resolveNode.enemy == "cutscene")
+		{
+			CutscenePage cutscenePage = resolveNode.originPage as CutscenePage;
+
+			if (cutscenePage != null)
+			{
+				cutscenePage.ResolveBeat();
+			}
+		}
 	}
 
 	private HashSet<IObserver<BeatData>> beatDataObservers;

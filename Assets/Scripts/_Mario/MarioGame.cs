@@ -36,8 +36,14 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 	public GameObject marioA;
 	public GameObject marioB;
 
+	public Sprite dungeonSprite;
+
+	public bool dungeonMode = true;
+
 	[SerializeField]
 	private CameraEasyScaler camScaler; 
+
+	public GameObject bowser;
 
 	public float MoveCurve(float ratio)
 	{
@@ -50,14 +56,18 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 	public void SetUpcomingAttack(int distanceAhead, string attack, bool firstOfBar)
 	{
 		string key = attack;
+
 		switch(key)
 		{
 			case "goomba":
 			case "pit":
+			case "cpit":
 			case "chomp":
 			case "coinhi":
 			case "coinlo":
 			case "coingoomba":
+			case "blue":
+			case "d1":
 				break;
 			case "reset":
 				marioB.SetActive(false);
@@ -95,9 +105,18 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 			cellQueue.Enqueue(newCell);
 
+			if (dungeonMode)
+			{
+				SpriteRenderer dirtyFix = newObject.GetComponentInChildren<SpriteRenderer>();
+				if (dirtyFix != null && dirtyFix.gameObject.name == "floor")
+					dirtyFix.sprite = dungeonSprite;
+			}
+
 			// give them a death sentence?
 			//Destroy(newObject,40f);
 		}
+
+		
 
 		creationPoint += horizontalSpacing;
 	}
@@ -118,7 +137,7 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 		}
 	}
 
-	public void PassPlayerAnimation(string animation)
+	private void PassPlayerAnimation(string animation)
 	{
 		if (playerAnimator == null)
 			return;
@@ -258,13 +277,13 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			if (data.enemy == "firemario")
 				StartCoroutine(MarioChange());
 
-			if (data.player == "flame")
+			if (data.player == "flame" || data.auto == "flame")
 			{
 				var nextCell = cellQueue.Peek();
 				var nextData = data.next;
 				if (nextCell.playables != null)// && nextData.enemy == "")
 				{
-					nextData.enemy = "";
+					//nextData.enemy = ""; // TODO does this matter?
 					foreach (var playable in nextCell.playables)
 						playable.Play("kill");
 				}
