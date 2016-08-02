@@ -21,14 +21,27 @@ public struct SerializeClips
 	public AudioClip clip;
 }
 
+[System.Serializable]
+public struct SerializeClipSet
+{
+	public string name;
+	public AudioClip[] gpClip;
+	public AudioClip[] kdClip;
+}
+
 public class NoodleMain : MonoBehaviour
 {
 	[SerializeField]
 	private SerializeClips[] audioClipsList;
 
+	[SerializeField]
+	private SerializeClipSet[] verbClips;
+
 	public StringToPrefab[] prefabList;
 
 	private Dictionary<string, AudioClip> audioClips;
+
+	private Dictionary<string, SerializeClipSet> verbClipDict;
 
 	// This is singletonish stuff
 	// Maybe use get/set here?
@@ -66,6 +79,12 @@ public class NoodleMain : MonoBehaviour
 		foreach (var clip in audioClipsList)
 		{
 			audioClips[clip.name] = clip.clip;
+		}
+
+		verbClipDict = new Dictionary<string,SerializeClipSet>();
+		foreach (var clipSet in verbClips)
+		{
+			verbClipDict[clipSet.name] = clipSet;
 		}
 
 		var newList = new List<Color>( new Color[] { Color.yellow, Color.blue, Color.red, Color.green } );
@@ -145,5 +164,18 @@ public class NoodleMain : MonoBehaviour
 			return null;
 		audioClips.TryGetValue(name, out value);
 		return value;
+	}
+
+	public AudioClip GetVerb(bool kid, string verb)
+	{
+		SerializeClipSet clipSet;
+		if (!verbClipDict.TryGetValue(verb, out clipSet))
+			return null;
+		AudioClip[] cset = clipSet.gpClip;
+		if (kid)
+			cset = clipSet.kdClip;
+
+		int index = (int)(cset.Length * Random.value) % cset.Length;
+		return cset[index];
 	}
 }

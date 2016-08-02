@@ -61,6 +61,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 		switch(key)
 		{
+			case "ggoomba":
+				key = "goomba";
+				break;
 			case "goomba":
 			case "pit":
 			case "cpit":

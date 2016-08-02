@@ -21,7 +21,7 @@ public class Page
 	private bool hasFailed;
 	private int beatCount;
 	protected PlayerAnimMap playerAnimMap;
-	private int pageScore;
+	public int pageScore;
 	protected int maxScore;
 	protected List<string> autoActions;
 

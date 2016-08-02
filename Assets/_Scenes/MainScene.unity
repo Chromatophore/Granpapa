@@ -1658,7 +1658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24137926, g: 0, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2949,7 +2949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.08965516, a: 1}
+  m_Color: {r: 0, g: 0.6275863, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3215,7 +3215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.2965517, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3272,32 +3272,45 @@ MonoBehaviour:
   audioClipsList:
   - name: mariotest
     clip: {fileID: 8300000, guid: efd7a9e1a580a4f78bd1844730fd0aeb, type: 3}
-  - name: bop
-    clip: {fileID: 8300000, guid: 1fdf3e9a6ac0b40c29b6778ea842dffd, type: 3}
+  - name: marioa
+    clip: {fileID: 8300000, guid: b58c149443d884240b6ed8780ac0d864, type: 3}
+  - name: mariob
+    clip: {fileID: 8300000, guid: 9aef38efac24c4475b397d5c53217f02, type: 3}
+  - name: marioc
+    clip: {fileID: 8300000, guid: 810d60d7511954309b996e3736549b71, type: 3}
+  - name: mariod
+    clip: {fileID: 8300000, guid: b3ea18219d8b94465bf71dd9aab86ae4, type: 3}
+  - name: marioe
+    clip: {fileID: 8300000, guid: bdb9f0c37482948f6b95dff5c15a6984, type: 3}
+  verbClips:
   - name: jump
-    clip: {fileID: 8300000, guid: c6b488ccc6a9e466baeedc5633301670, type: 3}
-  - name: hop1
-    clip: {fileID: 8300000, guid: f7e99a35addca294d97936bbdee4d96f, type: 3}
-  - name: hop2
-    clip: {fileID: 8300000, guid: 4d18cc1d15c1d8249aa3da5f50f1710b, type: 3}
-  - name: hop3
-    clip: {fileID: 8300000, guid: 133aba37219ec05408bd7d2c13d4a48a, type: 3}
-  - name: bop1
-    clip: {fileID: 8300000, guid: 8fa8054220d88ba4d9a44e66537e8144, type: 3}
-  - name: bop2
-    clip: {fileID: 8300000, guid: dd26870e4b981164592d7de601cd8357, type: 3}
-  - name: bop3
-    clip: {fileID: 8300000, guid: 4276759454ef3ec46be8172c61bbd81b, type: 3}
-  - name: burn1
-    clip: {fileID: 8300000, guid: bc70d2f97e5704440bde669d279d0845, type: 3}
-  - name: burn2
-    clip: {fileID: 8300000, guid: a06b50e1d9956dc40bf5d4cdb12b3a95, type: 3}
-  - name: burn3
-    clip: {fileID: 8300000, guid: f9c90e45f0a9a4f46a7c795b595ca45e, type: 3}
-  - name: mariointro
-    clip: {fileID: 8300000, guid: 982101544adf975478a9229ed23176c7, type: 3}
-  - name: mariotwo
-    clip: {fileID: 8300000, guid: 994b849f0798f7448a3c594cf35d4306, type: 3}
+    gpClip:
+    - {fileID: 8300000, guid: 05d6b53ae136f4f0cb925691d91454da, type: 3}
+    - {fileID: 8300000, guid: 522699229df37462987f0c87b1be2854, type: 3}
+    - {fileID: 8300000, guid: d47f649393e0d4fa0976c4ef817d0c79, type: 3}
+    kdClip:
+    - {fileID: 8300000, guid: 2130510ff34654d95b5fc0e1cbd95c70, type: 3}
+    - {fileID: 8300000, guid: 8361891ff77b24651a9b56250a10459e, type: 3}
+    - {fileID: 8300000, guid: 1d16c7f6aaf02463781ded2b71c6430c, type: 3}
+  - name: hop
+    gpClip:
+    - {fileID: 8300000, guid: 5482ff9fb05ed4ca8a44237a7bd4f083, type: 3}
+    - {fileID: 8300000, guid: 69ef453d832c94685864bfc53959fb0a, type: 3}
+    - {fileID: 8300000, guid: 708738c4238ce42b9979c3f6a47150eb, type: 3}
+    kdClip:
+    - {fileID: 8300000, guid: 14d49bc2e579e4317ac64d0be8983190, type: 3}
+    - {fileID: 8300000, guid: a97ed611fdae04703849164c87629899, type: 3}
+    - {fileID: 8300000, guid: d5b240134bd2f47aba1681f6844cc146, type: 3}
+  - name: flame
+    gpClip:
+    - {fileID: 8300000, guid: 9a2d35ca354ca4d1ca65de1186884be8, type: 3}
+    - {fileID: 8300000, guid: 74952a23d01544d5982b4a5e3d6ec37d, type: 3}
+    - {fileID: 8300000, guid: 0b01837d974c94dfbba59163b4a51442, type: 3}
+    - {fileID: 8300000, guid: ddc9cda4f7c204395b256610a40c8aae, type: 3}
+    kdClip:
+    - {fileID: 8300000, guid: 21c0ca338c0594a1ab892ff7f34ee93f, type: 3}
+    - {fileID: 8300000, guid: d5abf8377c9434ab1b9f1879551b268a, type: 3}
+    - {fileID: 8300000, guid: 8e9c03866caba44a3bc10a8675cbe32c, type: 3}
   prefabList:
   - concept: success
     prefab: {fileID: 104494, guid: 53853454e08a042ec9e09d05a078b4bb, type: 2}
@@ -3560,6 +3573,7 @@ GameObject:
   - 114: {fileID: 1617974970}
   - 95: {fileID: 1617974972}
   - 114: {fileID: 1617974971}
+  - 82: {fileID: 1617974973}
   m_Layer: 0
   m_Name: MarioGame
   m_TagString: Untagged
@@ -3647,6 +3661,8 @@ MonoBehaviour:
     prefab: {fileID: 173002, guid: e41f16b1ee1fe4126ab3ae28fe052af6, type: 2}
   - concept: flamefail
     prefab: {fileID: 197860, guid: a75955e3023ba48d994178c9255a726f, type: 2}
+  - concept: ggoomba
+    prefab: {fileID: 166050, guid: c6f274d6275594fe0b1ceda48e418717, type: 2}
   playerAvatar: {fileID: 1228340641}
   marioA: {fileID: 94103316}
   marioB: {fileID: 2135211}
@@ -3677,6 +3693,7 @@ MonoBehaviour:
   finaleAnimator: {fileID: 1617974972}
   bowserAnim: {fileID: 1780659556}
   marioAnim: {fileID: 1031575431}
+  endAudio: {fileID: 1617974973}
 --- !u!114 &1617974971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3708,6 +3725,80 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!82 &1617974973
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1617974967}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bdb9f0c37482948f6b95dff5c15a6984, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!1 &1640663325
 GameObject:
   m_ObjectHideFlags: 0

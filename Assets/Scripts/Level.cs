@@ -109,6 +109,9 @@ public class Level
 		"pit", "def", "PitNo", "", "-1",
 		"cpit", "jump", "Jump", "", "1",
 		"cpit", "def", "PitNo", "", "-1",
+		"ggoomba", "jump", "Jump", "", "1",
+		"ggoomba", "hop", "EnemyYes", "splat", "2",
+		"ggoomba", "def", "EnemyNo", "", "-1",
 		"goomba", "jump", "Jump", "", "1",
 		"goomba", "hop", "EnemyYes", "splat", "2",
 		"goomba", "def", "EnemyNo", "", "-1",
@@ -131,38 +134,38 @@ public class Level
 		"blue", "def", "EnemyNo", "", "-1",
 			});
 
-		/*
-		myPages.Add(new CutscenePage(8, "*No Speaky!*"));
-		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "mariointro"));
+		
+		myPages.Add(new CutscenePage(8, "Use Z to Jump! Watch for New Moves!!"));
+		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "marioa"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", thirdActiveInputDict));
 
 		
 		//myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
-		myPages.Add(qpg (new string[] { "", "", "goomba", ""}, 1));
+		myPages.Add(qpg (new string[] { "", "", "ggoomba", ""}, 1));
 		//Dictionary<string, string[]> customSoundDict = new Dictionary<string, string[]>();
 		//customSoundDict.Add("jump", new string[] {"bop"});
 		//myPages[myPages.Count - 1].AddCustomSounds(customSoundDict);
-		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 2));
-		myPages.Add(qpg(new string[] { "goomba", "", "pit", "pit" }, 3));
-		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
-		myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", thirdActiveInputDict, "mariotwo"));
+		myPages.Add(qpg(new string[] { "", "pit", "ggoomba", "" }, 2));
+		myPages.Add(qpg(new string[] { "ggoomba", "", "pit", "pit" }, 3));
+		myPages.Add(qpg (new string[] { "pit", "ggoomba", "pit", "" }, 3));
+		myPages.Add(new CutscenePage(8, "One more skill, that's good to use\nYou can squish goombas to death with your shoes", thirdActiveInputDict, "mariob"));
 		//myPages.Add(new CutscenePage(8, "one more skill, that's good to use\nYou can squish goombas to death with your shoes", secondActiveInputDict));
-		myPages.Add(qpg (new string[] { "", "goomba", "", "" }, 1));
-		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 2));
-		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 3));
-		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 3));
+		myPages.Add(qpg (new string[] { "", "goomba", "", "" }, 2));
+		myPages.Add(qpg(new string[] { "", "pit", "goomba", "" }, 3));
+		myPages.Add(qpg (new string[] { "goomba", "", "pit", "pit" }, 4));
+		myPages.Add(qpg (new string[] { "pit", "goomba", "pit", "" }, 4));
 		
-		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict, "mariothree", "firemario"));
+		myPages.Add(new CutscenePage(8, "Bash that block for a new power\nLight them up with a sweet fire flower!", thirdActiveInputDict, "marioc", "firemario"));
 		myPages.Add(qpg(new string[] { "", "", "usefire", "chomp" }, 2));
 		myPages.Add(qpg(new string[] { "", "goomba", "", "coingoomba" }, 4));
 		myPages.Add(qpg(new string[] { "", "coingoomba", "usefire", "chomp", "chomp", "pit", "chomp", "pit" }, 8));	// (the -2 position chomp is safe)
 		myPages.Add(qpg(new string[] { "chomp", "", "coingoomba", "pit", "usefire", "goomba", "goomba", "coingoomba" }, 10));
-		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));  */
-		myPages.Add(new CutscenePage(8, "8 bar interlude", thirdActiveInputDict, "mariofour", "ending"));
+		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));  
+		myPages.Add(new CutscenePage(8, "Alright cool we've got pretty far...\nActually, I think I've got this, granpapa!", thirdActiveInputDict, "mariod", "ending"));
 
 		// Beat 176 is the start of this.
 		// Fireballs take 6 beats to arive
-		/*
+		
 		myPages.Add(qpg(new string[] { "cpit", "goomba", "", "coingoomba"}, 4, true, new string[] { "jump", "hop", "flame", "jump"} ));
 		myPages.Add(qpg(new string[] { "", "goomba", "", "coingoomba"}, 4, true, new string[] { "none", "hop", "flame", "jump"} ));
 		myPages.Add(qpg(new string[] { "blue", "chomp", "coingoomba", "cpit"}, 4, true, new string[] { "hop", "flame", "jump", "jump" } ));
@@ -171,7 +174,7 @@ public class Level
 		myPages.Add(qpg(new string[] { "cpit", "", "chomp", "cpit" }, 4, true, new string[] { "jump", "flame", "none", "jump" } ));
 		myPages.Add(qpg(new string[] { "", "blue", "chomp", "coinhi"}, 4, true, new string[] { "none", "hop", "none", "jump"} ));
 		myPages.Add(qpg(new string[] { "coinlo", "", "blue", "cpit" }, 4, true, new string[] { "hop", "none", "hop", "jump" } ));
-		*/
+		
 		// 32?
 		myPages.Add(qpg(new string[] { "b1", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "none", "none", "none", "none", "none", "none", "none" } ));
 		myPages.Add(qpg(new string[] { "b2", "", "", "", "", "", "", "" }, 4, true, new string[] { "none", "jump", "none", "hop", "none", "flame", "none", "jump" } ));

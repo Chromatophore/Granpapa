@@ -21,6 +21,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private int resolveNodeValue = -1;
 	private int nextResolveNodeValue = -1;
 
+	private int audioskip = 0;//4939195;
+
 	// Audio tracks associated with this game:
 	private SongStruct currentAudio;
 	[SerializeField]
@@ -199,6 +201,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		trackerBar.Setup(this, currentAudio.beatTime);
 
 		// start the song
+		attachedAudioSource.timeSamples = audioskip;
 		attachedAudioSource.Play();
 		// prejig a datamarker to achieve results:
 		trackerList[playerNodeValue].resolution = DATAMARKER.END;
@@ -316,7 +319,9 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 			if (!breakMode && trackerList[playerNodeValue + inputFudgeOffset].originPage != null)
 			{
-				granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue + inputFudgeOffset].originPage.ResolveSound(inputConcept[0])));
+				AudioClip clip = noodleMain.GetVerb(false, inputConcept[0]);
+				//granpapaAnim.MakeSound(noodleMain.GetClip(trackerList[playerNodeValue + inputFudgeOffset].originPage.ResolveSound(inputConcept[0])));
+				granpapaAnim.MakeSound(clip);
 			}
 		}
 	}
@@ -326,6 +331,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 	private void AssessInputBeat()
 	{
 		int currentSamples = attachedAudioSource.timeSamples;
+		currentSamples -= audioskip;
 		int difference = currentSamples - lastSamples;
 
 		float beatRatio = (inputNextBeatFudge + (currentSamples / SamplesPerBeat));
@@ -343,6 +349,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		AssessInputBeat();
 
 		int currentSamples = attachedAudioSource.timeSamples;
+		currentSamples -= audioskip;
 		int difference = currentSamples - lastSamples;
 
 		// calculate if a new beat has occured yet:
@@ -420,12 +427,19 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// Or, we can assess as the events pass behind us, which allows us to move the kid closer to grandpapa
 			else if (!assessPage.useDataMarkers)
 			{
+				var lastNode = trackerList[playerNodeValue - 1];
 				// Check the previous entry once it has left us
-				assessPage = trackerList[playerNodeValue - 1].originPage;
+				assessPage = lastNode.originPage;
 				if (breakMode)
 				{
-					if (trackerList[ playerNodeValue - 1].player == "")
-						trackerList[ playerNodeValue - 1].player = "none";
+					if (lastNode.player == "")
+						lastNode.player = "none";
+
+					Debug.Log("Scoring last node? " + lastNode.player + " " + lastNode.auto);
+					if (lastNode.player == lastNode.auto)
+					{
+						lastNode.score++;
+					}
 				}
 				assessPage.CheckSuccess(trackerList[ playerNodeValue - 1]);
 			}
@@ -681,7 +695,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				kidAnim.Play(gameString, rn);
 
 			if (!breakMode && gameover == false)
-				kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(rn)));
+			{
+				AudioClip clip = noodleMain.GetVerb(true, rn);
+				//kidAnim.MakeSound(noodleMain.GetClip(resolveNode.originPage.ResolveSound(rn)));
+				kidAnim.MakeSound(clip);
+			}
 		}
 
 		if (resolveNode.active)

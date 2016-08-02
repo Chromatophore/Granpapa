@@ -19,10 +19,12 @@ public class finale : MonoBehaviour, IObserver<BeatData>
 	public Animator bowserAnim;
 	public Animator marioAnim;
 
-	//private int startValue = 176;
+	private int startValue = 176;
 	//private int startValue = 8;
-	private int startValue = -24;
+	//private int startValue = -24;
 	
+	public AudioSource endAudio;
+
 	void Start ()
 	{
 		
@@ -56,7 +58,7 @@ public class finale : MonoBehaviour, IObserver<BeatData>
 	{
 		int finaleNumber = data.beatNumber - startValue;
 
-		Debug.Log("Finale Beat " + finaleNumber + " ± "  + data);
+//		Debug.Log("Finale Beat " + finaleNumber + " ± "  + data);
 
 		Vector3 loFire = mario.transform.position;
 		Vector3 hiFire = loFire;
@@ -69,6 +71,9 @@ public class finale : MonoBehaviour, IObserver<BeatData>
 		switch (finaleNumber)
 		{
 			case 0:
+				endAudio.Play();
+				Instantiate(FirebreathPrefab, hiFire, Quaternion.identity);
+				break;
 			case 14:
 			case 20:
 			case 27:
