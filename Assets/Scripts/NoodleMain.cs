@@ -178,4 +178,10 @@ public class NoodleMain : MonoBehaviour
 		int index = (int)(cset.Length * Random.value) % cset.Length;
 		return cset[index];
 	}
+
+	public void MouthFlap(bool kid)
+	{
+
+		//StartCoroutine(Flapper())
+	}
 }

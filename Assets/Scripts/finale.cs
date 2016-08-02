@@ -15,7 +15,6 @@ public class finale : MonoBehaviour, IObserver<BeatData>
 
 	public Animator finaleAnimator;
 
-
 	public Animator bowserAnim;
 	public Animator marioAnim;
 
@@ -112,6 +111,12 @@ public class finale : MonoBehaviour, IObserver<BeatData>
 				break;
 			default:
 				break;
+		}
+
+		if (finaleNumber <= 56)
+		{
+			if (finaleNumber % 8 == 0)
+				ps.MakeFlap(((finaleNumber % 16) == 0), 5f, 0f);
 		}
 
 		// 176 is the first beat of the finale sequence

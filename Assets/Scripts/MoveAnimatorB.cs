@@ -22,7 +22,7 @@ public class MoveAnimatorB : MonoBehaviour {
 
 		if (anim != "")
 		{
-			animator.CrossFade(anim, 0.1f, 1, 0f);
+			animator.CrossFade(anim, 0.1f, -1, 0f);
 			animator.SetLayerWeight(1, 1.0f);
 		}
 	}

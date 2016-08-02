@@ -288,8 +288,10 @@ public class GamePlayPage : Page
 public class CutscenePage : Page, IObserver<BeatData>
 {
 	private int beatsSoFar = 0;
-	private int length = 0;
+	public int length = 0;
 	private int beatsTillEnd = -1;
+
+	public bool[] flapper;
 
 	private string inputString;
 	private string customAudio;
@@ -314,6 +316,10 @@ public class CutscenePage : Page, IObserver<BeatData>
 
 	public CutscenePage(int length, string testString, Dictionary<BUTTON, string> pageActiveInputDict = null, string customAudio = "", string special = "")
 	{
+		flapper = new bool[2];
+		flapper[0] = false;
+		flapper[1] = false;
+
 		enemyAttacks = new List<string>();
 
 		NoBreaks = false;

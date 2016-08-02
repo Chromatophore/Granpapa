@@ -703,8 +703,19 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			if (cutscenePage != null)
 			{
 				cutscenePage.ActivateBeat(this);
+
 				string customAudioName = cutscenePage.GetCustomAudio();
+
 				if (customAudioName != "")
+				{
+
+					float barTime = currentAudio.beatTime * cutscenePage.length;
+
+					MakeFlap(cutscenePage.flapper[0], barTime * 0.9f, 0f);
+					MakeFlap(cutscenePage.flapper[1], barTime * 0.9f, barTime);
+				}
+
+				if (customAudioName != "" && customAudioName != "flap")
 				{
 					AudioClip customClip = noodleMain.GetClip(customAudioName);
 					if (customClip != null)
@@ -834,5 +845,29 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 
 		// Now, return an IDisposable implimentation to whatever called us so that it can unsubscribe from our updates:
 		return new GenericUnsubscriber<BeatData>(beatDataObserversToRemove, observer, true);
+	}
+
+	IEnumerator MouthFlap(MoveAnimatorB anim, float tMax, float delay = 0f)
+	{
+		if (delay != 0f)
+			yield return new WaitForSeconds(delay);
+
+		float t = 0f;
+		while (t < tMax)
+		{
+			float sTime = Time.time;
+			float topen = 0.1f + Random.value * 0.2f;
+			anim.DoMouth(topen);
+			yield return new WaitForSeconds(topen + 0.1f + Random.value * 0.2f);
+			t += Time.time - sTime;
+		}
+	}
+
+	public void MakeFlap(bool kid, float tMax, float delay = 0f)
+	{
+		if (kid)
+			StartCoroutine(MouthFlap(kidAnim, tMax, delay));
+		else
+			StartCoroutine(MouthFlap(granpapaAnim, tMax, delay));
 	}
 }
