@@ -72,6 +72,8 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			case "coinlo":
 			case "coingoomba":
 			case "blue":
+			case "cutscenefiremario":
+			case "gameover":
 				break;
 			case "cutsceneending":
 				dungeonMode = true;
@@ -94,6 +96,13 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			pos += movementDolly.transform.localPosition;
 			GameObject newObject = Instantiate(newObjectPrefab, pos, Quaternion.identity ) as GameObject;
 			newObject.transform.parent = movementDolly.transform;
+
+			if (key == "cutscenefiremario")
+			{
+				MarioCloudScipt cloud = newObject.GetComponentInChildren<MarioCloudScipt>();
+				if (cloud != null)
+					cloud.lookTarget = marioA;
+			}
 
 			if (firstOfBar)
 			{
@@ -122,8 +131,6 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			// give them a death sentence?
 			//Destroy(newObject,40f);
 		}
-
-		
 
 		creationPoint += horizontalSpacing;
 	}
@@ -319,6 +326,7 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 
 	IEnumerator MarioChange()
 	{
+		yield return new WaitForSeconds(0.6666f);
 		bool toggle = false;
 
 		for (int j = 0; j < 6; j++)

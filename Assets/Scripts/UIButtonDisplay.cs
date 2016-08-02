@@ -20,6 +20,8 @@ public class UIButtonDisplay : MonoBehaviour {
 	[SerializeField]
 	private Text[] abilityText;
 
+	public lookflash looker;
+
 	// Use this for initialization
 	void Start () {
 		mainButtons = new Dictionary<BUTTON,ButtonToObject>();
@@ -45,5 +47,7 @@ public class UIButtonDisplay : MonoBehaviour {
 			mainButtons[button].text.text = pageActiveInputDict[button];
 			mainButtons[button].prefab.SetActive(true);
 		}
+
+		looker.MakeFlash();
 	}
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;	// Needed for Array stuff?
 using System.Collections.Generic;	// We use generic for Data Structures with <YourClass> style declarations
+using UnityEngine.SceneManagement;
 
 public enum DATAMARKER
 {
@@ -116,9 +117,15 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		GetCurrentDicts();
 	}
 
+	private Page lastPageTest = null;
+
 	private void GetCurrentDicts()
 	{
 		var originPage = trackerList[playerNodeValue + inputFudgeOffset].originPage;
+
+		if (originPage == lastPageTest)
+			return;
+		lastPageTest = originPage;
 		// Load the input map from this page, in case it chaneges:
 		if (originPage != null)
 		{
@@ -352,6 +359,12 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		currentSamples -= audioskip;
 		int difference = currentSamples - lastSamples;
 
+		if (currentSamples > currentAudio.audioTrack.samples - 10)
+		{
+			// load the base level again
+			SceneManager.LoadScene(0);
+		}
+
 		// calculate if a new beat has occured yet:
 		if (currentSamples >= nextSampleValue || (difference < 0))
 		{
@@ -451,7 +464,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 				}
 				assessPage.CheckSuccess(lastNode, !breakMode);
 
-				if (!breakMode || (breakMode && entryPlayer == ""))
+				if ((!breakMode && lastNode.enemy != "") || (breakMode && entryPlayer == ""))
 				{
 					addSuccessTo = playerNodeValue - 1;
 				}

@@ -135,7 +135,7 @@ public class Level
 			});
 
 		
-		myPages.Add(new CutscenePage(8, "Use Z to Jump! Watch for New Moves!!"));
+		myPages.Add(new CutscenePage(8, "Use Z to Jump! Use the marker in the middle to time your action!"));
 		myPages.Add(new CutscenePage(8, "One thing first, before we start!\nPick up, Flip up and blow in the cart!", null, "marioa"));
 		myPages.Add(new CutscenePage(8, "Let's try this first, see how it goes\nIt's time to play super mario bros!", firstActiveInputDict));
 
@@ -161,7 +161,7 @@ public class Level
 		myPages.Add(qpg(new string[] { "", "coingoomba", "usefire", "chomp", "chomp", "pit", "chomp", "pit" }, 8));	// (the -2 position chomp is safe)
 		myPages.Add(qpg(new string[] { "chomp", "", "coingoomba", "pit", "usefire", "goomba", "goomba", "coingoomba" }, 10));
 		myPages.Add(qpg(new string[] { "usefire", "chomp", "coingoomba", "", "coingoomba", "pit", "chomp", "coingoomba" }, 9));  
-		myPages.Add(new CutscenePage(8, "Alright cool we've got pretty far...\nActually, I think I've got this, granpapa!", thirdActiveInputDict, "mariod", "ending"));
+		myPages.Add(new CutscenePage(8, "Alright cool we've got pretty far...\nActually, I think I've got this, granpapa!", null, "mariod", "ending"));
 
 		// Beat 176 is the start of this.
 		// Fireballs take 6 beats to arive

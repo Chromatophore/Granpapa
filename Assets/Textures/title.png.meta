@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d0c9eb420dc0646749cd923be85ff880
-timeCreated: 1470060656
+guid: 177240efec6294cbb9c79488675ed006
+timeCreated: 1470109080
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -44,14 +44,14 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 72
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: mario
+  spritePackingTag: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 
