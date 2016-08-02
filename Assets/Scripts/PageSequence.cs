@@ -276,10 +276,12 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 								{
 									node.success = true;
 								}
+								else
+								{
+									node.success = false;
+								}
 								if (moveFeedback != "" && moveFeedback != "kill")
 									node.player = move;
-
-								node.score = 1;
 							}
 						}
 
@@ -293,9 +295,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 							trackerBar.AddChild(playerNodeValue + i, noodleMain.GetPrefab(moveFeedback));
 							if (breakMode)
 							{
-								//if (node.auto == "")
-									//node.success = true;
-
+								Debug.Log(node.auto + " " + node.player + " " + (node.auto == node.player));
 								AddSuccessObject(playerNodeValue + i);
 							}
 						}
@@ -395,6 +395,8 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// and reset the last value's information
 		lastEntry.Reset();
 
+		int addSuccessTo = -1;
+
 		///////////////////
 		/// Below this point, all our internal structures should have been stepped/informed of the change in indexes etc that needed to have occured.
 
@@ -407,6 +409,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// We must first attempt to resolve any data sequences that are now in the resolution zone
 		// We can either assess a whole bar in one go, based on if we are set to use DataMarkers
 		var assessPage = trackerList[resolveNodeValue].originPage;
+
 		if (assessPage != null)
 		{
 			if (assessPage.useDataMarkers && trackerList[resolveNodeValue].resolution == DATAMARKER.START)
@@ -428,20 +431,42 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			else if (!assessPage.useDataMarkers)
 			{
 				var lastNode = trackerList[playerNodeValue - 1];
+				string entryPlayer = lastNode.player;
 				// Check the previous entry once it has left us
 				assessPage = lastNode.originPage;
+				bool forceSuccess = false;
 				if (breakMode)
 				{
-					if (lastNode.player == "")
-						lastNode.player = "none";
-
-					Debug.Log("Scoring last node? " + lastNode.player + " " + lastNode.auto);
-					if (lastNode.player == lastNode.auto)
+					if (lastNode.player == lastNode.auto || lastNode.player == "" && lastNode.auto == "none")
 					{
-						lastNode.score++;
+						lastNode.score = 1;
+						forceSuccess = true;
+					}
+					else
+					{
+						lastNode.score = 0;
+						forceSuccess = false;
+					}
+
+				}
+				assessPage.CheckSuccess(lastNode, !breakMode);
+
+				if (!breakMode || (breakMode && entryPlayer == ""))
+				{
+					addSuccessTo = playerNodeValue - 1;
+				}
+
+				if (breakMode)
+				{
+					lastNode.success = forceSuccess;
+
+					if (lastNode.resolution == DATAMARKER.END)
+					{
+						scoreDisplay.PageScore(assessPage.AssessScore());
 					}
 				}
-				assessPage.CheckSuccess(trackerList[ playerNodeValue - 1]);
+
+				//Debug.Log(breakMode + " Success int: " + addSuccessTo);
 			}
 		}
 		
@@ -475,7 +500,7 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 			// if the current page feels that it is completed, we will move to the next page:
 			if (currentPage == null || currentPage.Complete || (currentPage.NoBreaks))
 			{
-				if (currentPage != null)
+				if (currentPage != null && !breakMode)
 				{
 					scoreDisplay.PageScore(currentPage.AssessScore());
 				}
@@ -681,8 +706,11 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		// For the node that is in the resolve location, reveal the resolution outcome:
 		if (!breakMode && resolveNode.enemy != "")
 		{
-			AddSuccessObject(resolveNodeValue);
+			//AddSuccessObject(resolveNodeValue);
 		}
+
+		if (addSuccessTo != -1)
+			AddSuccessObject(addSuccessTo);
 
 //		Debug.Log(trackerList[resolveNodeValue]);
 		if (resolveNode.auto != "" || resolveNode.player != "" && resolveNode.resolved == true)
@@ -706,15 +734,15 @@ public class PageSequence : MonoBehaviour, IObservable<BeatData>
 		{
 			if (breakMode)
 			{
-				resolveNode.originPage.CheckSuccess(resolveNode);
+				resolveNode.originPage.CheckSuccess(resolveNode, false);
 				string moveFeedback = resolveNode.auto;
-				resolveNode.originPage.ProcessConcept(resolveNode, ref moveFeedback, 0);
+				resolveNode.originPage.ProcessConcept(resolveNode, ref moveFeedback, 0, false);
 
 				if (resolveNode.auto == "flame")
 				{
 					var nextNode = resolveNode.next;
 					moveFeedback = "kill";
-					nextNode.originPage.ProcessConcept(nextNode, ref moveFeedback, 1);
+					nextNode.originPage.ProcessConcept(nextNode, ref moveFeedback, 1, false);
 				}
 			}
 

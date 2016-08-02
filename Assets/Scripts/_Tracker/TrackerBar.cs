@@ -144,6 +144,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 			if (outputScale == targetScale || (timeRemaining < 0f))
 			{
 				needsScaleLerp = false;
+				scalerObject.transform.localScale = targetScale;
 			}
 		}
 	}
@@ -260,6 +261,7 @@ public class TrackerBar : MonoBehaviour, IObserver<BeatData>
 	public void SetBeatsPerPhase(int beats)
 	{
 		// 8 beats = 1.0 scale
+		beats = 4;
 		if (beats < 4)
 			beats = 4;
 		float defBeats = 8f;

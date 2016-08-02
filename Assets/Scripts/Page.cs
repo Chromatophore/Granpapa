@@ -21,7 +21,7 @@ public class Page
 	private bool hasFailed;
 	private int beatCount;
 	protected PlayerAnimMap playerAnimMap;
-	public int pageScore;
+	private int pageScore;
 	protected int maxScore;
 	protected List<string> autoActions;
 
@@ -116,7 +116,7 @@ public class Page
 		return sound[Random.Range(0, sound.Length)];
 	}
 
-	public virtual void CheckSuccess(PageTrackerData thisCell)
+	public virtual void CheckSuccess(PageTrackerData thisCell, bool useScore = true)
 	{
 		int score = thisCell.score;
 
@@ -136,10 +136,15 @@ public class Page
 
 		if (playerAnimMap != null)
 		{
-			score += playerAnimMap.AssessSuccess(thisCell);
+			int tempscore = playerAnimMap.AssessSuccess(thisCell);
+			if (useScore)
+				score += tempscore;
+			
+			
 			//Debug.Log("Cell " + thisCell.sequenceNumber + " final score: " + score);
 			pageScore += score;
 			//Debug.Log("Page score " + pageScore);
+			
 		}
 
 		if (score < 0)
@@ -182,7 +187,7 @@ public class Page
 		return 4;
 	}
 
-	public virtual void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
+	public virtual void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber, bool useScore = true)
 	{
 
 	}
@@ -236,7 +241,7 @@ public class GamePlayPage : Page
 		NoBreaks = noBreaks;
 	}
 
-	public override void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber )
+	public override void ProcessConcept(PageTrackerData node, ref string move, int sequenceNumber, bool useScore = true)
 	{
 		if (move == "flame")
 		{
@@ -253,20 +258,22 @@ public class GamePlayPage : Page
 			if (node.enemy == "goomba")
 			{
 				node.enemy = "";
-				node.score += 2;
+				if (useScore)
+					node.score += 2;
 			}
 			else if (node.enemy == "chomp")
 			{
 				int smod = node.sequenceNumber % 4;
 				//if (smod == 1 || smod == 2)
 				node.enemy = "";
-
-				node.score += 2;
+				if (useScore)
+					node.score += 2;
 			}
 			else if (node.enemy == "coingoomba")
 			{
 				node.enemy = "coinhi";
-				node.score += 2;
+				if (useScore)
+					node.score += 2;
 			}
 			move = "";
 		}

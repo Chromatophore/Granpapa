@@ -72,7 +72,9 @@ public class MarioGame : MonoBehaviour, IGameDisplay
 			case "coinlo":
 			case "coingoomba":
 			case "blue":
-			case "d1":
+				break;
+			case "cutsceneending":
+				dungeonMode = true;
 				break;
 			case "reset":
 				marioB.SetActive(false);

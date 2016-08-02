@@ -6,6 +6,8 @@ public class MoveAnimatorB : MonoBehaviour {
 	public Animator animator;
 	public AudioSource audiosource;
 
+	private Coroutine activeCoroutine = null;
+
 	public void Play(string gameName, string animation)
 	{
 
@@ -31,7 +33,25 @@ public class MoveAnimatorB : MonoBehaviour {
 		{
 			return;
 		}
+
+		DoMouth(sound.length * 0.7f);
+
 		audiosource.clip = sound;
 		audiosource.Play();
+	}
+
+	public void DoMouth(float seconds)
+	{
+		if (activeCoroutine != null)
+			StopCoroutine(activeCoroutine);
+		activeCoroutine = StartCoroutine(MouthTimer(seconds));
+	}
+
+	IEnumerator MouthTimer(float duration)
+	{
+		animator.Play("MouthOpen");
+		yield return new WaitForSeconds(duration);
+		animator.Play("MouthFlat");
+		activeCoroutine = null;
 	}
 }
